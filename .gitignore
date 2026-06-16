@@ -1,0 +1,25 @@
+# Android — ignore build/gradle artifacts, keep source (res/, manifests, etc.)
+polylex-global/apps/frontend/android/.gradle/
+polylex-global/apps/frontend/android/build/
+polylex-global/apps/frontend/android/app/build/
+polylex-global/apps/frontend/android/local.properties
+polylex-global/apps/frontend/android/capacitor-cordova-android-plugins/
+polylex-global/apps/frontend/android/app/src/main/assets/
+
+# iOS — ignore build/pods artifacts, keep source (Assets.xcassets/, etc.)
+polylex-global/apps/frontend/ios/App/Pods/
+polylex-global/apps/frontend/ios/App/build/
+polylex-global/apps/frontend/ios/App/output/
+polylex-global/apps/frontend/ios/App/App/public/
+polylex-global/apps/frontend/ios/DerivedData/
+polylex-global/apps/frontend/ios/xcuserdata/
+polylex-global/apps/frontend/ios/capacitor-cordova-ios-plugins/
+
+# Frontend build output
+polylex-global/apps/frontend/build/
+
+# Environment files (all levels)
+.env
+.env.*
+!.env.example
+!.env.*.example

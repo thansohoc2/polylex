@@ -1,0 +1,444 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Multi-tenancy ────────────────────────────────────────────────────────────
+// organizationId is nullable: NULL = global/public, non-null = org-scoped
+// Query pattern: WHERE organizationId = :orgId OR organizationId IS NULL
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users           User[]
+  vocabularyBases VocabularyBase[]
+
+  @@map("organizations")
+}
+
+// ─── Languages ────────────────────────────────────────────────────────────────
+
+model Language {
+  id          String  @id @default(uuid())
+  code        String  @unique // e.g. "en", "vi", "ja"
+  name        String  // English name: "English"
+  nativeName  String  @map("native_name") // Native: "日本語"
+  rtl         Boolean @default(false)
+  flagEmoji   String? @map("flag_emoji")
+  isActive    Boolean @default(true) @map("is_active")
+
+  vocabularyBases   VocabularyBase[]       @relation("SourceLanguage")
+  translations      VocabularyTranslation[] @relation("TargetLanguage")
+  usersNative       User[]                 @relation("NativeLanguage")
+  learningPaths     LearningPath[]         @relation("LearningLanguage")
+  pathTemplates     PathTemplate[]
+
+  @@map("languages")
+}
+
+// ─── Users ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  LEARNER
+  ADMIN
+  DEMO
+}
+
+enum QuickNoteStatus {
+  PENDING
+  PROCESSING
+  DONE
+  ERROR
+}
+
+enum SocialProvider {
+  GOOGLE
+  APPLE
+  FACEBOOK
+  ZALO
+}
+
+model User {
+  id               String       @id @default(uuid())
+  email            String       @unique
+  passwordHash     String?      @map("password_hash")
+  displayName      String       @map("display_name")
+  role             UserRole     @default(LEARNER)
+  nativeLanguageId String?      @map("native_language_id")
+  timezone         String       @default("UTC")
+  organizationId   String?      @map("organization_id")
+  dailyGoal        Int          @default(10) @map("daily_goal") // words per day
+  ttsVoiceGender   String       @default("FEMALE") @map("tts_voice_gender")
+  isOnboarded      Boolean      @default(true) @map("is_onboarded")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+  lastLoginAt      DateTime?    @map("last_login_at")
+  refreshToken     String?      @map("refresh_token") // hashed
+
+  organization     Organization?       @relation(fields: [organizationId], references: [id])
+  nativeLanguage   Language?           @relation("NativeLanguage", fields: [nativeLanguageId], references: [id])
+  userVocabularies UserVocabulary[]
+  learningPaths    LearningPath[]
+  skillScores      SkillScore[]
+  streak           UserStreak?
+  badges           UserBadge[]
+  reviewHistories  ReviewHistory[]
+  quickNotes       QuickNote[]
+  pathTemplates    PathTemplate[]
+  userPaths        UserPath[]
+  socialAccounts   SocialAccount[]
+
+  @@index([organizationId])
+  @@map("users")
+}
+
+// ─── Vocabulary Base ──────────────────────────────────────────────────────────
+
+model VocabularyBase {
+  id               String   @id @default(uuid())
+  term             String   // the base word/phrase in source language
+  languageId       String   @map("language_id") // source language
+  cefrLevel        String?  @map("cefr_level") // A1, A2, B1, B2, C1, C2
+  partOfSpeech     String?  @map("part_of_speech") // noun, verb, adj...
+  phonetic         String?  // IPA pronunciation
+  phoneticRomaji   String?  @map("phonetic_romaji") // Romanization/reading aid: Pinyin (zh), Romaji (ja: "花 (はな, hana)"), etc.
+  imageUrl         String?  @map("image_url")
+  audioUrl         String?  @map("audio_url") // fallback if TTS unavailable
+  exampleSentence  String?  @map("example_sentence")
+  organizationId   String?  @map("organization_id") // null = global vocab
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  language         Language               @relation("SourceLanguage", fields: [languageId], references: [id])
+  organization     Organization?          @relation(fields: [organizationId], references: [id])
+  translations     VocabularyTranslation[]
+  userVocabularies UserVocabulary[]
+  quickNotes       QuickNote[]
+  pathStageVocabs  PathStageVocab[]
+
+  @@unique([term, languageId, organizationId])
+  @@index([languageId])
+  @@index([organizationId])
+  @@index([cefrLevel])
+  @@map("vocabulary_base")
+}
+
+// ─── Vocabulary Translation ───────────────────────────────────────────────────
+
+model VocabularyTranslation {
+  id                 String   @id @default(uuid())
+  vocabularyBaseId   String   @map("vocabulary_base_id")
+  targetLanguageId   String   @map("target_language_id")
+  translation        String   // the translated word/phrase
+  definition         String?  // definition in target language
+  exampleTranslation String?  @map("example_translation")
+  notes              String?
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  vocabularyBase VocabularyBase @relation(fields: [vocabularyBaseId], references: [id], onDelete: Cascade)
+  targetLanguage Language       @relation("TargetLanguage", fields: [targetLanguageId], references: [id])
+
+  @@unique([vocabularyBaseId, targetLanguageId])
+  @@index([targetLanguageId])
+  @@map("vocabulary_translations")
+}
+
+// ─── User Vocabulary (spaced repetition state) ───────────────────────────────
+
+model UserVocabulary {
+  id               String    @id @default(uuid())
+  userId           String    @map("user_id")
+  vocabularyBaseId String    @map("vocabulary_base_id")
+  sourceType       String?   @map("source_type") // 'quicknote' | 'path' | 'manual' | null (legacy)
+  memoryStrength   Float     @default(0.3) @map("memory_strength") // 0.0–1.0
+  intervalDays     Float     @default(1.0) @map("interval_days")
+  nextReview       DateTime  @default(now()) @map("next_review")
+  leechScore       Int       @default(0) @map("leech_score") // threshold = 8
+  difficultyUser   Float     @default(0.3) @map("difficulty_user") // 0.0–1.0
+  reviewCount      Int       @default(0) @map("review_count")
+  isLeech          Boolean   @default(false) @map("is_leech")
+  isSuspended      Boolean   @default(false) @map("is_suspended")
+  isLearned        Boolean   @default(false) @map("is_learned")
+  addedAt          DateTime  @default(now()) @map("added_at")
+  lastReviewedAt   DateTime? @map("last_reviewed_at")
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vocabularyBase VocabularyBase @relation(fields: [vocabularyBaseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, vocabularyBaseId])
+  @@index([userId, nextReview])
+  @@index([userId, isLeech])
+  @@index([userId, isLearned])
+  @@map("user_vocabulary")
+}
+
+// ─── Review History ───────────────────────────────────────────────────────────
+
+model ReviewHistory {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  vocabularyBaseId String   @map("vocabulary_base_id")
+  reviewMode       String   @map("review_mode") // flashcard | type_answer | reverse | listening | context | sentence
+  recallQuality    Int      @map("recall_quality") // 0–5
+  responseTimeMs   Int      @map("response_time_ms")
+  confidenceLevel  Int      @map("confidence_level") // 1–5
+  memoryStrengthBefore Float @map("memory_strength_before")
+  memoryStrengthAfter  Float @map("memory_strength_after")
+  intervalDays     Float    @map("interval_days")
+  isLeech          Boolean  @default(false) @map("is_leech")
+  reviewedAt       DateTime @default(now()) @map("reviewed_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, reviewedAt])
+  @@index([userId, vocabularyBaseId])
+  @@map("review_history")
+}
+
+// ─── Learning Paths ───────────────────────────────────────────────────────────
+
+model LearningPath {
+  id               String    @id @default(uuid())
+  userId           String    @map("user_id")
+  targetLanguageId String    @map("target_language_id")
+  targetCefrLevel  String    @map("target_cefr_level") // A1–C2
+  currentCefrLevel String    @default("A1") @map("current_cefr_level")
+  isActive         Boolean   @default(true) @map("is_active")
+  isPrimary        Boolean   @default(false) @map("is_primary")
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetLanguage Language @relation("LearningLanguage", fields: [targetLanguageId], references: [id])
+
+  @@unique([userId, targetLanguageId])
+  @@index([userId])
+  @@map("learning_paths")
+}
+
+// ─── Skill Scores ─────────────────────────────────────────────────────────────
+
+model SkillScore {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  skill          String   // reading | listening | speaking | writing | vocabulary | grammar
+  score          Float    @default(0.0)
+  lastCalculated DateTime @default(now()) @map("last_calculated")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skill])
+  @@index([userId])
+  @@map("skill_scores")
+}
+
+// ─── User Streak ──────────────────────────────────────────────────────────────
+
+model UserStreak {
+  id            String   @id @default(uuid())
+  userId        String   @unique @map("user_id")
+  currentStreak Int      @default(0) @map("current_streak")
+  longestStreak Int      @default(0) @map("longest_streak")
+  streakFreezes Int      @default(1) @map("streak_freezes")
+  lastActiveDate DateTime? @map("last_active_date")
+  totalXp       Int      @default(0) @map("total_xp")
+  weeklyXp      Int      @default(0) @map("weekly_xp")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([weeklyXp(sort: Desc), userId])
+  @@map("user_streaks")
+}
+
+// ─── User Badges ──────────────────────────────────────────────────────────────
+
+model UserBadge {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  badge     String   // e.g. "STREAK_7", "WORDS_100", "FIRST_REVIEW"
+  earnedAt  DateTime @default(now()) @map("earned_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badge])
+  @@index([userId])
+  @@map("user_badges")
+}
+
+// ─── AI Learning Paths ──────────────────────────────────────────────────────────────────────────
+
+model PathTemplate {
+  id               String   @id @default(uuid())
+  title            String
+  description      String?
+  emoji            String   @default("🎯")
+  goalInput        String   @map("goal_input")
+  targetLanguageId String   @map("target_language_id")
+  nativeLanguageId String?  @map("native_language_id")
+  targetCefrLevel  String   @map("target_cefr_level")
+  totalWords       Int      @default(0) @map("total_words")
+  isPublished      Boolean  @default(true) @map("is_published")
+  createdByUserId  String   @map("created_by_user_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  targetLanguage Language      @relation(fields: [targetLanguageId], references: [id])
+  stages         PathStage[]
+  userPaths      UserPath[]
+  createdBy      User          @relation(fields: [createdByUserId], references: [id])
+
+  @@index([targetLanguageId])
+  @@map("path_templates")
+}
+
+model PathStage {
+  id             String @id @default(uuid())
+  pathTemplateId String @map("path_template_id")
+  order          Int
+  title          String
+  description    String?
+  xpReward       Int    @default(20) @map("xp_reward")
+  wordCount      Int    @default(0) @map("word_count")
+
+  pathTemplate PathTemplate     @relation(fields: [pathTemplateId], references: [id], onDelete: Cascade)
+  stageVocabs  PathStageVocab[]
+  userStages   UserPathStage[]
+  dialogue     PathStageDialogue?
+  videos       PathStageVideo[]
+
+  @@unique([pathTemplateId, order])
+  @@index([pathTemplateId])
+  @@map("path_stages")
+}
+
+model PathStageVocab {
+  id               String @id @default(uuid())
+  pathStageId      String @map("path_stage_id")
+  vocabularyBaseId String @map("vocabulary_base_id")
+  order            Int    @default(0)
+
+  pathStage      PathStage      @relation(fields: [pathStageId], references: [id], onDelete: Cascade)
+  vocabularyBase VocabularyBase @relation(fields: [vocabularyBaseId], references: [id], onDelete: Cascade)
+
+  @@unique([pathStageId, vocabularyBaseId])
+  @@map("path_stage_vocabs")
+}
+
+model UserPath {
+  id                String    @id @default(uuid())
+  userId            String    @map("user_id")
+  pathTemplateId    String    @map("path_template_id")
+  currentStageOrder Int       @default(1) @map("current_stage_order")
+  totalXpEarned     Int       @default(0) @map("total_xp_earned")
+  startedAt         DateTime  @default(now()) @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pathTemplate PathTemplate  @relation(fields: [pathTemplateId], references: [id])
+  userStages   UserPathStage[]
+
+  @@unique([userId, pathTemplateId])
+  @@index([userId])
+  @@map("user_paths")
+}
+
+model UserPathStage {
+  id           String    @id @default(uuid())
+  userPathId   String    @map("user_path_id")
+  pathStageId  String    @map("path_stage_id")
+  isUnlocked   Boolean   @default(false) @map("is_unlocked")
+  isCompleted  Boolean   @default(false) @map("is_completed")
+  wordsLearned Int       @default(0) @map("words_learned")
+  unlockedAt   DateTime? @map("unlocked_at")
+  completedAt  DateTime? @map("completed_at")
+
+  userPath  UserPath  @relation(fields: [userPathId], references: [id], onDelete: Cascade)
+  pathStage PathStage @relation(fields: [pathStageId], references: [id], onDelete: Cascade)
+
+  @@unique([userPathId, pathStageId])
+  @@map("user_path_stages")
+}
+
+// ─── Quick Notes (AI-enriched fast input) ────────────────────────────────────────────────────
+
+model PathStageDialogue {
+  id          String   @id @default(uuid())
+  pathStageId String   @unique @map("path_stage_id")
+  lines       Json     // DialogueLine[] — { speaker, text, translation, vocabTerms }
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  pathStage PathStage @relation(fields: [pathStageId], references: [id], onDelete: Cascade)
+
+  @@map("path_stage_dialogues")
+}
+
+model PathStageVideo {
+  id              String   @id @default(uuid())
+  pathStageId     String   @map("path_stage_id")
+  youtubeVideoId  String   @map("youtube_video_id")
+  title           String
+  channelTitle    String?  @map("channel_title")
+  thumbnailUrl    String?  @map("thumbnail_url")
+  durationSeconds Int?     @map("duration_seconds")
+  relevanceScore  Float    @default(0.0) @map("relevance_score")
+  aiReason        String?  @map("ai_reason")
+  order           Int      @default(0)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  pathStage PathStage @relation(fields: [pathStageId], references: [id], onDelete: Cascade)
+
+  @@index([pathStageId])
+  @@map("path_stage_videos")
+}
+
+// ─── Social Accounts ─────────────────────────────────────────────────────────
+
+model SocialAccount {
+  id          String         @id @default(uuid())
+  userId      String         @map("user_id")
+  provider    SocialProvider
+  providerId  String         @map("provider_id")
+  email       String?
+  displayName String?        @map("display_name")
+  avatarUrl   String?        @map("avatar_url")
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+  @@index([userId])
+  @@map("social_accounts")
+}
+
+// ─── Quick Notes (AI-enriched fast input) ────────────────────────────────────────────────────
+
+model QuickNote {
+  id                 String          @id @default(uuid())
+  userId             String          @map("user_id")
+  term               String
+  sourceLanguageCode String          @map("source_language_code")
+  targetLanguageCode String          @map("target_language_code")
+  status             QuickNoteStatus @default(PENDING)
+  errorMessage       String?         @map("error_message")
+  vocabularyBaseId   String?         @map("vocabulary_base_id")
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vocabularyBase VocabularyBase? @relation(fields: [vocabularyBaseId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("quick_notes")
+}

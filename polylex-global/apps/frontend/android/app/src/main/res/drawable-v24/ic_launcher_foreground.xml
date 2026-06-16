@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportHeight="108"
+    android:viewportWidth="108">
+    <!-- PolyLex "P" mark — indigo/violet brand colour -->
+    <!-- P stem: x=24.75,y=23.63 w=14.81,h=59.06 -->
+    <path
+        android:fillColor="#6366F1"
+        android:pathData="M24.75,23.63 h14.81 v59.06 h-14.81 Z" />
+    <!-- P top bar: x=24.75,y=23.63 w=44.44,h=14.81 -->
+    <path
+        android:fillColor="#6366F1"
+        android:pathData="M24.75,23.63 h44.44 v14.81 h-44.44 Z" />
+    <!-- P bottom bar: x=24.75,y=51.0 w=44.44,h=14.81 -->
+    <path
+        android:fillColor="#A78BFA"
+        android:pathData="M24.75,51.0 h44.44 v14.81 h-44.44 Z" />
+    <!-- P right cap: x=54.38,y=23.63 w=14.81,h=42.88 -->
+    <path
+        android:fillColor="#818CF8"
+        android:pathData="M54.38,23.63 h14.81 v42.88 h-14.81 Z" />
+</vector>

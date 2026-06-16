@@ -1,0 +1,10 @@
+{
+  "app": {
+    "title": "PolyLex Zalo Mini App",
+    "appId":"1203406964474983864"
+  },
+  "template": {
+    "primaryColor": "#4f46e5",
+    "headerLogo": ""
+  }
+}

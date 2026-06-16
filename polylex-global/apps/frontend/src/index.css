@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* Display font for headings (TICKET-035 — Playful Light). Body keeps Inter. */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap");
+
+@theme {
+  /* ── Legacy dark tokens (kept so un-migrated screens keep working) ── */
+  --color-surface: #0F0F1A;
+  --color-surface-2: #1A1A2E;
+  --color-surface-3: #16213E;
+  --color-primary: #6366F1;
+  --color-primary-dark: #4F46E5;
+  --color-accent: #A78BFA;
+  --color-text-1: #F1F5F9;
+  --color-text-2: #94A3B8;
+  --color-text-3: #475569;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-border: rgba(99, 102, 241, 0.2);
+
+  /* ─────────────────────────────────────────────────────────────────
+   * TICKET-035 — "Playful Light" Design Tokens (new default direction)
+   * Light + warm, energetic accents, premium-bold typography.
+   * Utility examples: bg-canvas, bg-card, text-ink, text-coral,
+   * shadow-soft, shadow-pop, rounded-card, font-display
+   * ───────────────────────────────────────────────────────────────── */
+
+  /* Surfaces (light) */
+  --color-canvas: #FBF6F2;        /* app background — warm off-white */
+  --color-card: #FFFFFF;          /* card / elevated surface */
+  --color-card-2: #FFF3EC;        /* subtle tinted surface */
+  --color-line: #EFE6DE;          /* hairline borders on light */
+
+  /* Brand — warm, playful */
+  --color-coral: #FF6B4A;         /* primary accent */
+  --color-coral-2: #FF8A3D;       /* gradient partner (orange) */
+  --color-pink: #FF4D8D;          /* secondary accent */
+  --color-gold: #FFB627;          /* tertiary / XP */
+  --color-grape: #7C5CFC;         /* cool accent for balance */
+  --color-grape-light: #F4F0FF;   /* light background for "You" item */
+  --color-grape-bright: #D9CFFC;  /* bright border for "You" item */
+  --color-grape-dark: #5A3EBE;    /* dark text for high contrast on grape-light */
+
+  /* Ink (text on light) — WCAG AA on canvas/card */
+  --color-ink: #221B2E;           /* headings — near-black w/ purple tint */
+  --color-ink-2: #5B5366;         /* body */
+  --color-ink-3: #8E8798;         /* muted / captions */
+
+  /* Semantic (tuned for light) */
+  --color-ok: #14B86A;
+  --color-warn: #FF9F1C;
+  --color-bad: #F2415A;
+  --color-info: #3B82F6;
+
+  /* Gamification accents */
+  --color-streak: #FF6B4A;
+  --color-xp: #FFB627;
+  --color-mastery: #7C5CFC;
+
+  /* Soft, colored elevation (replaces dark borders) */
+  --shadow-soft: 0 6px 20px rgba(34, 27, 46, 0.06), 0 2px 6px rgba(34, 27, 46, 0.04);
+  --shadow-pop: 0 12px 32px rgba(34, 27, 46, 0.10), 0 4px 10px rgba(34, 27, 46, 0.06);
+  --shadow-coral: 0 10px 26px rgba(255, 107, 74, 0.30);
+  --shadow-grape: 0 10px 26px rgba(124, 92, 252, 0.28);
+
+  /* Radius scale */
+  --radius-card: 1.25rem;         /* 20px */
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Fonts */
+  --font-family-sans: "Inter", system-ui, sans-serif;
+  --font-family-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Playful micro-interaction keyframes (TICKET-035) */
+@keyframes pop-in {
+  0% { transform: scale(0.92); opacity: 0; }
+  60% { transform: scale(1.03); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+
+/* Base dark styles */
+html, body, #root {
+  background-color: #0F0F1A;
+  color: #F1F5F9;
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent iOS/Android auto-zoom on input focus (browsers zoom when font-size < 16px) */
+input, textarea, select {
+  font-size: max(16px, 1em);
+}
+
+/* Hide scrollbars */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+/* ───────────────────────────────────────────────────────────────────
+ * TICKET-035 — "Playful Light" helpers
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* Display type scale (use with font-display) */
+.text-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 6vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.text-h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.text-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.075rem;
+  line-height: 1.25;
+}
+.font-display { font-family: var(--font-display); }
+
+/* Colored soft elevation */
+.shadow-soft { box-shadow: var(--shadow-soft); }
+.shadow-pop { box-shadow: var(--shadow-pop); }
+.shadow-coral { box-shadow: var(--shadow-coral); }
+.shadow-grape { box-shadow: var(--shadow-grape); }
+
+/* Playful animations */
+.animate-pop { animation: pop-in 0.4s var(--ease-spring) both; }
+.animate-bounce-soft { animation: bounce-soft 2.4s ease-in-out infinite; }
+.animate-wiggle { animation: wiggle 0.6s ease-in-out; }
+
+/* Press feedback for interactive cards/buttons */
+.press {
+  transition: transform 0.12s var(--ease-out-soft), box-shadow 0.18s var(--ease-out-soft);
+}
+.press:active { transform: scale(0.97); }

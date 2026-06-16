@@ -1,0 +1,81 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Sizes --- */
+.size-sm { height: 36px; padding: 0 14px; font-size: 13px; border-radius: 10px; }
+.size-md { height: 44px; padding: 0 18px; }
+.size-lg { height: 56px; padding: 0 24px; font-size: 16px; }
+
+/* --- Variants --- */
+.variant-primary {
+  background: #0084FF;
+  color: #fff;
+}
+.variant-primary:not(:disabled):hover { background: #006ecc; }
+
+.variant-outline {
+  background: transparent;
+  border: 1.5px solid #0084FF;
+  color: #0084FF;
+}
+.variant-outline:not(:disabled):hover { background: rgba(0, 132, 255, 0.08); }
+
+.variant-ghost {
+  background: transparent;
+  color: #0084FF;
+}
+.variant-ghost:not(:disabled):hover { background: rgba(0, 132, 255, 0.08); }
+
+/* --- Provider color overrides --- */
+.provider-google.variant-primary {
+  background: #fff;
+  color: #1F1F1F;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.provider-google.variant-primary:not(:disabled):hover { background: #f5f5f5; }
+
+.provider-apple.variant-primary {
+  background: #000;
+  color: #fff;
+}
+.provider-apple.variant-primary:not(:disabled):hover { background: #1a1a1a; }
+
+.provider-facebook.variant-primary {
+  background: #1877F2;
+  color: #fff;
+}
+.provider-facebook.variant-primary:not(:disabled):hover { background: #0d65d8; }
+
+.provider-zalo.variant-primary {
+  background: #0084FF;
+  color: #fff;
+}
+
+/* full-width helper */
+.fullWidth { width: 100%; }
+
+/* icon wrapper */
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

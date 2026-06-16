@@ -1,0 +1,144 @@
+name: Deploy to Main
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+        working-directory: polylex-global
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: true
+
+      - name: Check who is using ports 8001 and 8002
+        run: |
+          echo "=== Checking port 8001 ==="
+          if lsof -i :8001 -sTCP:LISTEN -Pn >/dev/null 2>&1; then
+            lsof -i :8001 -sTCP:LISTEN -Pn
+          else
+            echo "Port 8001 is free"
+          fi
+
+          echo "=== Checking port 8002 ==="
+          if lsof -i :8002 -sTCP:LISTEN -Pn >/dev/null 2>&1; then
+            lsof -i :8002 -sTCP:LISTEN -Pn
+          else
+            echo "Port 8002 is free"
+          fi
+
+          echo "=== Checking Docker containers using those ports ==="
+          docker ps --format "table {{.Names}}\t{{.Ports}}" | grep -E "8001|8002" || echo "No Docker container using those ports"
+      - name: Kill processes using ports 8001 and 8002
+        run: |
+          fuser -k 8001/tcp || true
+          fuser -k 8002/tcp || true
+      - name: Verify deploy files exist
+        run: |
+          test -f docker-compose.deploy.yml
+          test -f .env.deploy.example
+
+      - name: Prepare deploy env
+        run: |
+          # All secrets are committed in apps/backend/.env and apps/frontend/.env.production
+          # .env.deploy only needs vars used by docker-compose substitution
+          cp .env.deploy.example .env.deploy
+          cp .env.deploy .env
+      - name: Force remove old containers using ports 8001 and 8002
+        run: |
+          echo "Stopping old containers that may occupy ports..."
+
+          docker ps --format "{{.ID}} {{.Names}} {{.Ports}}" | grep -E "8001|8002" | awk '{print $1}' | xargs -r docker stop || true
+
+          docker ps -a --format "{{.ID}} {{.Names}} {{.Ports}}" | grep -E "8001|8002" | awk '{print $1}' | xargs -r docker rm || true
+
+          echo "Remaining containers:"
+          docker ps
+      - name: Stop running containers
+        run: docker compose -f docker-compose.deploy.yml down --remove-orphans
+        continue-on-error: true
+
+      - name: Start infrastructure services
+        run: docker compose -f docker-compose.deploy.yml up -d postgres redis
+
+      - name: Wait for infrastructure to be healthy
+        run: |
+          set -euo pipefail
+          for i in {1..40}; do
+            POSTGRES_STATUS="$(docker inspect -f '{{.State.Health.Status}}' polylex_postgres 2>/dev/null || true)"
+            REDIS_STATUS="$(docker inspect -f '{{.State.Health.Status}}' polylex_redis 2>/dev/null || true)"
+            if [[ "$POSTGRES_STATUS" == "healthy" && "$REDIS_STATUS" == "healthy" ]]; then
+              echo "Infrastructure is healthy"
+              exit 0
+            fi
+            echo "Waiting infra... postgres=$POSTGRES_STATUS redis=$REDIS_STATUS"
+            sleep 3
+          done
+          echo "Infrastructure did not become healthy in time"
+          exit 1
+
+      - name: Build backend image (required before running migrations)
+        run: docker compose -f docker-compose.deploy.yml build backend
+
+      - name: Run production migrations
+        run: docker compose -f docker-compose.deploy.yml run --rm backend npm run migrate:deploy
+
+      - name: Seed initial data
+        run: docker compose -f docker-compose.deploy.yml run --rm backend npm run db:seed
+
+      - name: Build and start full app
+        run: docker compose -f docker-compose.deploy.yml up --build -d --remove-orphans
+
+      - name: Wait for application services to be healthy
+        run: |
+          set -euo pipefail
+          for i in {1..50}; do
+            BACKEND_STATUS="$(docker inspect -f '{{.State.Health.Status}}' polylex_backend 2>/dev/null || true)"
+            FRONTEND_STATUS="$(docker inspect -f '{{.State.Health.Status}}' polylex_frontend 2>/dev/null || true)"
+            if [[ "$BACKEND_STATUS" == "healthy" && "$FRONTEND_STATUS" == "healthy" ]]; then
+              echo "Application services are healthy"
+              exit 0
+            fi
+            echo "Waiting app... backend=$BACKEND_STATUS frontend=$FRONTEND_STATUS"
+            sleep 3
+          done
+          echo "Application services did not become healthy in time"
+          exit 1
+
+      - name: Smoke check endpoints
+        run: |
+          set -a
+          source .env
+          set +a
+          curl -fsS http://127.0.0.1:8002/ > /dev/null
+          curl -fsS http://127.0.0.1:8001/api/v1/health > /dev/null
+
+      - name: Show running containers
+        run: docker compose -f docker-compose.deploy.yml ps
+
+      - name: Clean up Docker build cache and unused images
+        run: |
+          docker image prune -af --filter "until=24h" || true
+          docker builder prune -f || true
+        continue-on-error: true
+
+      - name: Clean up old OTA bundle zips
+        run: find apps/frontend -maxdepth 1 -name "bundle-*.zip" -delete || true
+        continue-on-error: true
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose -f docker-compose.deploy.yml logs --no-color --tail=300

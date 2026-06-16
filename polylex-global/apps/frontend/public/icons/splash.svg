@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732" fill="none">
+  <!-- Background -->
+  <rect width="2732" height="2732" fill="#0F172A"/>
+  <!-- Centered P mark (512x512 at center 1366,1366) -->
+  <g transform="translate(1110, 1110)">
+    <!-- P stem -->
+    <rect x="120" y="112" width="72" height="288" rx="18" fill="url(#grad)"/>
+    <!-- P bowl top bar -->
+    <rect x="120" y="112" width="216" height="72" rx="18" fill="url(#grad)"/>
+    <!-- P bowl bottom bar -->
+    <rect x="120" y="248" width="216" height="72" rx="18" fill="url(#grad)"/>
+    <!-- P bowl right cap -->
+    <rect x="264" y="112" width="72" height="208" rx="18" fill="url(#grad)"/>
+  </g>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+</svg>

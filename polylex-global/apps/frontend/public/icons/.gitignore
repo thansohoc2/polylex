@@ -1,0 +1,5 @@
+# Force-track all generated icon/splash assets
+# (overrides ~/.gitignore_global which excludes *.png globally)
+!*.png
+!*.ico
+!*.svg

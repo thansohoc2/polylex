@@ -1,0 +1,68 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+.npm/
+
+# =========================
+# Build outputs
+# =========================
+dist/
+build/
+.next/
+apps/zalo-miniapp/www/
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.local
+.env.*.local
+!.env.example
+!apps/backend/.env.example
+
+# =========================
+# Prisma
+# =========================
+# KHÔNG ignore migrations trong production
+# apps/backend/prisma/migrations/   ❌ REMOVE dòng này
+
+# =========================
+# Vite
+# =========================
+*.local
+
+# =========================
+# Logs
+# =========================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# =========================
+# Coverage
+# =========================
+coverage/
+*.lcov
+
+# =========================
+# Docker local volumes
+# =========================
+pgdata/
+!package-lock.json

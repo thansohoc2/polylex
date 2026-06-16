@@ -1,0 +1,5 @@
+@import "../../../frontend/src/index.css";
+
+@source "../../../frontend/src/**/*.{ts,tsx}";
+@source "../../../packages/shared-ui/src/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";

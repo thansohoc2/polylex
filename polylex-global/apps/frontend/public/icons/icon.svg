@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Squircle background: coral -> gold brand gradient -->
+  <rect width="512" height="512" rx="116" fill="url(#brand)"/>
+  <rect width="512" height="512" rx="116" fill="url(#sheen)"/>
+
+  <!-- White speech bubble = language / conversation -->
+  <path
+    d="M150 116h212a64 64 0 0 1 64 64v140a64 64 0 0 1-64 64H252l-66 56a14 14 0 0 1-23-11v-45h-13a64 64 0 0 1-64-64V180a64 64 0 0 1 64-64Z"
+    fill="#FFFFFF"/>
+
+  <!-- "P" monogram (coral) -->
+  <path
+    d="M150 168h66a58 58 0 0 1 0 116h-34v50a15 15 0 0 1-32 0V168Zm32 32v52h34a26 26 0 0 0 0-52h-34Z"
+    fill="url(#letter)"/>
+
+  <!-- Multilingual glyph chip: 文 (grape) -->
+  <g>
+    <rect x="276" y="150" width="86" height="86" rx="24" fill="url(#ribbon)"/>
+    <text x="319" y="210" font-family="'Hiragino Sans','Noto Sans CJK SC','PingFang SC',sans-serif"
+          font-size="58" font-weight="700" fill="#FFFFFF" text-anchor="middle">文</text>
+  </g>
+
+  <!-- Multilingual glyph chip: あ (gold) -->
+  <g>
+    <rect x="276" y="252" width="86" height="86" rx="24" fill="url(#chipGold)"/>
+    <text x="319" y="312" font-family="'Hiragino Sans','Noto Sans CJK JP',sans-serif"
+          font-size="56" font-weight="700" fill="#FFFFFF" text-anchor="middle">あ</text>
+  </g>
+
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF6B4A"/>
+      <stop offset="55%" stop-color="#FF8A3D"/>
+      <stop offset="100%" stop-color="#FFB627"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="letter" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF6B4A"/>
+      <stop offset="100%" stop-color="#FF8A3D"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#9B7BFF"/>
+    </linearGradient>
+    <linearGradient id="chipGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFB627"/>
+      <stop offset="100%" stop-color="#FF8A3D"/>
+    </linearGradient>
+  </defs>
+</svg>

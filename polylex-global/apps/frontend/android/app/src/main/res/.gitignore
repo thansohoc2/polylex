@@ -1,0 +1,3 @@
+# Force-track generated PNG icons/splash screens in mipmap & drawable dirs
+# (overrides ~/.gitignore_global which excludes *.png globally)
+!*.png

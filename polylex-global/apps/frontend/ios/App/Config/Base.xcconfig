@@ -1,0 +1,13 @@
+// Shared build settings for the iOS app.
+// Keep this file committed. Put any machine/user-specific overrides in `User.xcconfig`.
+
+#include? "User.xcconfig"
+
+// --- Code signing ---
+// Leave DEVELOPMENT_TEAM empty by default so each developer can set their own team
+// without committing it.
+DEVELOPMENT_TEAM = $(DEVELOPMENT_TEAM)
+CODE_SIGN_STYLE = Automatic
+
+// If you want to force a signing identity locally, set it in User.xcconfig.
+// CODE_SIGN_IDENTITY = Apple Development

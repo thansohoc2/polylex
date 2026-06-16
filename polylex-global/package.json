@@ -1,0 +1,35 @@
+{
+  "name": "polylex-global",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend",
+    "apps/zalo-miniapp",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:shared": "npm run build --workspace=packages/shared-types && npm run build --workspace=packages/shared-ui",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "dev:zalo": "npm run dev --workspace=apps/zalo-miniapp",
+    "dev": "npm run build:shared && concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "build": "npm run build --workspaces --if-present",
+    "build:zalo": "npm run build --workspace=apps/zalo-miniapp",
+    "deploy:zalo": "npm run deploy --workspace=apps/zalo-miniapp",
+    "test": "npm run test --workspace=apps/backend",
+    "lint": "npm run lint --workspaces --if-present",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "db:migrate": "npm run prisma migrate dev --workspace=apps/backend",
+    "db:seed": "npm run prisma db seed --workspace=apps/backend",
+    "db:studio": "npx prisma studio --prefix apps/backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

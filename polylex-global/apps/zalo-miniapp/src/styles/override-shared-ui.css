@@ -1,0 +1,13 @@
+/* Zalo dark theme overrides for @polylex/shared-ui */
+
+/* Primary social button */
+.social-login-button-zalo {
+  background: var(--zalo-blue, #0084FF) !important;
+  color: white !important;
+}
+
+/* Error toast */
+.zalo-error-toast {
+  background: var(--zalo-error, #dc2626) !important;
+  color: white !important;
+}

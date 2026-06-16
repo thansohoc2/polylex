@@ -1,0 +1,3 @@
+# Force-track generated PNG icons/splash screens
+# (overrides ~/.gitignore_global which excludes *.png globally)
+!*.png

@@ -1,0 +1,2 @@
+ALTER TABLE "user_streaks"
+ADD COLUMN IF NOT EXISTS "streak_freezes" INTEGER NOT NULL DEFAULT 1;

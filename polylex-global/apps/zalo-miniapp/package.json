@@ -1,0 +1,48 @@
+{
+  "name": "@polylex/zalo-miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "dev:zalo": "zmp dev",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "zmp deploy",
+    "lint": "echo \"No linter configured for zalo-miniapp yet\""
+  },
+  "dependencies": {
+    "@capacitor-community/apple-sign-in": "^7.1.0",
+    "@capacitor/app": "^8.0.1",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/preferences": "^8.0.1",
+    "@capgo/capacitor-updater": "^8.43.9",
+    "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4",
+    "@polylex/shared-ui": "file:../../packages/shared-ui",
+    "@polylex/shared-types": "file:../../packages/shared-types",
+    "axios": "^1.6.7",
+    "date-fns": "^3.3.1",
+    "framer-motion": "^11.0.0",
+    "i18next": "^25.8.13",
+    "lucide-react": "^0.460.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.4.1",
+    "react-i18next": "^16.5.4",
+    "react-router-dom": "^6.22.0",
+    "zmp-sdk": "^2.51.1",
+    "zmp-ui": "^1.11.13",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4",
+    "vite-tsconfig-paths": "^5.1.4",
+    "zmp-vite-plugin": "^1.1.6"
+  }
+}
