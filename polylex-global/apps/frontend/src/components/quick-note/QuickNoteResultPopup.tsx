@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, BookPlus, ArrowRight, Volume2 } from 'lucide-react';
+import { X, ArrowRight, Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { CefrBadge, LanguageBadge } from '@/components/ui/Badge';
 import { PhoneticDisplay } from '@/components/ui/PhoneticDisplay';
@@ -22,7 +22,6 @@ interface QuickNoteResultPopupProps {
 export default function QuickNoteResultPopup({
   note,
   onClose,
-  onAddToDeck,
   onOpenNotes,
 }: QuickNoteResultPopupProps) {
   const { t } = useTranslation();
@@ -30,7 +29,6 @@ export default function QuickNoteResultPopup({
 
   const vb = note?.vocabularyBase ?? null;
   const translation = vb?.translations?.[0]?.translation;
-  const canAddToDeck = !!note?.vocabularyBaseId;
 
   return (
     <AnimatePresence>
