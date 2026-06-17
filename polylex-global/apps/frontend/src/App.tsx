@@ -22,7 +22,6 @@ import OnboardingPage from '@/pages/OnboardingPage';
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import SupportPage from '@/pages/SupportPage';
 import { QuickNoteProvider } from '@/contexts/QuickNoteContext';
-import QuickNoteFab from '@/components/quick-note/QuickNoteFab';
 
 function RequireAuth() {
   const isAuthed = useAuthStore((s) => !!s.accessToken);
