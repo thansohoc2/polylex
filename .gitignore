@@ -23,3 +23,6 @@ polylex-global/apps/frontend/build/
 .env.*
 !.env.example
 !.env.*.example
+polylex-global/.env.deploy.example
+polylex-global/DEPLOY-SERVER.md
+polylex-global/docker-compose.global.yml
