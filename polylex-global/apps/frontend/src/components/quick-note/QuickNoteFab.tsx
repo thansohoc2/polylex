@@ -36,7 +36,7 @@ export default function QuickNoteFab() {
           transition={{ type: 'spring', stiffness: 420, damping: 28 }}
           onClick={openSheet}
           aria-label={t('quicknote.newNote')}
-          className="fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full"
+          className="absolute right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full"
           style={{
             // Sit just above the 64px bottom nav + iOS safe area.
             bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)',

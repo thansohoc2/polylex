@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import TopBar from './TopBar';
 import BottomNav from './BottomNav';
+import QuickNoteFab from '../quick-note/QuickNoteFab';
 
 interface AppShellProps {
   title: string;
@@ -34,6 +35,7 @@ export default function AppShell({ title, rightAction, children, theme = 'dark' 
       </AnimatePresence>
 
       <BottomNav theme={theme} />
+      <QuickNoteFab />
 
     </div>
   );

@@ -38,7 +38,6 @@ function ProtectedShell() {
   return (
     <QuickNoteProvider>
       <Outlet />
-      <QuickNoteFab />
     </QuickNoteProvider>
   );
 }
