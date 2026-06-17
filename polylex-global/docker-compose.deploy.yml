@@ -10,7 +10,7 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: 8000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-polylex}:${POSTGRES_PASSWORD:-polylex}@shared-postgres:5434/${POSTGRES_DB:-polylex}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-polylex}:${POSTGRES_PASSWORD:-polylex}@shared-postgres:5432/${POSTGRES_DB:-polylex}
       REDIS_URL: redis://:REDIS1234!acbd@shared_redis:6388
       OPENAI_ENABLED: ${OPENAI_ENABLED:-false}
     ports:
