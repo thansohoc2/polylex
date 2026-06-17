@@ -73,7 +73,19 @@ async function bootstrap() {
 
   await app.listen(port);
 
+  // ── Startup diagnostic log ───────────────────────────────────────────────
+  const redisRaw = process.env.REDIS_URL ?? '';
+  const redisSafe = redisRaw
+    ? redisRaw.replace(/(:)[^@]+(@)/, '$1****$2') // hide password
+    : '(not set)';
   console.log(`API running on http://localhost:${port}/api/v1`);
+  console.log('[Boot] REDIS_URL      :', redisSafe);
+  console.log('[Boot] DATABASE_URL   :', (process.env.DATABASE_URL ?? '(not set)').replace(/(:)[^@]+(@)/, '$1****$2'));
+  console.log('[Boot] GOOGLE_TTS_ENABLED:', process.env.GOOGLE_TTS_ENABLED ?? 'false');
+  console.log('[Boot] OPENAI_ENABLED :', process.env.OPENAI_ENABLED ?? 'false');
+  console.log('[Boot] GEMINI_ENABLED :', process.env.GEMINI_ENABLED ?? 'false');
+  console.log('[Boot] NODE_ENV       :', process.env.NODE_ENV ?? 'development');
+  // ────────────────────────────────────────────────────────────────────────
 }
 
 bootstrap();

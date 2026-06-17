@@ -71,7 +71,12 @@ export class VocabularyService {
           languageCode: language.code,
         } satisfies TtsGenerateJob);
       } catch (e) {
-        this.logger.warn(`Failed to dispatch TTS job for ${result.id}`, e);
+        const err = e as Error & { code?: string };
+        this.logger.warn(
+          `Failed to dispatch TTS job for ${result.id} | term="${result.term}" | ` +
+          `errorName=${err.name} | code=${err.code ?? 'n/a'} | message=${err.message}`,
+        );
+        this.logger.debug(`TTS dispatch stack: ${err.stack ?? 'no stack'}`);
       }
     }
 
@@ -315,7 +320,12 @@ export class VocabularyService {
             languageCode: language.code,
           } satisfies TtsGenerateJob);
         } catch (e) {
-          this.logger.warn(`Failed to dispatch TTS job for ${vocab.id}`, e);
+          const err = e as Error & { code?: string };
+          this.logger.warn(
+            `Failed to dispatch TTS job for ${vocab.id} | term="${vocab.term}" | ` +
+            `errorName=${err.name} | code=${err.code ?? 'n/a'} | message=${err.message}`,
+          );
+          this.logger.debug(`TTS dispatch stack: ${err.stack ?? 'no stack'}`);
         }
       }
 
