@@ -5,11 +5,6 @@ services:
       context: .
       dockerfile: apps/backend/Dockerfile
     restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     env_file:
       - ./apps/backend/.env
     environment:
