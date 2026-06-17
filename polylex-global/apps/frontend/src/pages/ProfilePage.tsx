@@ -182,7 +182,7 @@ export default function ProfilePage() {
         {/* ── ZONE 1: PROFILE + STATS (read-only) ── */}
         <div
           className="rounded-[var(--radius-card)] p-5 text-white shadow-coral"
-          style={{ background: 'linear-gradient(135deg, var(--color-coral) 0%, var(--color-coral-2) 100%)' }}
+          style={{ background: 'linear-gradient(135deg, var(--color-ok) 0%, var(--color-indigo-600) 100%)' }}
         >
           {/* Avatar + name */}
           <div className="flex items-center gap-4 mb-4">

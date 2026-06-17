@@ -153,10 +153,10 @@ export default function DialoguePage() {
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <AppShell title={t('dialogue.title')}>
+      <AppShell title={t('dialogue.title')} theme="light">
         <div className="flex items-center justify-center py-32">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6366F1]" />
-          <span className="ml-3 text-sm text-[#94A3B8]">{t('dialogue.loading')}</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-coral)]" />
+          <span className="ml-3 text-sm text-[var(--color-ink-3)]">{t('dialogue.loading')}</span>
         </div>
       </AppShell>
     );
@@ -165,13 +165,13 @@ export default function DialoguePage() {
   // ── Error / empty ────────────────────────────────────────────────────────────
   if (error || !dialogue) {
     return (
-      <AppShell title={t('dialogue.title')}>
+      <AppShell title={t('dialogue.title')} theme="light">
         <div className="flex flex-col items-center justify-center py-24 px-8 text-center">
           <p className="text-4xl mb-4">😕</p>
-          <p className="text-[#94A3B8]">
+          <p className="text-[var(--color-ink-3)]">
             {error ? t('dialogue.loadError') : t('dialogue.noDialogue')}
           </p>
-          <button onClick={() => navigate(-1)} className="mt-6 text-sm text-[#6366F1]">
+          <button onClick={() => navigate(-1)} className="mt-6 text-sm text-[var(--color-coral)]">
             {t('dialogue.backBtn')}
           </button>
         </div>
@@ -181,19 +181,19 @@ export default function DialoguePage() {
 
   // ── Main ─────────────────────────────────────────────────────────────────────
   return (
-    <AppShell title={dialogue.stageTitle || t('dialogue.title')}>
+    <AppShell title={dialogue.stageTitle || t('dialogue.title')} theme="light">
       {/* Sticky toolbar */}
       <div
         className="px-4 pt-2 pb-3 flex items-center gap-3 sticky top-0 z-10"
         style={{
-          background: 'rgba(15,23,42,0.95)',
+          background: 'rgba(251,246,242,0.95)',
           backdropFilter: 'blur(8px)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid var(--color-line)',
         }}
       >
         <button
           onClick={() => navigate(-1)}
-          className="text-sm text-[#94A3B8] hover:text-[#F1F5F9] transition-colors"
+          className="text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
         >
           {t('dialogue.backBtn')}
         </button>
@@ -214,7 +214,7 @@ export default function DialoguePage() {
           <button
             onClick={playAll}
             className="rounded-xl px-4 py-2 text-sm font-medium text-white transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' }}
           >
             {t('dialogue.playAll')}
           </button>
@@ -231,7 +231,7 @@ export default function DialoguePage() {
           return (
             <div key={idx} className={`flex flex-col gap-1 ${isA ? 'items-start' : 'items-end'}`}>
               {/* Speaker label */}
-              <span className="text-xs text-[#64748B] px-2">
+              <span className="text-xs text-[var(--color-ink-3)] px-2">
                 {line.speaker === 'A' ? t('dialogue.speaker_A') : t('dialogue.speaker_B')}
               </span>
 
@@ -239,25 +239,25 @@ export default function DialoguePage() {
               <button
                 onClick={() => toggleTranslation(idx)}
                 className={`text-left max-w-[85%] rounded-2xl px-4 py-3 transition-all duration-200 ${
-                  isActive ? 'ring-2 ring-[#6366F1] ring-offset-1 ring-offset-[#0F172A]' : ''
+                  isActive ? 'ring-2 ring-[var(--color-coral)] ring-offset-1 ring-offset-[var(--color-canvas)]' : ''
                 }`}
                 style={{
                   background: isA
-                    ? 'rgba(99,102,241,0.15)'
-                    : 'rgba(139,92,246,0.12)',
+                    ? 'rgba(255,107,74,0.08)'
+                    : 'rgba(255,138,61,0.08)',
                   border: isA
-                    ? '1px solid rgba(99,102,241,0.3)'
-                    : '1px solid rgba(139,92,246,0.25)',
+                    ? '1px solid rgba(255,107,74,0.2)'
+                    : '1px solid rgba(255,138,61,0.2)',
                 }}
               >
-                <p className="text-sm text-[#F1F5F9] leading-relaxed">
+                <p className="text-sm text-[var(--color-ink)] leading-relaxed">
                   {renderText(line, idx)}
                 </p>
                 {translationVisible && (
                   <p
-                    className="mt-2 text-xs text-[#94A3B8] italic"
+                    className="mt-2 text-xs text-[var(--color-ink-3)] italic"
                     style={{
-                      borderTop: '1px solid rgba(255,255,255,0.08)',
+                      borderTop: '1px solid var(--color-line)',
                       paddingTop: '6px',
                     }}
                   >
@@ -267,7 +267,7 @@ export default function DialoguePage() {
               </button>
 
               {/* Translation toggle hint */}
-              <span className="text-xs text-[#475569] px-2">
+              <span className="text-xs text-[var(--color-ink-3)] px-2">
                 {translationVisible
                   ? t('dialogue.hideTranslation')
                   : t('dialogue.showTranslation')}

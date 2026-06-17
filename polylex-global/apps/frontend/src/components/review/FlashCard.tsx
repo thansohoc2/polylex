@@ -29,15 +29,16 @@ interface FlashCardProps {
   light?: boolean;
 }
 
-export default function FlashCard({ item, isFlipped, light = false, onFlip }: FlashCardProps) {
+export default function FlashCard({ item, isFlipped = false, light = false, onFlip }: FlashCardProps) {
   const { t } = useTranslation();
   const rate = useAudioSettingsStore((s) => s.rate);
   const translation = item.vocabularyBase.translations[0];
-
+ const textPrimary = light ? 'var(--color-red-400)' : '#F1F5F9';
   return (
+    <div className="w-full flex flex-col gap-4">  
     <div
-      className="relative w-full cursor-pointer mx-4"
-      style={{ perspective: '1000px', aspectRatio: '3/2', maxWidth: 'calc(100% - 2rem)' }}
+      className=" relative rounded-3xl p-6 flex flex-col items-center justify-center"
+      style={{  minHeight: '30vh'}}
       onClick={onFlip}
     >
       {/* Front */}
@@ -48,6 +49,7 @@ export default function FlashCard({ item, isFlipped, light = false, onFlip }: Fl
           border: `1px solid ${light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)'}`,
           backfaceVisibility: 'hidden',
         }}
+        initial={{ rotateY: 0 }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       >
@@ -60,7 +62,7 @@ export default function FlashCard({ item, isFlipped, light = false, onFlip }: Fl
             {t('review.leech')}
           </span>
         )}
-        <p className="text-3xl font-bold text-[#F1F5F9] text-center mb-2">
+        <p className="text-3xl font-bold  text-center mb-6 mt-10" style={{ color: textPrimary }}>
           {item.vocabularyBase.term}
         </p>
         <LanguageBadge code={item.vocabularyBase.language.code} name={item.vocabularyBase.language.name} />
@@ -76,6 +78,7 @@ export default function FlashCard({ item, isFlipped, light = false, onFlip }: Fl
           backfaceVisibility: 'hidden',
           rotateY: 180,
         }}
+        initial={{ rotateY: -180 }}
         animate={{ rotateY: isFlipped ? 0 : -180 }}
         transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       >
@@ -130,6 +133,7 @@ export default function FlashCard({ item, isFlipped, light = false, onFlip }: Fl
           </div>
         )}
       </motion.div>
+    </div>
     </div>
   );
 }

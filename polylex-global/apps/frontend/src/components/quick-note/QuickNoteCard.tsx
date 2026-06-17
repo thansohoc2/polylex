@@ -37,9 +37,9 @@ export default function QuickNoteCard({ note, onDelete, onAddToDeck, light = fal
   const cardBg = light
     ? { background: 'var(--color-card)', border: '1px solid var(--color-line)' }
     : { background: '#1A1A2E', border: '1px solid rgba(255,255,255,0.05)' };
-  const textPrimary = light ? 'var(--color-ink)' : '#F1F5F9';
-  const textSecondary = light ? 'var(--color-ink-soft)' : '#94A3B8';
-  const textMuted = light ? 'var(--color-ink-softer)' : '#475569';
+   const textPrimary = light ? 'var(--color-red-400)' : '#f86156';
+  const textSecondary = light ? 'var(--color-red-300)' : '#f27b5d';
+  const textMuted = light ? 'var(--color-red-200)' : '#475569';
   const shimmerLight = light
     ? 'linear-gradient(90deg, #F5F0EB 0%, #FBF6F2 50%, #F5F0EB 100%)'
     : 'linear-gradient(90deg, #16213E 0%, #1A1A2E 50%, #16213E 100%)';

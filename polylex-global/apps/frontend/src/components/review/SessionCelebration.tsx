@@ -28,8 +28,8 @@ export default function SessionCelebration({
 }: SessionCelebrationProps) {
   const { t } = useTranslation();
 
-  const textPrimary = light ? 'var(--color-ink)' : '#F1F5F9';
-  const textMuted = light ? 'var(--color-ink-softer)' : '#94A3B8';
+  const textPrimary = light ? 'var(--color-red-400)' : '#F1F5F9';
+  const textMuted = light ? 'var(--color-red-200)' : '#94A3B8';
   const statBg = light ? 'var(--color-card-2)' : 'rgba(255,255,255,0.05)';
   const statBorder = light ? 'var(--color-line)' : 'rgba(255,255,255,0.1)';
   const badgeBg = light ? 'rgba(255,100,70,0.1)' : 'rgba(99,102,241,0.2)';

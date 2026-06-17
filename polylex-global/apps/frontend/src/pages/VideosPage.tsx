@@ -30,10 +30,10 @@ export default function VideosPage() {
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <AppShell title={t('review.viewVideos')}>
+      <AppShell title={t('review.viewVideos')} theme="light">
         <div className="flex items-center justify-center py-32">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6366F1]" />
-          <span className="ml-3 text-sm text-[#94A3B8]">{t('dialogue.loading')}</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-coral)]" />
+          <span className="ml-3 text-sm text-[var(--color-ink-3)]">{t('dialogue.loading')}</span>
         </div>
       </AppShell>
     );
@@ -42,13 +42,13 @@ export default function VideosPage() {
   // ── Error / empty ────────────────────────────────────────────────────────────
   if (error || videos.length === 0) {
     return (
-      <AppShell title={t('review.viewVideos')}>
+      <AppShell title={t('review.viewVideos')} theme="light">
         <div className="flex flex-col items-center justify-center py-24 px-8 text-center">
           <p className="text-4xl mb-4">📹</p>
-          <p className="text-[#94A3B8]">
+          <p className="text-[var(--color-ink-3)]">
             {error ? t('dialogue.loadError') : t('dialogue.noDialogue')}
           </p>
-          <button onClick={() => navigate(-1)} className="mt-6 text-sm text-[#6366F1]">
+          <button onClick={() => navigate(-1)} className="mt-6 text-sm text-[var(--color-coral)]">
             {t('dialogue.backBtn')}
           </button>
         </div>
@@ -58,25 +58,25 @@ export default function VideosPage() {
 
   // ── Main ─────────────────────────────────────────────────────────────────────
   return (
-    <AppShell title={stageTitle || t('review.viewVideos')}>
+    <AppShell title={stageTitle || t('review.viewVideos')} theme="light">
       {/* Sticky toolbar */}
       <div
         className="px-4 pt-2 pb-3 flex items-center gap-3 sticky top-0 z-10"
         style={{
-          background: 'rgba(15,23,42,0.95)',
+          background: 'rgba(251,246,242,0.95)',
           backdropFilter: 'blur(8px)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid var(--color-line)',
         }}
       >
         <button
           onClick={() => navigate(-1)}
-          className="text-sm text-[#94A3B8] hover:text-[#F1F5F9] transition-colors"
+          className="text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
         >
           {t('dialogue.backBtn')}
         </button>
         <span className="flex-1" />
-        <span className="text-xs text-[#64748B]">
-          {videos.length} {videos.length === 1 ? t('dialogue.titleDefault') : t('dialogue.titleDefault')}
+        <span className="text-xs text-[var(--color-ink-3)]">
+          {videos.length} {videos.length > 1 ? 'videos' : 'video'}
         </span>
       </div>
 
@@ -91,8 +91,8 @@ export default function VideosPage() {
               key={video.id}
               className="rounded-2xl overflow-hidden border transition-all"
               style={{
-                background: 'rgba(30,41,59,0.6)',
-                borderColor: isExpanded ? 'rgba(99,102,241,0.3)' : 'rgba(99,102,241,0.15)',
+                background: 'var(--color-card)',
+                borderColor: isExpanded ? 'var(--color-coral)' : 'var(--color-line)',
               }}
             >
               {/* Video preview / embed */}
@@ -126,7 +126,7 @@ export default function VideosPage() {
                   >
                     <div className="w-12 h-12 rounded-full flex items-center justify-center" 
                       style={{
-                        background: 'rgba(239,68,68,0.9)',
+                        background: 'var(--color-coral)',
                       }}>
                       <span className="text-2xl">▶️</span>
                     </div>
@@ -138,22 +138,21 @@ export default function VideosPage() {
               <div className="p-4">
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-[#F1F5F9] line-clamp-2">
+                    <p className="text-sm font-semibold text-[var(--color-ink)] line-clamp-2">
                       {video.title}
                     </p>
-                    <p className="text-xs text-[#64748B] mt-1">
+                    <p className="text-xs text-[var(--color-ink-3)] mt-1">
                       {video.channelTitle}
                     </p>
                   </div>
-                  <span className="flex-shrink-0 text-xs text-[#94A3B8]">
+                  <span className="flex-shrink-0 text-xs text-[var(--color-ink-3)]">
                     {Math.floor(video.durationSeconds / 60)}:{String(video.durationSeconds % 60).padStart(2, '0')}
                   </span>
                 </div>
 
                 {/* AI reason chip */}
-                <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)]">
-                  <p className="text-xs text-[#94A3B8] mb-2">💡 {t('dialogue.titleDefault')}</p>
-                  <p className="text-xs text-[#CBD5E1] leading-relaxed">
+                <div className="mt-3 pt-3 border-t border-[var(--color-line)]">
+                  <p className="text-xs text-[var(--color-ink-2)] leading-relaxed">
                     {video.aiReason}
                   </p>
                 </div>
@@ -162,7 +161,7 @@ export default function VideosPage() {
                 {isExpanded && (
                   <button
                     onClick={() => setExpandedVideoId(null)}
-                    className="mt-3 w-full text-xs text-center text-[#94A3B8] hover:text-[#F1F5F9] py-2 transition-colors"
+                    className="mt-3 w-full text-xs text-center text-[var(--color-ink-3)] hover:text-[var(--color-ink)] py-2 transition-colors"
                   >
                     ▲ {t('dialogue.backBtn')}
                   </button>

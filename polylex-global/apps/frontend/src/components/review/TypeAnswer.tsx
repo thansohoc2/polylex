@@ -33,9 +33,78 @@ interface TypeAnswerProps {
 }
 const FAST_RESPONSE_MS = 6_000;
 
-/** Normalise an answer for comparison: trim, lowercase, collapse whitespace. */
+/** Remove diacritics/accents from a string for fuzzy matching. */
+function removeDiacritics(s: string): string {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/** Remove parenthetical annotations like "(nam/nữ)", "(formal)", "[plural]". */
+function stripAnnotations(s: string): string {
+  return s
+    .replace(/\([^)]*\)/g, '') // Remove (...) content
+    .replace(/\[[^\]]*\]/g, '') // Remove [...] content
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Normalise an answer for comparison: trim, lowercase, collapse whitespace, remove punctuation. */
 function normalize(s: string): string {
-  return s.trim().toLowerCase().replace(/\s+/g, ' ');
+  return s
+    .trim()
+    .toLowerCase()
+    .replace(/[.,!?;:'"]/g, '') // Remove common punctuation
+    .replace(/\s+/g, ' ');
+}
+
+/** Remove common articles from the beginning of a string. */
+function stripArticles(s: string): string {
+  return s.replace(/^(a|an|the|un|une|des|le|la|les|el|la|los|las|der|die|das|il|lo|i|gli)\s+/i, '');
+}
+
+/** 
+ * Expand variants from patterns like "Obrigado/a" → ["Obrigado", "Obrigada"]
+ * Also handles patterns like "he/she", "Mr./Ms.", comma-separated variants,
+ * and parenthetical annotations like "Cảm ơn (nam/nữ)" → ["Cảm ơn"]
+ */
+function expandVariants(text: string): string[] {
+  const variants: string[] = [];
+  
+  // Strip parenthetical/bracket annotations first: "Cảm ơn (nam/nữ)" → "Cảm ơn"
+  const cleaned = stripAnnotations(text);
+  
+  // Split by comma for patterns like "hóa đơn, biên lai"
+  const commaSplit = cleaned.split(/\s*,\s+/);
+  
+  for (const part of commaSplit) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    
+    // Check for slash patterns like "Obrigado/a", "he/she", "Meu / Minha"
+    const slashMatch = trimmed.match(/^(.+?)\s*\/\s*(.+?)$/);
+    
+    if (slashMatch) {
+      const [, base, suffix] = slashMatch;
+      const baseTrim = base.trim();
+      const suffixTrim = suffix.trim();
+      
+      // Handle patterns like "Obrigado/a" → ["Obrigado", "Obrigada"]
+      // The suffix might be a single char to append, or a full word
+      if (suffixTrim.length <= 2 && /^[a-zA-ZÀ-ỹ]+$/.test(suffixTrim) && !suffixTrim.includes(' ')) {
+        // Single character or two-char suffix: append to base
+        variants.push(baseTrim);
+        variants.push(baseTrim + suffixTrim);
+      } else {
+        // Full alternative words: "he/she" → ["he", "she"], "Meu / Minha" → ["Meu", "Minha"]
+        variants.push(baseTrim);
+        variants.push(suffixTrim);
+      }
+    } else {
+      // No slash pattern, use as-is
+      variants.push(trimmed);
+    }
+  }
+  
+  return variants.length > 0 ? variants : [stripAnnotations(text) || text];
 }
 
 /** Levenshtein distance — used to tolerate a single typo. */
@@ -63,14 +132,100 @@ type Grade = 'correct' | 'close' | 'wrong';
 function gradeAnswer(input: string, translations: string[]): Grade {
   const guess = normalize(input);
   if (!guess) return 'wrong';
+  
   let best: Grade = 'wrong';
+  
+  // Expand all translations into variants (e.g., "Obrigado/a" → ["Obrigado", "Obrigada"])
+  const allVariants: string[] = [];
   for (const t of translations) {
-    const target = normalize(t);
-    if (guess === target) return 'correct';
-    const dist = levenshtein(guess, target);
-    if (dist <= 1 && target.length > 2) best = 'close';
+    const variants = expandVariants(t);
+    allVariants.push(...variants);
   }
+  
+  for (const variant of allVariants) {
+    const target = normalize(variant);
+    
+    // 1. Exact match
+    if (guess === target) return 'correct';
+    
+    // 2. Match without articles (a/an/the, etc.)
+    const guessNoArticle = stripArticles(guess);
+    const targetNoArticle = stripArticles(target);
+    if (guessNoArticle === targetNoArticle && guessNoArticle.length > 0) {
+      return 'correct';
+    }
+    
+    // 3. Match ignoring diacritics (hóa đơn vs hoa don)
+    const guessNoDiacritic = removeDiacritics(guess);
+    const targetNoDiacritic = removeDiacritics(target);
+    if (guessNoDiacritic === targetNoDiacritic) {
+      return 'correct';
+    }
+    
+    // 4. Fuzzy match with Levenshtein distance
+    // Scale threshold with word length: longer words get more tolerance
+    const dist = levenshtein(guess, target);
+    const threshold = target.length <= 4 ? 1 : target.length <= 8 ? 2 : 3;
+    
+    if (dist <= threshold && target.length > 2) {
+      if (dist === 1 || (dist === 2 && target.length > 6)) {
+        best = 'close';
+      } else if (best !== 'close') {
+        // Only update if we haven't found a closer match
+        best = 'close';
+      }
+    }
+    
+    // 5. Partial match for compound words (if guess contains target or vice versa)
+    if (target.length > 4 && (guess.includes(target) || target.includes(guess))) {
+      const longerLength = Math.max(guess.length, target.length);
+      const shorterLength = Math.min(guess.length, target.length);
+      // If one is at least 70% of the other, consider it close
+      if (shorterLength / longerLength >= 0.7) {
+        best = 'close';
+      }
+    }
+  }
+  
   return best;
+}
+
+/** Check if user is typing something close to any target (for real-time hint). */
+function isTypingClose(input: string, translations: string[]): boolean {
+  const guess = normalize(input);
+  if (guess.length < 2) return false; // Too short to judge
+  
+  // Expand all translations into variants
+  const allVariants: string[] = [];
+  for (const t of translations) {
+    const variants = expandVariants(t);
+    allVariants.push(...variants);
+  }
+  
+  for (const variant of allVariants) {
+    const target = normalize(variant);
+    const targetNoArticle = stripArticles(target);
+    
+    // Check if it's a prefix match
+    if (target.startsWith(guess) || targetNoArticle.startsWith(guess)) {
+      return true;
+    }
+    
+    // Check if typing without diacritics matches
+    const guessNoDiacritic = removeDiacritics(guess);
+    const targetNoDiacritic = removeDiacritics(target);
+    if (targetNoDiacritic.startsWith(guessNoDiacritic)) {
+      return true;
+    }
+    
+    // Check fuzzy proximity
+    if (guess.length >= 3) {
+      const dist = levenshtein(guess, target.slice(0, guess.length));
+      if (dist <= 1) return true;
+    }
+  }
+  
+  return false;
 }
 
 export default function TypeAnswer({ item, disabled = false, light = false, onComplete }: TypeAnswerProps) {
@@ -91,6 +246,9 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
 
   const translations = item.vocabularyBase.translations.map((tr) => tr.translation);
   const primary = translations[0] ?? '';
+  
+  // Check if user is typing in the right direction
+  const typingClose = grade === null && value.length > 0 && isTypingClose(value, translations);
 
   useEffect(() => {
     // Reset state + refocus whenever the word changes.
@@ -145,7 +303,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
       {/* Prompt card */}
       <div
         className="relative rounded-3xl p-6 flex flex-col items-center justify-center"
-        style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '40vh' }}
+        style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '30vh' }}
       >
         <StrengthBar value={item.memoryStrength} className="absolute top-4 left-4" />
         {item.isLeech && (
@@ -241,11 +399,20 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
         autoCapitalize="none"
         spellCheck={false}
         placeholder={t('review.typePlaceholder')}
-        className="w-full rounded-2xl px-4 py-4 text-base outline-none disabled:opacity-60"
+        className="w-full rounded-2xl px-4 py-4 text-base outline-none disabled:opacity-60 transition-all"
         style={{
           background: inputBg,
           color: textPrimary,
-          border: `1px solid ${grade !== null ? gradeColor : (light ? 'var(--color-line)' : 'rgba(99,102,241,0.3)')}`
+          border: `2px solid ${
+            grade !== null 
+              ? gradeColor 
+              : typingClose 
+                ? (light ? 'rgba(16,185,129,0.4)' : 'rgba(16,185,129,0.5)') // Green hint when typing close
+                : (light ? 'var(--color-line)' : 'rgba(99,102,241,0.3)')
+          }`,
+          boxShadow: typingClose && grade === null
+            ? (light ? '0 0 0 3px rgba(16,185,129,0.1)' : '0 0 0 3px rgba(16,185,129,0.15)')
+            : 'none'
         }}
       />
 

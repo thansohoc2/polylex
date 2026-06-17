@@ -2,6 +2,7 @@
   "nav": {
     "home": "Trang chủ",
     "roadmap": "Lộ trình",
+    "videos": "Videos",
     "notes": "Ghi chú",
     "review": "Ôn tập",
     "profile": "Hồ sơ"
@@ -222,7 +223,26 @@
     "statusPending": "⏳ Đang chờ",
     "statusProcessing": "🔄 Đang xử lý",
     "statusDone": "✅ Xong",
-    "statusError": "❌ Lỗi"
+    "statusError": "❌ Lỗi",
+    "submitting": "Đang xử lý “{{term}}”…",
+    "resultReady": "“{{term}}” đã sẵn sàng!",
+    "resultError": "Không thể xử lý “{{term}}”",
+    "viewResult": "Xem kết quả",
+    "addToDeck": "Thêm vào sổ",
+    "openNotes": "Mở danh sách ghi chú",
+    "newNote": "Ghi chú nhanh",
+    "meaning": "Nghĩa",
+    "close": "Đóng",
+    "listen": "Nghe phát âm"
+  },
+  "videosHub": {
+    "title": "Videos",
+    "subtitle": "Tổng hợp video từ các lộ trình của bạn",
+    "empty": "Chưa có video nào",
+    "emptyHint": "Tạo lộ trình học để nhận gợi ý video phù hợp",
+    "loading": "Đang tải video…",
+    "goToRoadmap": "Tạo lộ trình",
+    "videosCount": "{{count}} video"
   },
   "addNote": {
     "title": "Thêm ghi chú nhanh",

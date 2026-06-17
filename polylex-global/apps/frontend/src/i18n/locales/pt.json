@@ -2,6 +2,7 @@
   "nav": {
     "home": "Início",
     "roadmap": "Roteiro",
+    "videos": "Vídeos",
     "notes": "Notas",
     "review": "Revisão",
     "profile": "Perfil"
@@ -222,7 +223,26 @@
     "statusPending": "⏳ Pendente",
     "statusProcessing": "🔄 Processando",
     "statusDone": "✅ Concluído",
-    "statusError": "❌ Erro"
+    "statusError": "❌ Erro",
+    "submitting": "Processando “{{term}}”…",
+    "resultReady": "“{{term}}” está pronto!",
+    "resultError": "Não foi possível processar “{{term}}”",
+    "viewResult": "Ver resultado",
+    "addToDeck": "Adicionar ao baralho",
+    "openNotes": "Abrir lista de notas",
+    "newNote": "Nota rápida",
+    "meaning": "Significado",
+    "close": "Fechar",
+    "listen": "Ouvir"
+  },
+  "videosHub": {
+    "title": "Vídeos",
+    "subtitle": "Todos os vídeos dos seus roteiros",
+    "empty": "Nenhum vídeo ainda",
+    "emptyHint": "Crie um roteiro de aprendizado para receber sugestões de vídeo",
+    "loading": "Carregando vídeos…",
+    "goToRoadmap": "Criar roteiro",
+    "videosCount": "{{count}} vídeos"
   },
   "addNote": {
     "title": "Adicionar Nota Rápida",

@@ -1,7 +1,66 @@
 const flagMap: Record<string, string> = {
+  // --- Các ngôn ngữ bạn đã có ---
   en: '🇬🇧', vi: '🇻🇳', ja: '🇯🇵', fr: '🇫🇷',
   de: '🇩🇪', zh: '🇨🇳', ko: '🇰🇷', es: '🇪🇸',
+
+  // --- Châu Á & Đông Nam Á ---
+  th: '🇹🇭', // Thái Lan
+  id: '🇮🇩', // Indonesia
+  ms: '🇲🇾', // Malaysia
+  my: '🇲🇲', // Myanmar
+  ph: '🇵🇭', // Philippines
+  sg: '🇸🇬', // Singapore
+  km: '🇰🇭', // Campuchia
+  lo: '🇱🇦', // Lào
+  in: '🇮🇳', // Ấn Độ
+  tw: '🇹🇼', // Đài Loan
+  hk: '🇭🇰', // Hồng Kông
+  mn: '🇲🇳', // Mông Cổ
+
+  // --- Châu Âu ---
+  it: '🇮🇹', // Ý
+  ru: '🇷🇺', // Nga
+  pt: '🇵🇹', // Bồ Đào Nha
+  nl: '🇳🇱', // Hà Lan
+  pl: '🇵🇱', // Ba Lan
+  tr: '🇹🇷', // Thổ Nhĩ Kỳ
+  sv: '🇸🇪', // Thụy Điển
+  no: '🇳🇴', // Na Uy
+  fi: '🇫🇮', // Phần Lan
+  da: '🇩🇰', // Đan Mạch
+  uk: '🇺🇦', // Ukraine
+  el: '🇬🇷', // Hy Lạp
+  cs: '🇨🇿', // Séc
+  ro: '🇷🇴', // Romania
+  hu: '🇭🇺', // Hungary
+  be: '🇧🇪', // Bỉ
+  ch: '🇨🇭', // Thụy Sĩ
+  at: '🇦🇹', // Áo
+  ie: '🇮🇪', // Ireland
+
+  // --- Châu Mỹ ---
+  us: '🇺🇸', // Mỹ (Nếu bạn muốn tách biệt với tiếng Anh Anh 'en')
+  ca: '🇨🇦', // Canada
+  mx: '🇲🇽', // Mexico
+  br: '🇧🇷', // Brazil
+  ar: '🇦🇷', // Argentina
+  co: '🇨🇴', // Colombia
+  cl: '🇨🇱', // Chile
+  pe: '🇵🇪', // Peru
+
+  // --- Châu Úc ---
+  au: '🇦🇺', // Úc
+  nz: '🇳🇿', // New Zealand
+
+  // --- Trung Đông & Châu Phi ---
+  ar_AE: '🇦🇪', // UAE (Tiếng Ả Rập)
+  sa: '🇸🇦', // Ả Rập Xê Út
+  il: '🇮🇱', // Israel
+  za: '🇿🇦', // Nam Phi
+  eg: '🇪🇬', // Ai Cập
+  ng: '🇳🇬', // Nigeria
 };
+
 
 interface DueVocabItemProps {
   term: string;

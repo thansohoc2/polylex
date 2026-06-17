@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "roadmap": "Roadmap",
+    "videos": "Videos",
     "notes": "Notes",
     "review": "Review",
     "profile": "Profile"
@@ -219,10 +220,29 @@
     "failedToDelete": "Failed to delete note",
     "addedToDeck": "Added to your vocabulary deck! 📚",
     "alreadyInDeck": "Already in your deck or failed to add",
+    "submitting": "Processing “{{term}}”…",
+    "resultReady": "“{{term}}” is ready!",
+    "resultError": "Couldn’t process “{{term}}”",
+    "viewResult": "View result",
+    "addToDeck": "Add to deck",
+    "openNotes": "Open notes list",
+    "newNote": "Quick note",
     "statusPending": "⏳ Pending",
     "statusProcessing": "🔄 Processing",
     "statusDone": "✅ Done",
-    "statusError": "❌ Error"
+    "statusError": "❌ Error",
+    "meaning": "Meaning",
+    "close": "Close",
+    "listen": "Listen"
+  },
+  "videosHub": {
+    "title": "Videos",
+    "subtitle": "All videos from your learning paths",
+    "empty": "No videos yet",
+    "emptyHint": "Create a learning path to get matching video suggestions",
+    "loading": "Loading videos…",
+    "goToRoadmap": "Create a path",
+    "videosCount": "{{count}} videos"
   },
   "addNote": {
     "title": "Add Quick Note",

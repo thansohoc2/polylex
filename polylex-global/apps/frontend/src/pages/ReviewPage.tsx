@@ -458,7 +458,7 @@ export default function ReviewPage() {
         ) : (
           <>
             {/* Flash card — recognition for new/weak words */}
-            <FlashCard item={item} isFlipped={showAnswer} light={true} onFlip={handleReveal} />
+            <FlashCard key={item.id} item={item} isFlipped={showAnswer} light={true} onFlip={handleReveal} />
             {showAnswer && <RatingButtons onRate={handleRate} disabled={submitting} light={true} />}
           </>
         )}

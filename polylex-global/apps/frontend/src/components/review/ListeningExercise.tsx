@@ -128,9 +128,9 @@ export default function ListeningExercise({ item, disabled = false, light = fals
 
   const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
   const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textPrimary = light ? 'var(--color-ink)' : '#F1F5F9';
-  const textSoft = light ? 'var(--color-ink-soft)' : '#475569';
-  const textMuted = light ? 'var(--color-ink-softer)' : '#94A3B8';
+  const textPrimary = light ? 'var(--color-red-400)' : '#f86156';
+  const textSoft = light ? 'var(--color-red-300)' : '#f27b5d';
+  const textMuted = light ? 'var(--color-red-200)' : '#94A3B8';
   const accentColor = light ? 'var(--color-coral)' : '#A78BFA';
   const inputBg = light ? 'var(--color-card-2)' : '#12121F';
   const btnBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';

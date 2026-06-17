@@ -84,8 +84,8 @@ export default function MultipleChoiceExercise({
 
   const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
   const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textPrimary = light ? 'var(--color-ink)' : '#F1F5F9';
-  const textSoft = light ? 'var(--color-ink-soft)' : '#475569';
+  const textPrimary = light ? 'var(--color-red-400)' : '#f86156';
+  const textSoft = light ? 'var(--color-red-300)' : '#f27b5d';
   const optionBg = light ? 'var(--color-card-2)' : '#12121F';
   const optionBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.3)';
   const btnBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';
@@ -125,7 +125,7 @@ export default function MultipleChoiceExercise({
     <div className="w-full flex flex-col gap-4">
       <div
         className="relative rounded-3xl p-6 flex flex-col items-center justify-center"
-        style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '40vh' }}
+        style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '30vh' }}
       >
         <StrengthBar value={item.memoryStrength} className="absolute top-4 left-4" />
         {item.isLeech && (

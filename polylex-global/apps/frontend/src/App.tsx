@@ -17,13 +17,30 @@ import QuickNotePage from '@/pages/QuickNotePage';
 import ProfilePage from '@/pages/ProfilePage';
 import DialoguePage from '@/pages/DialoguePage';
 import VideosPage from '@/pages/VideosPage';
+import VideosHubPage from '@/pages/VideosHubPage';
 import OnboardingPage from '@/pages/OnboardingPage';
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import SupportPage from '@/pages/SupportPage';
+import { QuickNoteProvider } from '@/contexts/QuickNoteContext';
+import QuickNoteFab from '@/components/quick-note/QuickNoteFab';
 
 function RequireAuth() {
   const isAuthed = useAuthStore((s) => !!s.accessToken);
   return isAuthed ? <Outlet /> : <Navigate to="/login" replace />;
+}
+
+/**
+ * Wraps every authenticated page with the global quick-note system: a provider
+ * (sheet + result popup + background AI polling + toasts) and a floating button
+ * that lets the user capture a note from anywhere without leaving the page.
+ */
+function ProtectedShell() {
+  return (
+    <QuickNoteProvider>
+      <Outlet />
+      <QuickNoteFab />
+    </QuickNoteProvider>
+  );
 }
 
 export default function App() {
@@ -91,9 +108,9 @@ export default function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: '#1A1A2E',
-            color: '#F1F5F9',
-            border: '1px solid rgba(99, 102, 241, 0.2)',
+            background: 'var(--color-card)',
+            color: 'var(--color-ink)',
+            border: '1px solid var(--color-line)',
             borderRadius: '12px',
             fontSize: '14px',
           },
@@ -108,20 +125,23 @@ export default function App() {
 
         {/* Protected */}
         <Route element={<RequireAuth />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="vocabulary" element={<VocabularyPage />} />
-          <Route path="review" element={<ReviewPage />} />
-          <Route path="review/path/:userPathId" element={<ReviewPage />} />
-          <Route path="review/:filter" element={<ReviewPage />} />
-          <Route path="roadmap" element={<RoadmapPage />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-          <Route path="leaderboard" element={<LeaderboardPage />} />
-          <Route path="quick-notes" element={<QuickNotePage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="dialogue/:pathStageId" element={<DialoguePage />} />
-          <Route path="videos/:pathStageId" element={<VideosPage />} />
-          <Route path="onboarding" element={<OnboardingPage />} />
+          <Route element={<ProtectedShell />}>
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="vocabulary" element={<VocabularyPage />} />
+            <Route path="review" element={<ReviewPage />} />
+            <Route path="review/path/:userPathId" element={<ReviewPage />} />
+            <Route path="review/:filter" element={<ReviewPage />} />
+            <Route path="roadmap" element={<RoadmapPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="leaderboard" element={<LeaderboardPage />} />
+            <Route path="quick-notes" element={<QuickNotePage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="dialogue/:pathStageId" element={<DialoguePage />} />
+            <Route path="videos" element={<VideosHubPage />} />
+            <Route path="videos/:pathStageId" element={<VideosPage />} />
+            <Route path="onboarding" element={<OnboardingPage />} />
+          </Route>
         </Route>
 
         {/* Fallback */}

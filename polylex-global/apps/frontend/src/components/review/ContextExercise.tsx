@@ -154,7 +154,7 @@ export default function ContextExercise({ item, disabled = false, light = false,
       {/* Prompt card */}
       <div
         className="relative rounded-3xl p-6 flex flex-col items-center justify-center"
-        style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '40vh' }}
+        style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '30vh' }}
       >
         <StrengthBar value={item.memoryStrength} className="absolute top-4 left-4" />
         {item.isLeech && (
