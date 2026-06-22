@@ -17,6 +17,7 @@ let package = Package(
         .package(name: "CapacitorLocalNotifications", path: "../../../../../node_modules/@capacitor/local-notifications"),
         .package(name: "CapacitorPreferences", path: "../../../../../node_modules/@capacitor/preferences"),
         .package(name: "CapgoCapacitorUpdater", path: "../../../../../node_modules/@capgo/capacitor-updater"),
+        .package(name: "CapgoCapacitorYoutubePlayer", path: "../../../../../node_modules/@capgo/capacitor-youtube-player"),
         .package(name: "CodetrixStudioCapacitorGoogleAuth", path: "../../../../../node_modules/@codetrix-studio/capacitor-google-auth")
     ],
     targets: [
@@ -30,6 +31,7 @@ let package = Package(
                 .product(name: "CapacitorLocalNotifications", package: "CapacitorLocalNotifications"),
                 .product(name: "CapacitorPreferences", package: "CapacitorPreferences"),
                 .product(name: "CapgoCapacitorUpdater", package: "CapgoCapacitorUpdater"),
+                .product(name: "CapgoCapacitorYoutubePlayer", package: "CapgoCapacitorYoutubePlayer"),
                 .product(name: "CodetrixStudioCapacitorGoogleAuth", package: "CodetrixStudioCapacitorGoogleAuth")
             ]
         )

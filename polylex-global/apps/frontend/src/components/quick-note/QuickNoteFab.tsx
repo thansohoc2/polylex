@@ -39,7 +39,7 @@ export default function QuickNoteFab() {
           className="absolute right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full"
           style={{
             // Sit just above the 64px bottom nav + iOS safe area.
-            bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)',
+            bottom: 'calc(env(safe-area-inset-bottom, 50px) + 140px)',
             background: 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))',
             boxShadow: '0 8px 24px rgba(255, 107, 74, 0.45)',
             touchAction: 'none',

@@ -14,7 +14,7 @@ export default function TopBar({ title, rightAction, theme = 'dark' }: TopBarPro
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: light ? '1px solid var(--color-line)' : '1px solid rgba(255,255,255,0.05)',
-        paddingTop: 'env(safe-area-inset-top)',
+       
       }}
     >
       {/* Logo */}

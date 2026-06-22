@@ -108,7 +108,7 @@ export default function VideosHubPage() {
       <div className="px-4 py-2 flex flex-col gap-6 pb-16">
         {videos.map((video) => {
           const isExpanded = expandedVideoId === video.id;
-          const videoEmbedUrl = `https://www.youtube.com/embed/${video.youtubeVideoId}?modestbranding=1&controls=1&rel=0`;
+          const videoEmbedUrl = `https://ebms.store/youtube.html?v=${video.youtubeVideoId}&modestbranding=1&controls=1&rel=0`;
 
           return (
             <div
@@ -121,11 +121,13 @@ export default function VideosHubPage() {
             >
               {isExpanded ? (
                 <div className="w-full aspect-video">
+                  
                   <iframe
                     width="100%"
                     height="100%"
                     src={videoEmbedUrl}
                     title={video.title}
+                    referrerPolicy="strict-origin-when-cross-origin"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen

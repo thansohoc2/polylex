@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { pathApi, VideoDto } from '@/api/client';
 import AppShell from '@/components/layout/AppShell';
+// 1. Sử dụng thư viện chuẩn của Capgo
+import { YoutubePlayer } from '@capgo/capacitor-youtube-player';
 
 export default function VideosPage() {
   const { pathStageId } = useParams<{ pathStageId: string }>();
@@ -26,6 +28,61 @@ export default function VideosPage() {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [pathStageId]);
+
+    // 2. Cập nhật hàm xử lý khởi tạo chuẩn cú pháp phẳng của Capgo
+   // 2. Hàm xử lý khởi tạo chuẩn với tham số khắc phục lỗi 152
+  const handlePlayVideo = async (videoId: string, youtubeVideoId: string) => {
+    if (expandedVideoId && expandedVideoId !== videoId) {
+      try {
+        await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    setExpandedVideoId(videoId);
+    
+    // Đợi React cập nhật xong DOM
+    setTimeout(async () => {
+      try {
+        await YoutubePlayer.initialize({
+          playerId: `player-${videoId}`,
+          videoId: youtubeVideoId,
+          playerSize: {
+            width: window.innerWidth - 32,
+            height: Math.floor((window.innerWidth - 32) * 9 / 16),
+          },
+          // BẮT BUỘC: Kích hoạt chế độ không Cookie (youtube-nocookie.com) 
+          // Đây là chìa khóa để vượt qua bộ lọc chặn Origin (Lỗi 152) của YouTube trên WebView
+          privacyEnhanced: true, 
+        });
+      } catch (err) {
+        console.error("Lỗi khởi tạo Youtube Player Native: ", err);
+      }
+    }, 150);
+  };
+
+  // 3. Giữ nguyên hàm tắt trình phát theo chuẩn Object ID
+  const handleStopVideo = async () => {
+    if (expandedVideoId) {
+      try {
+        await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
+      } catch (err) {
+        console.error("Lỗi destroy player: ", err);
+      }
+    }
+    setExpandedVideoId(null);
+  };
+
+
+  // Tự động giải phóng trình phát khi thoát component
+  useEffect(() => {
+    return () => {
+      if (expandedVideoId) {
+        YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` }).catch(() => {});
+      }
+    };
+  }, [expandedVideoId]);
 
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) {
@@ -84,7 +141,6 @@ export default function VideosPage() {
       <div className="px-4 py-4 flex flex-col gap-6 pb-16">
         {videos.map((video) => {
           const isExpanded = expandedVideoId === video.id;
-          const videoEmbedUrl = `https://www.youtube.com/embed/${video.youtubeVideoId}?modestbranding=1&controls=1&rel=0`;
 
           return (
             <div
@@ -95,22 +151,18 @@ export default function VideosPage() {
                 borderColor: isExpanded ? 'var(--color-coral)' : 'var(--color-line)',
               }}
             >
-              {/* Video preview / embed */}
+              {/* Khu vực chứa video phát */}
               {isExpanded ? (
-                <div className="w-full aspect-video">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={videoEmbedUrl}
-                    title={video.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                <div className="w-full aspect-video bg-black flex items-center justify-center">
+                  {/* Div đích để trình phát native đè lên */}
+                  <div 
+                    id={`player-${video.id}`} 
+                    className="w-full h-full"
                   />
                 </div>
               ) : (
                 <button
-                  onClick={() => setExpandedVideoId(video.id)}
+                  onClick={() => handlePlayVideo(video.id, video.youtubeVideoId)}
                   className="w-full aspect-video relative group overflow-hidden"
                 >
                   <img
@@ -157,10 +209,10 @@ export default function VideosPage() {
                   </p>
                 </div>
 
-                {/* Collapse button when expanded */}
+                {/* Thu gọn video button */}
                 {isExpanded && (
                   <button
-                    onClick={() => setExpandedVideoId(null)}
+                    onClick={handleStopVideo}
                     className="mt-3 w-full text-xs text-center text-[var(--color-ink-3)] hover:text-[var(--color-ink)] py-2 transition-colors"
                   >
                     ▲ {t('dialogue.backBtn')}

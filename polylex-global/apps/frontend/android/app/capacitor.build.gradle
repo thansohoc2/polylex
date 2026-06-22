@@ -14,6 +14,7 @@ dependencies {
     implementation project(':capacitor-local-notifications')
     implementation project(':capacitor-preferences')
     implementation project(':capgo-capacitor-updater')
+    implementation project(':capgo-capacitor-youtube-player')
     implementation project(':codetrix-studio-capacitor-google-auth')
 
 }

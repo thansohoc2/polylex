@@ -27,6 +27,10 @@ const config: CapacitorConfig = {
       scopes: ['profile', 'email'],
     },
   },
+  server: {
+  androidScheme: 'https',
+  iosScheme: 'https'
+  },
   ios: {
     contentInset: 'always',
   },

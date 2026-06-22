@@ -17,5 +17,8 @@ project(':capacitor-preferences').projectDir = new File('../../../node_modules/@
 include ':capgo-capacitor-updater'
 project(':capgo-capacitor-updater').projectDir = new File('../../../node_modules/@capgo/capacitor-updater/android')
 
+include ':capgo-capacitor-youtube-player'
+project(':capgo-capacitor-youtube-player').projectDir = new File('../../../node_modules/@capgo/capacitor-youtube-player/android')
+
 include ':codetrix-studio-capacitor-google-auth'
 project(':codetrix-studio-capacitor-google-auth').projectDir = new File('../../../node_modules/@codetrix-studio/capacitor-google-auth/android')

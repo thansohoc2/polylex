@@ -31,6 +31,7 @@
     "@capacitor/local-notifications": "^8.2.0",
     "@capacitor/preferences": "^8.0.1",
     "@capgo/capacitor-updater": "^8.43.9",
+    "@capgo/capacitor-youtube-player": "^8.2.12",
     "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4",
     "@polylex/shared-types": "*",
     "@polylex/shared-ui": "*",

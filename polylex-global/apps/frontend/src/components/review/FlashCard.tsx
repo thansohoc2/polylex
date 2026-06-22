@@ -65,6 +65,22 @@ export default function FlashCard({ item, isFlipped = false, light = false, onFl
         <p className="text-3xl font-bold  text-center mb-6 mt-10" style={{ color: textPrimary }}>
           {item.vocabularyBase.term}
         </p>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            playAudio(
+              item.vocabularyBase.term,
+              item.vocabularyBase.language.code,
+              item.vocabularyBase.audioUrl,
+              rate,
+            );
+          }}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center"
+          style={{ background: 'rgba(99,102,241,0.15)' }}
+        >
+          <Volume2 size={14} className="text-[#6366F1]" />
+        </button>
+        
         <LanguageBadge code={item.vocabularyBase.language.code} name={item.vocabularyBase.language.name} />
         <p className="text-[#475569] text-xs mt-auto pt-4">{t('review.tapToReveal')}</p>
       </motion.div>
