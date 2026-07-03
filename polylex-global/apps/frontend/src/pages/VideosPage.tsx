@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Capacitor } from '@capacitor/core';
 import { pathApi, VideoDto } from '@/api/client';
 import AppShell from '@/components/layout/AppShell';
 // 1. Sử dụng thư viện chuẩn của Capgo
 import { YoutubePlayer } from '@capgo/capacitor-youtube-player';
+
+const isNativePlatform = (): boolean => {
+  try {
+    return Capacitor.isNativePlatform();
+  } catch {
+    return false;
+  }
+};
 
 export default function VideosPage() {
   const { pathStageId } = useParams<{ pathStageId: string }>();
@@ -31,8 +40,10 @@ export default function VideosPage() {
 
     // 2. Cập nhật hàm xử lý khởi tạo chuẩn cú pháp phẳng của Capgo
    // 2. Hàm xử lý khởi tạo chuẩn với tham số khắc phục lỗi 152
+  const isNative = isNativePlatform();
+
   const handlePlayVideo = async (videoId: string, youtubeVideoId: string) => {
-    if (expandedVideoId && expandedVideoId !== videoId) {
+    if (expandedVideoId && expandedVideoId !== videoId && isNative) {
       try {
         await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
       } catch (e) {
@@ -41,36 +52,45 @@ export default function VideosPage() {
     }
 
     setExpandedVideoId(videoId);
-    
+
+    if (!isNative) {
+      return;
+    }
+
     // Đợi React cập nhật xong DOM
     setTimeout(async () => {
       try {
         await YoutubePlayer.initialize({
           playerId: `player-${videoId}`,
           videoId: youtubeVideoId,
+          playerVars: {
+            origin: 'https://ebms.store', // Phải trùng khớp chính xác với cấu hình trong capacitor.config
+            playsinline: 1,
+          },
           playerSize: {
             width: window.innerWidth - 32,
             height: Math.floor((window.innerWidth - 32) * 9 / 16),
           },
-          // BẮT BUỘC: Kích hoạt chế độ không Cookie (youtube-nocookie.com) 
+          // BẮT BUỘC: Kích hoạt chế độ không Cookie (youtube-nocookie.com)
           // Đây là chìa khóa để vượt qua bộ lọc chặn Origin (Lỗi 152) của YouTube trên WebView
-          privacyEnhanced: true, 
+          privacyEnhanced: true,
         });
       } catch (err) {
-        console.error("Lỗi khởi tạo Youtube Player Native: ", err);
+        console.error('Lỗi khởi tạo Youtube Player Native: ', err);
       }
     }, 150);
   };
 
   // 3. Giữ nguyên hàm tắt trình phát theo chuẩn Object ID
   const handleStopVideo = async () => {
-    if (expandedVideoId) {
+    if (expandedVideoId && isNativePlatform()) {
       try {
         await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
       } catch (err) {
         console.error("Lỗi destroy player: ", err);
       }
     }
+
     setExpandedVideoId(null);
   };
 
@@ -78,7 +98,7 @@ export default function VideosPage() {
   // Tự động giải phóng trình phát khi thoát component
   useEffect(() => {
     return () => {
-      if (expandedVideoId) {
+      if (expandedVideoId && isNativePlatform()) {
         YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` }).catch(() => {});
       }
     };
@@ -154,11 +174,25 @@ export default function VideosPage() {
               {/* Khu vực chứa video phát */}
               {isExpanded ? (
                 <div className="w-full aspect-video bg-black flex items-center justify-center">
-                  {/* Div đích để trình phát native đè lên */}
-                  <div 
-                    id={`player-${video.id}`} 
-                    className="w-full h-full"
-                  />
+                  {isNative ? (
+                    // Div đích để trình phát native đè lên
+                    <div
+                      id={`player-${video.id}`}
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={`/youtube.html?v=${video.youtubeVideoId}&modestbranding=1&controls=1&rel=0`}
+                      title={video.title}
+                      className="w-full h-full"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  )}
                 </div>
               ) : (
                 <button
