@@ -11,6 +11,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: { enabled: false },
+      includeAssets: ['youtube.html'],
       // Service Worker generates during build; not needed in dev proxy mode
       workbox: {
         // App shell — cache the main JS/CSS chunks
@@ -48,6 +49,8 @@ export default defineConfig({
           },
         ],
       },
+      navigateFallback: '/index.html',
+      navigateFallbackDenylist: [/^\/youtube\.html($|\?)/],
       manifest: {
         name: 'PolyLex — Vocabulary Learning',
         short_name: 'PolyLex',
