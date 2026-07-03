@@ -28,7 +28,7 @@ const config: CapacitorConfig = {
     },
   },
   server: {
-    hostname: 'ebms.store',
+    //hostname: 'ebms.store',
     androidScheme: 'https',
     iosScheme: 'https',
   },

@@ -32,7 +32,6 @@
 <body>
   <iframe
     id="player"
-    allowfullscreen
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
     referrerpolicy="strict-origin-when-cross-origin"
   ></iframe>
@@ -60,6 +59,10 @@
       const playsinline = urlParams.get('playsinline') || '1';
 
       // Build YouTube embed URL parameters
+      const origin = window.location.origin?.startsWith('http')
+        ? window.location.origin
+        : 'https://ebms.store';
+
       const embedParams = new URLSearchParams({
         autoplay: autoplay,
         controls: controls,
@@ -67,7 +70,7 @@
         modestbranding: modestbranding,
         playsinline: playsinline,
         enablejsapi: '1',
-        origin: window.location.origin
+        origin,
       });
 
       // Add loop and playlist if loop is enabled

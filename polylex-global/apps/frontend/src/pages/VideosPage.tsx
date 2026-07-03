@@ -25,6 +25,7 @@ export default function VideosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [expandedVideoId, setExpandedVideoId] = useState<string | null>(null);
+  const [nativePlayerError, setNativePlayerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!pathStageId) return;
@@ -42,7 +43,7 @@ export default function VideosPage() {
    // 2. Hàm xử lý khởi tạo chuẩn với tham số khắc phục lỗi 152
   const isNative = isNativePlatform();
 
-  const handlePlayVideo = async (videoId: string, youtubeVideoId: string) => {
+  const handlePlayVideo = async (videoId: string) => {
     if (expandedVideoId && expandedVideoId !== videoId && isNative) {
       try {
         await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
@@ -51,34 +52,12 @@ export default function VideosPage() {
       }
     }
 
+    setNativePlayerError(null);
     setExpandedVideoId(videoId);
 
     if (!isNative) {
       return;
     }
-
-    // Đợi React cập nhật xong DOM
-    setTimeout(async () => {
-      try {
-        await YoutubePlayer.initialize({
-          playerId: `player-${videoId}`,
-          videoId: youtubeVideoId,
-          playerVars: {
-            origin: 'https://ebms.store', // Phải trùng khớp chính xác với cấu hình trong capacitor.config
-            playsinline: 1,
-          },
-          playerSize: {
-            width: window.innerWidth - 32,
-            height: Math.floor((window.innerWidth - 32) * 9 / 16),
-          },
-          // BẮT BUỘC: Kích hoạt chế độ không Cookie (youtube-nocookie.com)
-          // Đây là chìa khóa để vượt qua bộ lọc chặn Origin (Lỗi 152) của YouTube trên WebView
-          privacyEnhanced: true,
-        });
-      } catch (err) {
-        console.error('Lỗi khởi tạo Youtube Player Native: ', err);
-      }
-    }, 150);
   };
 
   // 3. Giữ nguyên hàm tắt trình phát theo chuẩn Object ID
@@ -95,14 +74,54 @@ export default function VideosPage() {
   };
 
 
-  // Tự động giải phóng trình phát khi thoát component
   useEffect(() => {
-    return () => {
-      if (expandedVideoId && isNativePlatform()) {
-        YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` }).catch(() => {});
+    if (!isNative || !expandedVideoId) {
+      return;
+    }
+
+    const video = videos.find((item) => item.id === expandedVideoId);
+    if (!video) {
+      return;
+    }
+
+    const playerId = `player-${expandedVideoId}`;
+    let cancelled = false;
+
+    const initializePlayer = async () => {
+      try {
+        const origin = window.location.origin?.startsWith('http')
+          ? window.location.origin
+          : 'https://ebms.store';
+        await YoutubePlayer.initialize({
+          playerId,
+          videoId: video.youtubeVideoId,
+          playerVars: {
+            origin,
+            playsinline: 1,
+            modestbranding: 1,
+            rel: 0,
+            controls: 1,
+          },
+          playerSize: {
+            width: window.innerWidth - 32,
+            height: Math.floor((window.innerWidth - 32) * 9 / 16),
+          },
+        });
+      } catch (err) {
+        if (!cancelled) {
+          console.error('Lỗi khởi tạo Youtube Player Native:', err);
+          setNativePlayerError(String(err));
+        }
       }
     };
-  }, [expandedVideoId]);
+
+    initializePlayer();
+
+    return () => {
+      cancelled = true;
+      YoutubePlayer.destroy({ playerId }).catch(() => {});
+    };
+  }, [expandedVideoId, isNative, videos]);
 
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) {
@@ -174,7 +193,7 @@ export default function VideosPage() {
               {/* Khu vực chứa video phát */}
               {isExpanded ? (
                 <div className="w-full aspect-video bg-black flex items-center justify-center">
-                  {isNative ? (
+                  {isNative && !nativePlayerError ? (
                     // Div đích để trình phát native đè lên
                     <div
                       id={`player-${video.id}`}
@@ -196,7 +215,7 @@ export default function VideosPage() {
                 </div>
               ) : (
                 <button
-                  onClick={() => handlePlayVideo(video.id, video.youtubeVideoId)}
+                  onClick={() => handlePlayVideo(video.id)}
                   className="w-full aspect-video relative group overflow-hidden"
                 >
                   <img

@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import {
   createAnalyticsApi,
   createApiClientWithAuth,
@@ -17,7 +18,9 @@ import { useAuthStore } from '@/store/auth.store';
 
 // In dev (Vite proxy) leave empty → relative '/api/v1'.
 // In production/native builds set VITE_API_BASE_URL=https://ebms.store/api/v1
-const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '/api/v1';
+const API_BASE =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+  (Capacitor.isNativePlatform() ? 'https://ebms.store/api/v1' : '/api/v1');
 
 export const apiClient = createApiClientWithAuth({
   baseURL: API_BASE,
