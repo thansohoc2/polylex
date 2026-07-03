@@ -203,7 +203,7 @@ export default function VideosPage() {
                     <iframe
                       width="100%"
                       height="100%"
-                      src={`/youtube.html?v=${video.youtubeVideoId}&modestbranding=1&controls=1&rel=0`}
+                      src={`https://www.youtube-nocookie.com/embed/${video.youtubeVideoId}?modestbranding=1&controls=1&rel=0&playsinline=1`}
                       title={video.title}
                       className="w-full h-full"
                       referrerPolicy="strict-origin-when-cross-origin"
