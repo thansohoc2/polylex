@@ -32,6 +32,18 @@ export interface TtsPreviewPayload {
   languageCode: string;
 }
 
+export interface SpeechRecognitionPayload {
+  languageCode: string;
+  audioBase64: string;
+  targetText: string;
+}
+
+export interface SpeechRecognitionResult {
+  transcript: string;
+  confidence: number;
+  accuracyPercent: number;
+}
+
 export interface VocabularyTranslationDto {
   translation: string;
   targetLanguage: Pick<LanguageDto, 'code' | 'name'>;

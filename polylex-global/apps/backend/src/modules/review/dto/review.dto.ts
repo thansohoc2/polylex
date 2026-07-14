@@ -18,6 +18,7 @@ const REVIEW_MODES: ReviewMode[] = [
   'listening',
   'context',
   'sentence',
+  'shadowing',
 ];
 
 export class SubmitReviewDto {

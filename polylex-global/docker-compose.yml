@@ -37,6 +37,22 @@ services:
       timeout: 5s
       retries: 5
 
+  whisper-stt:
+    build:
+      context: .
+      dockerfile: apps/whisper-stt/Dockerfile
+    container_name: polylex_whisper_stt
+    restart: unless-stopped
+    ports:
+      - '9000:9000'
+    networks:
+      - polylex-net
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:9000/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:
   redisdata:

@@ -93,6 +93,20 @@ export class TtsPreviewDto {
   languageCode: string;
 }
 
+export class SpeechRecognitionDto {
+  @ApiProperty({ example: 'en' })
+  @IsString()
+  languageCode: string;
+
+  @ApiProperty({ description: 'Base64-encoded audio content (WEBM_OPUS or similar)', example: 'UklGRiIAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=' })
+  @IsString()
+  audioBase64: string;
+
+  @ApiProperty({ example: 'I eat an apple every day.' })
+  @IsString()
+  targetText: string;
+}
+
 export class VocabularyQueryDto {
   @ApiPropertyOptional({ example: 'en' })
   @IsOptional()

@@ -13,6 +13,8 @@ import type {
   UserVocabularyListResponse,
   VocabularyAudioResponse,
   TtsPreviewPayload,
+  SpeechRecognitionPayload,
+  SpeechRecognitionResult,
   ReviewQueueParams,
   ReviewQueueResponse,
   SubmitReviewPayload,
@@ -59,6 +61,7 @@ export interface VocabularyApi {
   getMyList(page?: number, limit?: number): Promise<UserVocabularyListResponse>;
   getAudio(id: string): Promise<VocabularyAudioResponse>;
   ttsPreview(data: TtsPreviewPayload): Promise<ArrayBuffer>;
+  recognizeSpeech(data: SpeechRecognitionPayload): Promise<SpeechRecognitionResult>;
 }
 
 export function createVocabularyApi(client: AxiosInstance): VocabularyApi {
@@ -76,6 +79,7 @@ export function createVocabularyApi(client: AxiosInstance): VocabularyApi {
       client
         .post('/vocabulary/tts-preview', data, { responseType: 'arraybuffer' })
         .then((response) => response.data as ArrayBuffer),
+    recognizeSpeech: (data) => client.post('/vocabulary/speech-recognize', data).then((response) => response.data),
   };
 }
 

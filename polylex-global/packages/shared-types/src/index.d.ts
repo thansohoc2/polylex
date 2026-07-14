@@ -1,4 +1,4 @@
-export type ReviewMode = 'flashcard' | 'type_answer' | 'reverse' | 'listening' | 'context' | 'sentence';
+export type ReviewMode = 'flashcard' | 'type_answer' | 'reverse' | 'listening' | 'context' | 'sentence' | 'shadowing';
 export interface AcreInput {
     recallQuality: number;
     responseTimeMs: number;

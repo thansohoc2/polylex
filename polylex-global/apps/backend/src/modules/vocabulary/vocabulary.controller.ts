@@ -18,16 +18,21 @@ import {
   AddTranslationDto,
   VocabularyQueryDto,
   TtsPreviewDto,
+  SpeechRecognitionDto,
 } from './dto/vocabulary.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, AuthUser } from '../auth/decorators/current-user.decorator';
+import { SpeechToTextService } from './speech.service';
 
 @ApiTags('vocabulary')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('vocabulary')
 export class VocabularyController {
-  constructor(private readonly svc: VocabularyService) {}
+  constructor(
+    private readonly svc: VocabularyService,
+    private readonly speechToTextService: SpeechToTextService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'List/search vocabulary (global + org)' })
@@ -71,6 +76,13 @@ export class VocabularyController {
     const buffer = await this.svc.previewTts(dto.term, dto.languageCode, user.id);
     res.set({ 'Content-Type': 'audio/mpeg', 'Content-Length': String(buffer.length) });
     res.send(buffer);
+  }
+
+  @Post('speech-recognize')
+  @ApiOperation({ summary: 'Transcribe recorded audio with Google STT and return pronunciation accuracy' })
+  @HttpCode(HttpStatus.OK)
+  async recognizeSpeech(@Body() dto: SpeechRecognitionDto) {
+    return this.speechToTextService.transcribe(dto.audioBase64, dto.languageCode, dto.targetText);
   }
 
   @Post(':id/translations')

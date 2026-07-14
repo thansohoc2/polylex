@@ -14,6 +14,7 @@ import ContextExercise from '@/components/review/ContextExercise';
 import ListeningExercise from '@/components/review/ListeningExercise';
 import ReverseExercise from '@/components/review/ReverseExercise';
 import MultipleChoiceExercise from '@/components/review/MultipleChoiceExercise';
+import ShadowingExercise from '@/components/review/ShadowingExercise';
 import SessionCelebration from '@/components/review/SessionCelebration';
 import RatingButtons from '@/components/review/RatingButtons';
 import SkeletonCard from '@/components/ui/SkeletonCard';
@@ -82,6 +83,18 @@ function hasUsableReverse(item: QueueItem): boolean {
 }
 
 /**
+ * Whether a word is a good shadowing candidate: it needs a model to imitate —
+ * ideally an example sentence (for rhythm/intonation) or recorded audio, but the
+ * term itself is always speakable via TTS as a fallback.
+ */
+function hasUsableShadowing(item: QueueItem): boolean {
+  const sentence = item.vocabularyBase.exampleSentence;
+  const hasSentence = !!sentence && sentence.trim().length > 0;
+  const hasAudio = !!item.vocabularyBase.audioUrl && item.vocabularyBase.audioUrl.trim().length > 0;
+  return hasSentence || hasAudio;
+}
+
+/**
  * Choose the exercise mode for a word, mirroring ACRE's recommendMode escalation:
  * new / weak words use flashcard (recognition) to build familiarity, words already in
  * review switch to type_answer (active recall), and well-retained words with a usable
@@ -96,7 +109,14 @@ function pickMode(item: QueueItem, index: number): UiReviewMode {
     return index % 2 === 0 ? 'multiple_choice' : 'reverse';
   }
   if (item.memoryStrength < 0.55 && hasUsableReverse(item)) return 'reverse';
-  if (item.memoryStrength >= 0.75 && hasUsableListening(item)) return 'listening';
+  if (item.memoryStrength >= 0.75) {
+    const canShadow = hasUsableShadowing(item);
+    const canListen = hasUsableListening(item);
+    // Alternate speaking practice (shadowing) with listening for variety.
+    if (canShadow && canListen) return index % 2 === 0 ? 'listening' : 'shadowing';
+    if (canShadow) return 'shadowing';
+    if (canListen) return 'listening';
+  }
   if (item.memoryStrength >= 0.6 && hasUsableContext(item)) return 'context';
   return 'type_answer';
 }
@@ -440,6 +460,15 @@ export default function ReviewPage() {
         ) : itemMode === 'listening' ? (
           /* Listening recall — hear audio then type what you heard */
           <ListeningExercise
+            key={item.id}
+            item={item}
+            disabled={submitting}
+            light={true}
+            onComplete={(quality, confidence) => handleRate(quality, confidence)}
+          />
+        ) : itemMode === 'shadowing' ? (
+          /* Shadowing — hear the model, record yourself, listen back, get scored */
+          <ShadowingExercise
             key={item.id}
             item={item}
             disabled={submitting}

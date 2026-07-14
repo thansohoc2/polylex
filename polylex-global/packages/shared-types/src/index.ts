@@ -66,7 +66,8 @@ export type ReviewMode =
   | 'reverse'
   | 'listening'
   | 'context'
-  | 'sentence';
+  | 'sentence'
+  | 'shadowing';
 
 // ─── ACRE (Adaptive Cognitive Reinforcement Engine) ─────────────────────────
 /**

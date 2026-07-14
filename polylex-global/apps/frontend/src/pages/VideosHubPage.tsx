@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { pathApi, type VideoDto, type PathDto } from '@/api/client';
 import AppShell from '@/components/layout/AppShell';
+import { youtubeProxyUrl } from '@/utils/youtube';
 
 interface HubVideo extends VideoDto {
   pathStageId: string;
@@ -108,7 +109,7 @@ export default function VideosHubPage() {
       <div className="px-4 py-2 flex flex-col gap-6 pb-16">
         {videos.map((video) => {
           const isExpanded = expandedVideoId === video.id;
-          const videoEmbedUrl = `https://www.youtube-nocookie.com/embed/${video.youtubeVideoId}?modestbranding=1&controls=1&rel=0&playsinline=1`;
+          const videoEmbedUrl = youtubeProxyUrl(video.youtubeVideoId);
 
           return (
             <div

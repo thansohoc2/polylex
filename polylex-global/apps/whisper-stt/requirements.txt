@@ -1,0 +1,5 @@
+fastapi==0.139.0
+uvicorn[standard]==0.24.0
+numpy<2
+openai-whisper==20250625
+pydantic==2.10.6

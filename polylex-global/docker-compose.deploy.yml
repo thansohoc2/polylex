@@ -13,6 +13,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-polylex}:${POSTGRES_PASSWORD:-polylex}@shared-postgres:5432/${POSTGRES_DB:-polylex}
       REDIS_URL: redis://:REDIS1234!acbd@shared-redis:6379
       OPENAI_ENABLED: ${OPENAI_ENABLED:-false}
+      WHISPER_STT_URL: http://whisper-stt:9000
     ports:
       - '8001:8000'
     networks:
@@ -39,12 +40,30 @@ services:
     depends_on:
       backend:
         condition: service_started
+      whisper-stt:
+        condition: service_started
     ports:
       - '8002:80'
     networks:
       - shared-network
     healthcheck:
       test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1/healthz || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  whisper-stt:
+    container_name: polylex_whisper_stt
+    build:
+      context: .
+      dockerfile: apps/whisper-stt/Dockerfile
+    restart: unless-stopped
+    ports:
+      - '9000:9000'
+    networks:
+      - shared-network
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:9000/health || exit 1']
       interval: 10s
       timeout: 5s
       retries: 12

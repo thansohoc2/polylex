@@ -1,19 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Capacitor } from '@capacitor/core';
 import { pathApi, VideoDto } from '@/api/client';
 import AppShell from '@/components/layout/AppShell';
-// 1. Sử dụng thư viện chuẩn của Capgo
-import { YoutubePlayer } from '@capgo/capacitor-youtube-player';
-
-const isNativePlatform = (): boolean => {
-  try {
-    return Capacitor.isNativePlatform();
-  } catch {
-    return false;
-  }
-};
+import { youtubeProxyUrl } from '@/utils/youtube';
 
 export default function VideosPage() {
   const { pathStageId } = useParams<{ pathStageId: string }>();
@@ -25,7 +15,6 @@ export default function VideosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [expandedVideoId, setExpandedVideoId] = useState<string | null>(null);
-  const [nativePlayerError, setNativePlayerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!pathStageId) return;
@@ -39,89 +28,13 @@ export default function VideosPage() {
       .finally(() => setLoading(false));
   }, [pathStageId]);
 
-    // 2. Cập nhật hàm xử lý khởi tạo chuẩn cú pháp phẳng của Capgo
-   // 2. Hàm xử lý khởi tạo chuẩn với tham số khắc phục lỗi 152
-  const isNative = isNativePlatform();
-
-  const handlePlayVideo = async (videoId: string) => {
-    if (expandedVideoId && expandedVideoId !== videoId && isNative) {
-      try {
-        await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-
-    setNativePlayerError(null);
+  const handlePlayVideo = (videoId: string) => {
     setExpandedVideoId(videoId);
-
-    if (!isNative) {
-      return;
-    }
   };
 
-  // 3. Giữ nguyên hàm tắt trình phát theo chuẩn Object ID
-  const handleStopVideo = async () => {
-    if (expandedVideoId && isNativePlatform()) {
-      try {
-        await YoutubePlayer.destroy({ playerId: `player-${expandedVideoId}` });
-      } catch (err) {
-        console.error("Lỗi destroy player: ", err);
-      }
-    }
-
+  const handleStopVideo = () => {
     setExpandedVideoId(null);
   };
-
-
-  useEffect(() => {
-    if (!isNative || !expandedVideoId) {
-      return;
-    }
-
-    const video = videos.find((item) => item.id === expandedVideoId);
-    if (!video) {
-      return;
-    }
-
-    const playerId = `player-${expandedVideoId}`;
-    let cancelled = false;
-
-    const initializePlayer = async () => {
-      try {
-        const origin = window.location.origin?.startsWith('http')
-          ? window.location.origin
-          : 'https://ebms.store';
-        await YoutubePlayer.initialize({
-          playerId,
-          videoId: video.youtubeVideoId,
-          playerVars: {
-            origin,
-            playsinline: 1,
-            modestbranding: 1,
-            rel: 0,
-            controls: 1,
-          },
-          playerSize: {
-            width: window.innerWidth - 32,
-            height: Math.floor((window.innerWidth - 32) * 9 / 16),
-          },
-        });
-      } catch (err) {
-        if (!cancelled) {
-          console.error('Lỗi khởi tạo Youtube Player Native:', err);
-          setNativePlayerError(String(err));
-        }
-      }
-    };
-
-    initializePlayer();
-
-    return () => {
-      cancelled = true;
-      YoutubePlayer.destroy({ playerId }).catch(() => {});
-    };
-  }, [expandedVideoId, isNative, videos]);
 
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) {
@@ -193,25 +106,17 @@ export default function VideosPage() {
               {/* Khu vực chứa video phát */}
               {isExpanded ? (
                 <div className="w-full aspect-video bg-black flex items-center justify-center">
-                  {isNative && !nativePlayerError ? (
-                    // Div đích để trình phát native đè lên
-                    <div
-                      id={`player-${video.id}`}
-                      className="w-full h-full"
-                    />
-                  ) : (
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube-nocookie.com/embed/${video.youtubeVideoId}?modestbranding=1&controls=1&rel=0&playsinline=1`}
-                      title={video.title}
-                      className="w-full h-full"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  )}
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={youtubeProxyUrl(video.youtubeVideoId)}
+                    title={video.title}
+                    className="w-full h-full"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
                 </div>
               ) : (
                 <button
