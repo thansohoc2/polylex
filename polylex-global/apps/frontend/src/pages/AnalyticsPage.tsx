@@ -2,28 +2,49 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { analyticsApi } from '@/api/client';
 import { HeatmapEntry, VelocityEntry, RetentionRateDto } from '@polylex/shared-types';
+import { AsyncState } from '@polylex/shared-ui';
 import AppShell from '@/components/layout/AppShell';
+
+const HEAT_COLORS = [
+  'var(--color-heat-1)',
+  'var(--color-heat-2)',
+  'var(--color-heat-3)',
+  'var(--color-heat-4)',
+  'var(--color-heat-5)',
+] as const;
 
 export default function AnalyticsPage() {
   const { t } = useTranslation();
   const [heatmap, setHeatmap] = useState<HeatmapEntry[]>([]);
   const [velocity, setVelocity] = useState<VelocityEntry[]>([]);
   const [retention, setRetention] = useState<RetentionRateDto | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
-    analyticsApi.getHeatmap(90).then(setHeatmap).catch(() => {});
-    analyticsApi.getVelocity(8).then(setVelocity).catch(() => {});
-    analyticsApi.getRetention().then(setRetention).catch(() => {});
+    Promise.allSettled([
+      analyticsApi.getHeatmap(90),
+      analyticsApi.getVelocity(8),
+      analyticsApi.getRetention(),
+    ]).then(([heatmapResult, velocityResult, retentionResult]) => {
+      if (heatmapResult.status === 'fulfilled') setHeatmap(heatmapResult.value);
+      if (velocityResult.status === 'fulfilled') setVelocity(velocityResult.value);
+      if (retentionResult.status === 'fulfilled') setRetention(retentionResult.value);
+      setLoadFailed([heatmapResult, velocityResult, retentionResult].every((result) => result.status === 'rejected'));
+      setLoading(false);
+    });
   }, []);
 
   const maxHeatCount = Math.max(1, ...heatmap.map((h) => h.count));
 
   return (
-    <AppShell title={t('analytics.title')} theme="light">
-      <div className="px-4 pb-6 space-y-6">
+    <AppShell title={t('analytics.title')}>
+      <div className="space-y-6 px-4 pb-6 sm:px-6 lg:grid lg:grid-cols-2 lg:items-start lg:px-8">
+        {loading && <div className="lg:col-span-2"><AsyncState status="loading" /></div>}
+        {loadFailed && <div className="lg:col-span-2"><AsyncState status="error" errorMessage={t('dialogue.loadError')} /></div>}
         {/* Retention rate */}
-        {retention && (
-          <div className="grid grid-cols-3 gap-3">
+        {!loading && retention && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:col-span-2">
             {[
               { label: t('analytics.reviews30d'), value: retention.total },
               { label: t('analytics.passed'), value: retention.passed },
@@ -49,7 +70,7 @@ export default function AnalyticsPage() {
         )}
 
         {/* Activity heatmap */}
-        <div className="bg-card rounded-2xl p-5 shadow-soft">
+        {!loading && <div className="rounded-[var(--radius-card)] bg-card p-5 shadow-soft">
           <h3 className="font-semibold text-ink mb-4">{t('analytics.heatmapTitle')}</h3>
           {heatmap.length === 0 ? (
             <p className="text-ink-3 text-sm">{t('analytics.noActivity')}</p>
@@ -57,22 +78,22 @@ export default function AnalyticsPage() {
             <div className="flex flex-wrap gap-1.5">
               {heatmap.map(({ date, count }) => {
                 const intensity = Math.min(1, count / maxHeatCount);
-                const opacity = 0.2 + intensity * 0.8;
+                const heatLevel = Math.max(1, Math.min(5, Math.ceil(intensity * 5)));
                 return (
                   <div
                     key={date}
                     className="w-4 h-4 rounded-sm"
-                    style={{ backgroundColor: `rgba(255, 107, 74, ${opacity})` }}
+                    style={{ backgroundColor: HEAT_COLORS[heatLevel - 1] }}
                     title={t('analytics.heatmapTooltip', { date, count })}
                   />
                 );
               })}
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Weekly velocity */}
-        <div className="bg-card rounded-2xl p-5 shadow-soft">
+        {!loading && <div className="rounded-[var(--radius-card)] bg-card p-5 shadow-soft">
           <h3 className="font-semibold text-ink mb-4">{t('analytics.velocityTitle')}</h3>
           {velocity.length === 0 ? (
             <p className="text-ink-3 text-sm">{t('analytics.noVelocity')}</p>
@@ -89,7 +110,7 @@ export default function AnalyticsPage() {
                           100,
                           (wordsLearned / Math.max(1, ...velocity.map((v) => v.wordsLearned))) * 100
                         )}%`,
-                        background: 'linear-gradient(90deg, var(--color-coral), var(--color-coral-2))',
+                        background: 'var(--color-coral)',
                       }}
                     />
                   </div>
@@ -98,7 +119,7 @@ export default function AnalyticsPage() {
               ))}
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </AppShell>
   );

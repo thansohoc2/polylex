@@ -5,34 +5,30 @@ interface SearchBarProps {
   onChange: (v: string) => void;
   placeholder?: string;
   className?: string;
+  /** @deprecated PolyLex Web uses Playful Light exclusively. */
   light?: boolean;
 }
 
-export default function SearchBar({ value, onChange, placeholder = 'Search…', className = '', light = false }: SearchBarProps) {
-  const bgStyle = light
-    ? { background: 'var(--color-card)', border: '1px solid var(--color-line)' }
-    : { background: '#1A1A2E', border: '1px solid rgba(255,255,255,0.1)' };
-
-  const textColor = light ? 'var(--color-ink)' : '#F1F5F9';
-  const iconColor = light ? 'var(--color-ink-soft)' : '#475569';
-
+export default function SearchBar({ value, onChange, placeholder = 'Search…', className = '' }: SearchBarProps) {
   return (
-    <div
-      className={`flex items-center gap-3 px-4 py-3 rounded-2xl ${className}`}
-      style={bgStyle}
-    >
-      <Search size={18} style={{ color: iconColor }} className="flex-shrink-0" />
+    <div className={`flex min-h-11 items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-line)] bg-[var(--color-card)] px-4 py-3 ${className}`}>
+      <Search size={18} className="flex-shrink-0 text-[var(--color-ink-3)]" aria-hidden="true" />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 bg-transparent outline-none text-sm"
-        style={{ color: textColor }}
+        aria-label={placeholder}
+        className="min-w-0 flex-1 bg-transparent text-sm text-[var(--color-ink)] outline-none placeholder:text-[var(--color-ink-3)]"
       />
       {value && (
-        <button onClick={() => onChange('')} className="flex-shrink-0 min-w-[24px] min-h-[24px] flex items-center justify-center">
-          <X size={16} style={{ color: iconColor }} />
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          aria-label={`${placeholder}: clear`}
+          className="flex min-h-11 min-w-11 flex-shrink-0 items-center justify-center rounded-full text-[var(--color-ink-3)] hover:bg-[var(--color-card-2)]"
+        >
+          <X size={16} aria-hidden="true" />
         </button>
       )}
     </div>

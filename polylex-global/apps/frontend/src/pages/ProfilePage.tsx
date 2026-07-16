@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Pencil, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
+import { Dialog, Select, Switch, TextField } from '@polylex/shared-ui';
 import { useAuthStore } from '@/store/auth.store';
 import { useAudioSettingsStore } from '@/store/audio-settings.store';
 import { useReminderSettingsStore } from '@/store/reminder-settings.store';
@@ -10,6 +11,7 @@ import { authApi, gamificationApi, languageApi, userApi, vocabularyApi } from '@
 import AppShell from '@/components/layout/AppShell';
 import { LanguageBadge } from '@/components/ui/Badge';
 import { CefrBadge } from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
 import type { GamificationStats, LanguageDto, UserProfile } from '@polylex/shared-types';
 
 export default function ProfilePage() {
@@ -141,53 +143,38 @@ export default function ProfilePage() {
   };
 
   return (
-    <AppShell title={t('profile.title')} theme="light">
+    <AppShell title={t('profile.title')}>
       {/* ── Delete Account Confirmation Modal ── */}
-      {showDeleteModal && (
-        <div
-          className="fixed inset-0 z-[100] flex items-end justify-center p-4"
-          style={{ background: 'rgba(34,27,46,0.55)', backdropFilter: 'blur(4px)' }}
-          onClick={() => setShowDeleteModal(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-[var(--radius-card)] p-6 animate-pop"
-            style={{ background: 'var(--color-card)' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-3xl text-center mb-3">⚠️</p>
-            <h3 className="text-h2 text-[var(--color-ink)] text-center mb-2">{t('profile.deleteTitle')}</h3>
-            <p className="text-sm text-[var(--color-ink-3)] text-center mb-6">{t('profile.deleteWarning')}</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                className="press flex-1 rounded-2xl py-3 text-sm font-semibold bg-[var(--color-card-2)] text-[var(--color-ink-2)] border border-[var(--color-line)]"
-              >
-                {t('profile.cancel')}
-              </button>
-              <button
-                onClick={handleDeleteAccount}
-                disabled={deletingAccount}
-                className="press flex-1 rounded-2xl py-3 text-sm font-semibold text-white disabled:opacity-60"
-                style={{ background: 'var(--color-bad)' }}
-              >
-                {deletingAccount ? '…' : t('profile.deleteConfirm')}
-              </button>
-            </div>
+      <Dialog
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title={t('profile.deleteTitle')}
+        description={t('profile.deleteWarning')}
+        closeLabel={t('profile.cancel')}
+        footer={(
+          <div className="flex w-full gap-3">
+            <Button variant="secondary" fullWidth onClick={() => setShowDeleteModal(false)}>
+              {t('profile.cancel')}
+            </Button>
+            <Button variant="danger" fullWidth onClick={() => void handleDeleteAccount()} disabled={deletingAccount}>
+              {deletingAccount ? '…' : t('profile.deleteConfirm')}
+            </Button>
           </div>
-        </div>
-      )}
+        )}
+      >
+        <p className="text-center text-3xl" aria-hidden="true">⚠️</p>
+      </Dialog>
 
-      <div className="px-4 space-y-6 pb-6">
+      <div className="space-y-6 px-4 pb-6 sm:px-6 lg:px-8">
 
         {/* ── ZONE 1: PROFILE + STATS (read-only) ── */}
         <div
           className="rounded-[var(--radius-card)] p-5 text-white shadow-coral"
-          style={{ background: 'linear-gradient(135deg, var(--color-ok) 0%, var(--color-indigo-600) 100%)' }}
+          style={{ background: 'linear-gradient(135deg, var(--color-ok), var(--color-grape))' }}
         >
           {/* Avatar + name */}
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-display font-extrabold text-white flex-shrink-0"
-              style={{ background: 'rgba(255,255,255,0.22)' }}>
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-on-brand-tint-md)] text-xl font-display font-extrabold text-[var(--color-on-brand)]">
               {initials}
             </div>
             <div>
@@ -198,15 +185,15 @@ export default function ProfilePage() {
 
           {/* Gamification stats row */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.18)' }}>
+            <div className="rounded-xl bg-[var(--color-on-brand-tint-sm)] p-3 text-center">
               <p className="text-xl font-display font-extrabold">{stats?.currentStreak ?? 0}</p>
               <p className="text-xs text-white/80">🔥 {t('greeting.dayStreak')}</p>
             </div>
-            <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.18)' }}>
+            <div className="rounded-xl bg-[var(--color-on-brand-tint-sm)] p-3 text-center">
               <p className="text-xl font-display font-extrabold">{stats?.level ?? 1}</p>
               <p className="text-xs text-white/80">⭐ {t('profile.levelLabel', { level: '' }).trim()}</p>
             </div>
-            <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.18)' }}>
+            <div className="rounded-xl bg-[var(--color-on-brand-tint-sm)] p-3 text-center">
               <p className="text-xl font-display font-extrabold">{stats?.masteredWordCount ?? 0}</p>
               <p className="text-xs text-white/80">📚 {t('greeting.words')}</p>
             </div>
@@ -215,12 +202,12 @@ export default function ProfilePage() {
           {/* Level XP bar */}
           {stats && (
             <div className="mt-4">
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.25)' }}>
+              <div className="h-2 overflow-hidden rounded-full bg-[var(--color-on-brand-tint-lg)]">
                 <div
                   className="h-full rounded-full"
                   style={{
                     width: `${Math.min(100, Math.round((stats.xpInLevel / Math.max(1, stats.xpForNextLevel)) * 100))}%`,
-                    background: 'rgba(255,255,255,0.9)',
+                    background: 'var(--color-on-brand)',
                   }}
                 />
               </div>
@@ -257,19 +244,16 @@ export default function ProfilePage() {
 
             {editMode && (
               <>
-                <select
+                <Select
+                  label={t('profile.nativeLanguage')}
                   value={nativeLangCode}
                   onChange={(e) => setNativeLangCode(e.target.value)}
-                  className="w-full bg-[var(--color-card-2)] border border-[var(--color-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--color-ink)] focus:outline-none focus:ring-2"
-                  style={{ '--tw-ring-color': 'var(--color-coral)' } as React.CSSProperties}
                   disabled={saving}
-                >
-                  {languages.map((l) => (
-                    <option key={l.code} value={l.code}>
-                      {l.flagEmoji ? `${l.flagEmoji} ` : ''}{l.name}
-                    </option>
-                  ))}
-                </select>
+                  options={languages.map((language) => ({
+                    value: language.code,
+                    label: `${language.flagEmoji ? `${language.flagEmoji} ` : ''}${language.name}`,
+                  }))}
+                />
                 <div className="flex gap-2">
                   <button
                     onClick={handleSave}
@@ -314,15 +298,17 @@ export default function ProfilePage() {
             {t('profile.voiceSettings')}
           </h3>
           <div className="bg-[var(--color-card)] rounded-[var(--radius-card)] px-4 py-3 shadow-soft space-y-3">
-            <div className="flex items-center gap-3">
-              <select
+            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-end">
+              <Select
+                label={t('profile.voiceSettings')}
                 value={voiceGender}
                 onChange={(e) => setVoiceGender(e.target.value as 'MALE' | 'FEMALE')}
-                className="flex-1 bg-[var(--color-card-2)] border border-[var(--color-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--color-ink)] focus:outline-none"
-              >
-                <option value="FEMALE">{t('profile.female')}</option>
-                <option value="MALE">{t('profile.male')}</option>
-              </select>
+                disabled={voiceSaving}
+                options={[
+                  { value: 'FEMALE', label: t('profile.female') },
+                  { value: 'MALE', label: t('profile.male') },
+                ]}
+              />
               <button onClick={handleSaveVoice} disabled={voiceSaving}
                 className="press px-4 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                 style={{ background: 'var(--color-ok)' }}>
@@ -355,28 +341,18 @@ export default function ProfilePage() {
             {t('profile.reminderSettings')}
           </h3>
           <div className="bg-[var(--color-card)] rounded-[var(--radius-card)] px-4 py-3 shadow-soft space-y-3">
-            <label className="flex items-center justify-between gap-3">
-              <span className="text-sm text-[var(--color-ink)]">{t('profile.reminderEnabled')}</span>
-              <button
-                type="button"
-                onClick={() => setReminderEnabled(!reminderEnabled)}
-                className={`w-12 h-7 rounded-full p-1 transition-colors ${reminderEnabled ? '' : ''}`}
-                style={{ background: reminderEnabled ? 'var(--color-ok)' : 'var(--color-line)' }}
-                aria-label={t('profile.reminderEnabled')}
-              >
-                <span className={`block w-5 h-5 rounded-full bg-white transition-transform shadow ${reminderEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
-              </button>
-            </label>
-            <label className="block">
-              <span className="text-xs text-[var(--color-ink-3)]">{t('profile.reminderTime')}</span>
-              <input
-                type="time"
-                value={reminderTime}
-                onChange={(e) => setReminderTime(e.target.value)}
-                disabled={!reminderEnabled}
-                className="mt-1.5 w-full bg-[var(--color-card-2)] border border-[var(--color-line)] rounded-xl px-3 py-2.5 text-sm text-[var(--color-ink)] focus:outline-none disabled:opacity-50"
-              />
-            </label>
+            <Switch
+              label={t('profile.reminderEnabled')}
+              checked={reminderEnabled}
+              onCheckedChange={setReminderEnabled}
+            />
+            <TextField
+              label={t('profile.reminderTime')}
+              type="time"
+              value={reminderTime}
+              onChange={(e) => setReminderTime(e.target.value)}
+              disabled={!reminderEnabled}
+            />
             <p className="text-xs text-[var(--color-ink-3)]">{t('profile.reminderNote')}</p>
           </div>
         </section>
@@ -437,6 +413,7 @@ export default function ProfilePage() {
           <div className="bg-[var(--color-card)] rounded-[var(--radius-card)] shadow-soft overflow-hidden divide-y divide-[var(--color-line)]">
             {[
               { label: t('profile.vocabularyMenu'), icon: '📚', path: '/vocabulary' },
+              { label: t('dashboard.quickNotes'), icon: '⚡', path: '/quick-notes' },
               { label: t('profile.analyticsMenu'), icon: '📊', path: '/analytics' },
               { label: t('profile.leaderboardMenu'), icon: '🏆', path: '/leaderboard' },
             ].map(({ label, icon, path }) => (
@@ -471,8 +448,7 @@ export default function ProfilePage() {
         {/* Sign out */}
         <button
           onClick={handleLogout}
-          className="press w-full rounded-[var(--radius-card)] py-4 text-sm font-semibold border"
-          style={{ background: 'color-mix(in srgb, var(--color-coral) 10%, white)', color: 'var(--color-coral)', borderColor: 'color-mix(in srgb, var(--color-coral) 25%, white)' }}
+          className="press w-full rounded-[var(--radius-card)] border border-[var(--color-coral)] bg-[var(--color-coral-soft)] py-4 text-sm font-semibold text-[var(--color-coral)]"
         >
           {t('profile.signOut')}
         </button>
@@ -485,8 +461,7 @@ export default function ProfilePage() {
           <button
             onClick={() => setShowDeleteModal(true)}
             disabled={deletingAccount}
-            className="press w-full rounded-[var(--radius-card)] py-4 text-sm font-semibold border disabled:opacity-60"
-            style={{ background: 'color-mix(in srgb, var(--color-bad) 8%, white)', color: 'var(--color-bad)', borderColor: 'color-mix(in srgb, var(--color-bad) 22%, white)' }}
+            className="press w-full rounded-[var(--radius-card)] border border-[var(--color-bad)] bg-[var(--color-bad-soft)] py-4 text-sm font-semibold text-[var(--color-bad)] disabled:opacity-60"
           >
             {deletingAccount ? 'Deleting account…' : t('profile.deleteAccount')}
           </button>

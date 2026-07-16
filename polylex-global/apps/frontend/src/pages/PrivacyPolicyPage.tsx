@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-5 py-8 space-y-8 text-sm leading-relaxed">
+      <main className="mx-auto max-w-3xl space-y-8 px-5 py-8 text-sm leading-relaxed sm:px-8 sm:py-10">
         <p className="text-ink-3 text-xs">Last updated: {LAST_UPDATED}</p>
 
         <p>
@@ -180,7 +180,7 @@ export default function PrivacyPolicyPage() {
             ← Back
           </button>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

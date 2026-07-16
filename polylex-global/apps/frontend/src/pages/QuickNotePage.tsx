@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { AsyncState } from '@polylex/shared-ui';
 import { quickNoteApi, vocabularyApi } from '@/api/client';
 import AppShell from '@/components/layout/AppShell';
 import SearchBar from '@/components/ui/SearchBar';
@@ -23,16 +24,18 @@ export default function QuickNotePage() {
   const { t } = useTranslation();
   const [notes, setNotes] = useState<QuickNote[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [search, setSearch] = useState('');
   const [langFilter, setLangFilter] = useState('');
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const loadNotes = useCallback(async () => {
+    setLoadFailed(false);
     try {
       const data = await quickNoteApi.list();
       setNotes(data as QuickNote[]);
     } catch {
-      // ignore
+      setLoadFailed(true);
     } finally {
       setLoading(false);
     }
@@ -76,17 +79,26 @@ export default function QuickNotePage() {
   };
 
   return (
-    <AppShell title={t('quicknote.title')} theme="light">
+    <AppShell title={t('quicknote.title')}>
       {/* Search + filter */}
-      <div className="px-4 pt-4 pb-3 space-y-3">
-        <SearchBar value={search} onChange={setSearch} placeholder={t('quicknote.searchPlaceholder')} light={true} />
-        <LanguageFilterChips notes={notes} selected={langFilter} onSelect={setLangFilter} light={true} />
+      <div className="space-y-3 px-4 pb-3 pt-4 sm:px-6 lg:px-8">
+        <SearchBar value={search} onChange={setSearch} placeholder={t('quicknote.searchPlaceholder')} />
+        <LanguageFilterChips notes={notes} selected={langFilter} onSelect={setLangFilter} />
       </div>
 
       {/* Content */}
       {loading ? (
-        <div className="px-4 space-y-3">
-          {[1, 2, 3].map((i) => <SkeletonCard key={i} lines={3} light={true} />)}
+        <div className="grid gap-3 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
+          {[1, 2, 3].map((i) => <SkeletonCard key={i} lines={3} />)}
+        </div>
+      ) : loadFailed ? (
+        <div className="px-4 sm:px-6 lg:px-8">
+          <AsyncState
+            status="error"
+            errorMessage={t('addNote.failedToSubmit')}
+            retryLabel={t('review.tryAgain')}
+            onRetry={() => void loadNotes()}
+          />
         </div>
       ) : filteredNotes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
@@ -96,18 +108,18 @@ export default function QuickNotePage() {
             <line x1="20" y1="30" x2="44" y2="30" stroke="var(--color-coral)" strokeWidth="2" strokeLinecap="round" />
             <line x1="20" y1="38" x2="34" y2="38" stroke="var(--color-coral)" strokeWidth="2" strokeLinecap="round" />
           </svg>
-          <h3 className="font-semibold text-base" style={{ color: 'var(--color-ink)' }}>
+          <h3 className="text-base font-semibold text-[var(--color-ink)]">
             {t(search || langFilter ? 'quicknote.noMatchingTitle' : 'quicknote.noNotesTitle')}
           </h3>
-          <p className="text-sm mt-1" style={{ color: 'var(--color-ink-soft)' }}>
+          <p className="mt-1 text-sm text-[var(--color-ink-3)]">
             {t(search || langFilter ? 'quicknote.tryDifferentFilters' : 'quicknote.addFirstNote')}
           </p>
         </div>
       ) : (
-        <motion.div variants={containerVariants} initial="initial" animate="animate" className="pt-1">
+        <motion.div variants={containerVariants} initial="initial" animate="animate" className="grid gap-3 px-4 pt-1 sm:px-6 md:grid-cols-2 lg:px-8">
           {filteredNotes.map((note) => (
             <motion.div key={note.id} variants={itemVariants}>
-              <QuickNoteCard note={note} onDelete={handleDelete} onAddToDeck={handleAddToDeck} light={true} />
+              <QuickNoteCard note={note} onDelete={handleDelete} onAddToDeck={handleAddToDeck} />
             </motion.div>
           ))}
         </motion.div>
@@ -115,12 +127,12 @@ export default function QuickNotePage() {
 
       {/* FAB */}
       <button
+        type="button"
         onClick={() => setSheetOpen(true)}
-        className="fixed bottom-24 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
-        style={{ background: 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))', boxShadow: 'var(--shadow-coral)' }}
-        aria-label="Add quick note"
+        className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-coral)] text-[var(--color-on-brand)] shadow-coral"
+        aria-label={t('quicknote.newNote')}
       >
-        <span className="text-white text-2xl font-light leading-none">+</span>
+        <span className="text-2xl font-light leading-none">+</span>
       </button>
 
       <AddQuickNoteSheet

@@ -37,10 +37,7 @@ export default function PathCard({ path, onStageComplete }: Props) {
             )}
           </div>
           {path.completedAt && (
-            <span
-              className="flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold"
-              style={{ background: 'color-mix(in srgb, var(--color-ok) 14%, white)', color: 'var(--color-ok)' }}
-            >
+            <span className="flex-shrink-0 rounded-full bg-[var(--color-ok-soft)] px-2 py-0.5 text-xs font-semibold text-[var(--color-ok)]">
               {t('roadmap.done')}
             </span>
           )}
@@ -57,9 +54,7 @@ export default function PathCard({ path, onStageComplete }: Props) {
               className="h-1.5 rounded-full transition-all"
               style={{
                 width: `${progressPct}%`,
-                background: path.completedAt
-                  ? 'linear-gradient(90deg, var(--color-ok), #34D399)'
-                  : 'linear-gradient(90deg, var(--color-coral), var(--color-coral-2))',
+                background: path.completedAt ? 'var(--color-ok)' : 'var(--color-coral)',
               }}
             />
           </div>

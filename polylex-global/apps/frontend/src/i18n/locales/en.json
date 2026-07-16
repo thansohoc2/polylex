@@ -5,7 +5,8 @@
     "videos": "Videos",
     "notes": "Notes",
     "review": "Review",
-    "profile": "Profile"
+    "profile": "Profile",
+    "primary": "Primary navigation"
   },
   "auth": {
     "welcomeBack": "Welcome back",
@@ -30,7 +31,75 @@
     "alreadyHaveAccount": "Already have an account?",
     "enterHome": "Experience now",
     "enteringHome": "Entering experience…",
-    "guestEntryFailed": "Unable to enter experience right now. Please try again."
+    "guestEntryFailed": "Unable to enter experience right now. Please try again.",
+    "or": "or"
+  },
+  "common": {
+    "continue": "Continue",
+    "back": "Back"
+  },
+  "validation": {
+    "required": "This field is required.",
+    "email": "Enter a valid email address.",
+    "minLength": "Use at least {{minimum}} characters.",
+    "passwordMatch": "Passwords must match."
+  },
+  "legal": {
+    "privacy": "Privacy Policy",
+    "support": "Support"
+  },
+  "support": {
+    "title": "Support",
+    "heroTitle": "How can we help?",
+    "heroDescription": "Browse the FAQ below or reach out directly — we usually reply within 48 hours.",
+    "emailSubject": "[{{appName}}] Support Request",
+    "emailSupport": "Email Support",
+    "quickLinks": "Quick Links",
+    "deleteAccount": "Delete Account",
+    "faqTitle": "Frequently Asked Questions",
+    "appTagline": "{{appName}} · Language Learning",
+    "developedBy": "Developed by {{name}}",
+    "faq": {
+      "addWord": { "question": "How do I add a new vocabulary word?", "answer": "Tap the + button on the Vocabulary page, enter the word and optionally select an AI enrichment option to auto-fill the definition and example." },
+      "review": { "question": "How does the review system work?", "answer": "{{appName}} uses spaced repetition. Words return based on how well you recalled them last time — sooner if hard, later if easy." },
+      "language": { "question": "How do I change my native language?", "answer": "Open Profile, choose your native language, then save the setting." },
+      "deleteAccount": { "question": "How do I delete my account?", "answer": "Open Profile and select Delete Account to permanently remove your account and data." },
+      "socialLogin": { "question": "Google or Apple sign-in is not working", "answer": "Check your internet connection. On iOS, ensure iCloud Keychain is enabled for Sign in with Apple. Contact support if the issue persists." },
+      "offline": { "question": "Can I use PolyLex offline?", "answer": "Some saved content can be available from cache. AI enrichment and text-to-speech audio require an internet connection." }
+    }
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content"
+  },
+  "onboarding": {
+    "welcome": "Welcome to PolyLex! 🎉",
+    "learningQuestion": "What do you want to learn?",
+    "nativeSubtitle": "Tell us your native language",
+    "targetSubtitle": "Choose a language and goal for your first path",
+    "nativeLanguage": "Native language",
+    "selectNative": "Select your language...",
+    "targetLanguage": "Language to learn",
+    "selectTarget": "Select a language to learn...",
+    "goal": "Your goal",
+    "goalPlaceholder": "For example: communicate while travelling in Japan",
+    "currentLevel": "Current level",
+    "creatingPath": "Creating your path...",
+    "createPath": "Create path and start",
+    "skip": "Skip and create it later",
+    "pathCreated": "Your first learning path is ready! 🎉",
+    "pathCreateFailed": "We couldn't create the path yet. You can try again later.",
+    "goals": {
+      "dailyConversation": "Daily conversation",
+      "travel": "Travel",
+      "work": "Work and interviews",
+      "exam": "Exam preparation",
+      "entertainment": "Movies and entertainment"
+    },
+    "errors": {
+      "nativeRequired": "Choose your native language.",
+      "targetAndGoalRequired": "Choose a target language and learning goal.",
+      "saveFailed": "We couldn't save your choices. Please try again."
+    }
   },
   "dashboard": {
     "title": "Home",
@@ -123,6 +192,8 @@
     "viewDialogue": "💬 View Dialogue",
     "viewVideos": "▶️ View Videos",
     "tapToReveal": "Tap to reveal",
+    "pronounceTerm": "Pronounce term",
+    "pronounceExample": "Pronounce example sentence",
     "strength": "Strength",
     "leech": "🐛 Leech",
     "again": "🔁 Again",

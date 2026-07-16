@@ -71,7 +71,6 @@ export default function MultipleChoiceExercise({
   allItems,
   disabled = false,
   onComplete,
-  light = false,
 }: MultipleChoiceExerciseProps) {
   const { t } = useTranslation();
   const rate = useAudioSettingsStore((s) => s.rate);
@@ -81,15 +80,15 @@ export default function MultipleChoiceExercise({
   const [startAt, setStartAt] = useState(Date.now());
 
   const correct = item.vocabularyBase.translations[0]?.translation ?? '';
-  const options = useMemo(() => buildOptions(item, allItems), [item.id, allItems.length]);
+  const options = useMemo(() => buildOptions(item, allItems), [item, allItems]);
 
-  const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
-  const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textPrimary = light ? 'var(--color-red-400)' : '#f86156';
-  const textSoft = light ? 'var(--color-red-300)' : '#f27b5d';
-  const optionBg = light ? 'var(--color-card-2)' : '#12121F';
-  const optionBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.3)';
-  const btnBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';
+  const cardBg = 'var(--color-card)';
+  const cardBorder = 'var(--color-line)';
+  const textPrimary = 'var(--color-ink)';
+  const textSoft = 'var(--color-ink-2)';
+  const optionBg = 'var(--color-card-2)';
+  const optionBorder = 'var(--color-line)';
+  const btnBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
 
   useEffect(() => {
     setSelected(null);
@@ -140,7 +139,7 @@ export default function MultipleChoiceExercise({
         {item.isLeech && (
           <span
             className="text-xs px-2 py-0.5 rounded-full mb-3"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+            style={{ background: 'var(--color-bad-soft)', color: 'var(--color-bad)' }}
           >
             {t('review.leech')}
           </span>
@@ -159,17 +158,15 @@ export default function MultipleChoiceExercise({
               rate,
             )
           }
-          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center"
-
-          style={{ background: 'rgba(99,102,241,0.15)' }}
+          className="absolute top-3 right-3 w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-grape)]"
           aria-label={t('review.replay')}
         >
-          <Volume2 size={14} className="text-[#6366F1]" />
+          <Volume2 size={18} />
         </button>
       
 {item.vocabularyBase.exampleSentence && (
           <div className="flex items-start gap-1.5 mt-1">
-            <p className="text-sm text-[#94A3B8] italic text-center line-clamp-3 flex-1">
+            <p className="text-sm text-[var(--color-ink-3)] italic text-center line-clamp-3 flex-1">
               "{item.vocabularyBase.exampleSentence}"
             </p>
             <button
@@ -181,11 +178,10 @@ export default function MultipleChoiceExercise({
                   rate,
                 );
               }}
-              className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5"
-              style={{ background: 'rgba(148,163,184,0.12)' }}
-              aria-label="Pronounce example sentence"
+              className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-ink-3)]"
+              aria-label={t('review.pronounceExample')}
             >
-              <Volume2 size={11} className="text-[#94A3B8]" />
+              <Volume2 size={16} />
             </button>
           </div>
         )}
@@ -199,7 +195,7 @@ export default function MultipleChoiceExercise({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-sm font-semibold mt-4"
-            style={{ color: isCorrect ? '#10B981' : '#EF4444' }}
+            style={{ color: isCorrect ? 'var(--color-ok)' : 'var(--color-bad)' }}
           >
             {isCorrect ? t('review.answerCorrect') : t('review.answerWrong')}
           </motion.p>
@@ -213,14 +209,14 @@ export default function MultipleChoiceExercise({
           const showRight = revealed && isRight;
           const showWrong = revealed && isSelected && !isRight;
           const border = showRight
-            ? '1px solid #10B981'
+            ? '1px solid var(--color-ok)'
             : showWrong
-              ? '1px solid #EF4444'
+              ? '1px solid var(--color-bad)'
               : `1px solid ${optionBorder}`;
           const bg = showRight
-            ? 'rgba(16,185,129,0.12)'
+            ? 'var(--color-ok-soft)'
             : showWrong
-              ? 'rgba(239,68,68,0.12)'
+              ? 'var(--color-bad-soft)'
               : optionBg;
 
           return (

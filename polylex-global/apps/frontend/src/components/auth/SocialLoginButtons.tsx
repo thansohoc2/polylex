@@ -5,11 +5,13 @@ import toast from 'react-hot-toast';
 import { SocialLoginButton, type SocialLoginResult, type SocialLoginError } from '@polylex/shared-ui';
 import { authApi, userApi } from '@/api/client';
 import { useAuthStore } from '@/store/auth.store';
+import { useTranslation } from 'react-i18next';
 
 // Module-level flag so GSI initialize() is only called once
 let gsiInitialized = false;
 
 export default function SocialLoginButtons() {
+  const { t } = useTranslation();
   const { setTokens, setUser } = useAuthStore();
   const navigate = useNavigate();
   const tokenClientRef = useRef<google.accounts.oauth2.TokenClient | null>(null);
@@ -110,9 +112,9 @@ export default function SocialLoginButtons() {
     <div className="space-y-3 mt-4">
       {/* Divider */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs text-[#475569]">hoặc</span>
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px bg-[var(--color-line)]" />
+        <span className="text-xs text-[var(--color-ink-3)]">{t('auth.or')}</span>
+        <div className="flex-1 h-px bg-[var(--color-line)]" />
       </div>
 
       <SocialLoginButton

@@ -29,39 +29,31 @@ interface QuickNoteCardProps {
   note: QuickNote;
   onDelete: (id: string) => void;
   onAddToDeck: (vocabBaseId: string) => void;
+  /** @deprecated PolyLex Web uses Playful Light exclusively. */
   light?: boolean;
 }
 
-export default function QuickNoteCard({ note, onDelete, onAddToDeck, light = false }: QuickNoteCardProps) {
+export default function QuickNoteCard({ note, onDelete, onAddToDeck }: QuickNoteCardProps) {
   const { t } = useTranslation();
-  const cardBg = light
-    ? { background: 'var(--color-card)', border: '1px solid var(--color-line)' }
-    : { background: '#1A1A2E', border: '1px solid rgba(255,255,255,0.05)' };
-   const textPrimary = light ? 'var(--color-red-400)' : '#f86156';
-  const textSecondary = light ? 'var(--color-red-300)' : '#f27b5d';
-  const textMuted = light ? 'var(--color-red-200)' : '#475569';
-  const shimmerLight = light
-    ? 'linear-gradient(90deg, #F5F0EB 0%, #FBF6F2 50%, #F5F0EB 100%)'
-    : 'linear-gradient(90deg, #16213E 0%, #1A1A2E 50%, #16213E 100%)';
   const statusConfig = {
-    PENDING: { label: t('quicknote.statusPending'), bg: light ? 'bg-[#F59E0B]/10 text-[#D97706]' : 'bg-[#F59E0B]/15 text-[#F59E0B]' },
-    PROCESSING: { label: t('quicknote.statusProcessing'), bg: light ? 'bg-[var(--color-coral)]/15 text-[var(--color-coral)]' : 'bg-[#6366F1]/15 text-[#6366F1]' },
-    DONE: { label: t('quicknote.statusDone'), bg: light ? 'bg-[var(--color-ok)]/10 text-[#059669]' : 'bg-[#10B981]/15 text-[#10B981]' },
-    ERROR: { label: t('quicknote.statusError'), bg: light ? 'bg-[#EF4444]/10 text-[#DC2626]' : 'bg-[#EF4444]/15 text-[#EF4444]' },
+    PENDING: { label: t('quicknote.statusPending'), bg: 'bg-[var(--color-warn-soft)] text-[var(--color-warn)]' },
+    PROCESSING: { label: t('quicknote.statusProcessing'), bg: 'bg-[var(--color-info-soft)] text-[var(--color-info)]' },
+    DONE: { label: t('quicknote.statusDone'), bg: 'bg-[var(--color-ok-soft)] text-[var(--color-ok)]' },
+    ERROR: { label: t('quicknote.statusError'), bg: 'bg-[var(--color-bad-soft)] text-[var(--color-bad)]' },
   };
   const vb = note.vocabularyBase;
   const translation = vb?.translations?.[0];
   const canAddToDeck = note.status === 'DONE' && !!note.vocabularyBaseId;
 
   return (
-    <div className="relative mx-4 mb-3">
+    <div className="relative">
       {/* Background actions */}
-      <div className="absolute inset-y-0 left-0 w-20 flex items-center justify-center rounded-2xl" style={{ background: light ? 'rgba(239,68,68,0.1)' : 'rgba(239,68,68,0.2)' }}>
-        <Trash2 size={20} style={{ color: light ? '#DC2626' : '#EF4444' }} />
+      <div className="absolute inset-y-0 left-0 flex w-20 items-center justify-center rounded-[var(--radius-card)] bg-[var(--color-bad-soft)]">
+        <Trash2 size={20} className="text-[var(--color-bad)]" aria-hidden="true" />
       </div>
       {canAddToDeck && (
-        <div className="absolute inset-y-0 right-0 w-20 flex items-center justify-center rounded-2xl" style={{ background: light ? 'rgba(16,185,129,0.1)' : 'rgba(16,185,129,0.2)' }}>
-          <BookPlus size={20} style={{ color: light ? '#059669' : '#10B981' }} />
+        <div className="absolute inset-y-0 right-0 flex w-20 items-center justify-center rounded-[var(--radius-card)] bg-[var(--color-ok-soft)]">
+          <BookPlus size={20} className="text-[var(--color-ok)]" aria-hidden="true" />
         </div>
       )}
 
@@ -77,16 +69,15 @@ export default function QuickNoteCard({ note, onDelete, onAddToDeck, light = fal
             onAddToDeck(note.vocabularyBaseId);
           }
         }}
-        className="relative z-10 rounded-2xl p-4 cursor-grab active:cursor-grabbing"
-        style={cardBg}
+        className="relative z-10 cursor-grab rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-card)] p-4 shadow-soft active:cursor-grabbing"
         whileTap={{ scale: 0.98 }}
       >
         {/* Header row */}
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
-            <span className="text-xl font-bold truncate" style={{ color: textPrimary }}>{note.term}</span>
-            <LanguageBadge code={note.sourceLanguageCode} light={light} />
-            {vb?.cefrLevel && <CefrBadge level={vb.cefrLevel} light={light} />}
+            <span className="truncate text-xl font-bold text-[var(--color-ink)]">{note.term}</span>
+            <LanguageBadge code={note.sourceLanguageCode} light />
+            {vb?.cefrLevel && <CefrBadge level={vb.cefrLevel} light />}
           </div>
           <span
             className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${statusConfig[note.status].bg}`}
@@ -104,24 +95,24 @@ export default function QuickNoteCard({ note, onDelete, onAddToDeck, light = fal
 
         {/* Part of speech */}
         {vb?.partOfSpeech && (
-          <span className="inline-block text-xs px-2 py-0.5 rounded-full mb-2" style={{ background: light ? 'var(--color-card-2)' : 'bg-white/5', color: textMuted }}>
+          <span className="mb-2 inline-block rounded-full bg-[var(--color-card-2)] px-2 py-0.5 text-xs text-[var(--color-ink-3)]">
             {vb.partOfSpeech}
           </span>
         )}
 
         {/* Translation */}
         {translation && (
-          <p className="text-base font-medium mb-1" style={{ color: light ? 'var(--color-grape)' : '#A78BFA' }}>{translation.translation}</p>
+          <p className="mb-1 text-base font-medium text-[var(--color-grape)]">{translation.translation}</p>
         )}
 
         {/* Example */}
         {vb?.exampleSentence && (
-          <p className="text-sm italic line-clamp-2" style={{ color: textSecondary }}>" {vb.exampleSentence}"</p>
+          <p className="line-clamp-2 text-sm italic text-[var(--color-ink-2)]">&quot; {vb.exampleSentence}&quot;</p>
         )}
 
         {/* Error */}
         {note.status === 'ERROR' && note.errorMessage && (
-          <p className="text-xs mt-1" style={{ color: light ? '#DC2626' : '#EF4444' }}>{note.errorMessage}</p>
+          <p className="mt-1 text-xs text-[var(--color-bad)]" role="alert">{note.errorMessage}</p>
         )}
 
         {/* Loading skeleton for pending */}
@@ -130,12 +121,9 @@ export default function QuickNoteCard({ note, onDelete, onAddToDeck, light = fal
             {[80, 60].map((w, i) => (
               <div
                 key={i}
-                className="rounded-full h-3"
+                className="h-3 animate-pulse rounded-full bg-[var(--color-card-2)]"
                 style={{
                   width: `${w}%`,
-                  background: shimmerLight,
-                  backgroundSize: '200%',
-                  animation: 'shimmer 1.5s infinite',
                 }}
               />
             ))}

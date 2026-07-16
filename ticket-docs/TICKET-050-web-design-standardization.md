@@ -464,37 +464,37 @@ Triển khai theo bốn phase Web-only:
 
 #### 8.5 Definition of Done cấp ticket
 
-- [ ] Playful Light là Web default theme tại root/shell.
-- [ ] Có một nguồn semantic design tokens cho Web và Web shared components.
-- [ ] Không còn token undefined.
-- [ ] Không còn page-level theme fallback mơ hồ.
-- [ ] Hard-coded visual values chỉ còn trong danh sách ngoại lệ documented.
-- [ ] Primitive UI có states, accessibility và tests.
-- [ ] Auth, onboarding, vocabulary, roadmap, review, quick note và profile theo cùng visual language.
-- [ ] Navigation/back/deep-link behavior của Web được chốt và kiểm thử.
-- [ ] Loading/empty/error/offline/session-expiry patterns nhất quán.
-- [ ] 100% user-facing strings và accessible labels qua i18n.
-- [ ] Critical journeys đạt WCAG 2.2 AA; touch target tối thiểu 44×44 px.
-- [ ] Có reduced-motion behavior.
-- [ ] Visual baselines cho 320/375/430 px, tablet và desktop.
-- [ ] Critical Web E2E chạy ổn định.
-- [ ] CI chặn token undefined, missing locale, accessibility nghiêm trọng và Web build regression.
-- [ ] Không có thay đổi bắt buộc hoặc acceptance criteria nào cho Zalo/native.
+- [x] Playful Light là Web default theme tại root/shell.
+- [x] Có một nguồn semantic design tokens cho Web và Web shared components.
+- [x] Không còn token undefined.
+- [x] Không còn page-level theme fallback mơ hồ.
+- [x] Hard-coded visual values chỉ còn trong danh sách ngoại lệ documented.
+- [x] Primitive UI có states, accessibility và tests.
+- [x] Auth, onboarding, vocabulary, roadmap, review, quick note và profile theo cùng visual language.
+- [x] Navigation/back/deep-link behavior của Web được chốt và kiểm thử.
+- [x] Loading/empty/error/offline/session-expiry patterns nhất quán.
+- [x] 100% user-facing strings và accessible labels qua i18n.
+- [x] Critical journeys đạt WCAG 2.2 AA; touch target tối thiểu 44×44 px.
+- [x] Có reduced-motion behavior.
+- [x] Visual baselines cho 320/375/430 px, tablet và desktop.
+- [x] Critical Web E2E chạy ổn định.
+- [x] CI chặn token undefined, missing locale, accessibility nghiêm trọng và Web build regression.
+- [x] Không có thay đổi bắt buộc hoặc acceptance criteria nào cho Zalo/native.
 
 ---
 
 ### 9. Câu hỏi mở
 
-- [ ] **Q1:** Playful Light có phải theme Web duy nhất trong giai đoạn này hay vẫn cần giữ dark mode option? Playful Light duy nhất
-- [ ] **Q2:** Năm primary destinations chính thức của mobile Web là gì? Vocabulary và Quick Note thuộc vị trí nào? home, path, videos, review, profile. Vocabulary và Quick Note bỏ trong home và profile,
-- [ ] **Q3:** Review session có ẩn bottom navigation và chặn browser back ngoài ý muốn không? không
-- [ ] **Q4:** Design tokens/primitives nên nằm trong `@polylex/shared-ui` hay tạo `@polylex/design-system` dù hiện chỉ phục vụ Web? tự cân nhắc
-- [ ] **Q5:** Browser support matrix tối thiểu là gì để quyết định dùng `color-mix()`, backdrop filter và CSS mới? tự cân nhắc
-- [ ] **Q6:** Font Poppins sẽ self-host hay tiếp tục tải Google Fonts? cân nhắc cái nào tốt thì chọn
-- [ ] **Q7:** Chọn Playwright screenshots, Storybook/Chromatic hay giải pháp khác cho visual regression? kết hợp
-- [ ] **Q8:** Có analytics baseline để so sánh activation/review completion trước và sau migration không? cần
-- [ ] **Q9:** Backend đã có error code/idempotency contract đủ cho Web UX chưa, hay cần follow-up ticket? cần follow-up ticket
-- [ ] **Q10:** Desktop Web tiếp tục giới hạn `max-w-md` hay cần layout mở rộng cho tablet/desktop? layout mở rộng cho tablet/desktop
+- [x] **Q1:** Playful Light có phải theme Web duy nhất trong giai đoạn này hay vẫn cần giữ dark mode option? Playful Light duy nhất
+- [x] **Q2:** Năm primary destinations chính thức của mobile Web là gì? Vocabulary và Quick Note thuộc vị trí nào? home, path, videos, review, profile. Vocabulary và Quick Note bỏ trong home và profile,
+- [x] **Q3:** Review session có ẩn bottom navigation và chặn browser back ngoài ý muốn không? không
+- [x] **Q4:** Design tokens/primitives nên nằm trong `@polylex/shared-ui` hay tạo `@polylex/design-system` dù hiện chỉ phục vụ Web? tự cân nhắc
+- [x] **Q5:** Browser support matrix tối thiểu là gì để quyết định dùng `color-mix()`, backdrop filter và CSS mới? tự cân nhắc
+- [x] **Q6:** Font Poppins sẽ self-host hay tiếp tục tải Google Fonts? cân nhắc cái nào tốt thì chọn
+- [x] **Q7:** Chọn Playwright screenshots, Storybook/Chromatic hay giải pháp khác cho visual regression? kết hợp
+- [x] **Q8:** Có analytics baseline để so sánh activation/review completion trước và sau migration không? cần
+- [x] **Q9:** Backend đã có error code/idempotency contract đủ cho Web UX chưa, hay cần follow-up ticket? cần follow-up ticket
+- [x] **Q10:** Desktop Web tiếp tục giới hạn `max-w-md` hay cần layout mở rộng cho tablet/desktop? layout mở rộng cho tablet/desktop
 
 ---
 
@@ -611,28 +611,28 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-01 — Governance, scope và dependencies
 
-- [ ] **TODO-A.01.01 — Tạo governance decision record**  
+- [x] **TODO-A.01.01 — Tạo governance decision record**  
   **File:** `polylex-global/docs/design-system/GOVERNANCE.md`  
   **Context:** `ticket-docs/TICKET-050-web-design-standardization.md`, `polylex-global/ticket-docs/TICKET-035-design-system-playful-light.md`  
   **Change:** ghi Playful Light-only, Web-first package boundary, viewport matrix, exception owner và quy tắc không tạo acceptance criteria cho Zalo/native.  
   **Verify:** `grep -E "Playful Light|320|1024|Web-first" docs/design-system/GOVERNANCE.md`  
   **Expected:** cả bốn quyết định xuất hiện; không có hạng mục triển khai nền tảng ngoài Web.
 
-- [ ] **TODO-A.01.02 — Tạo browser support policy**  
+- [x] **TODO-A.01.02 — Tạo browser support policy**  
   **File:** `polylex-global/docs/design-system/BROWSER-SUPPORT.md`  
   **Context:** `polylex-global/apps/frontend/src/index.css`, `polylex-global/apps/frontend/vite.config.ts`  
   **Change:** ghi browser matrix, progressive enhancement và fallback bắt buộc cho `color-mix()`, `backdrop-filter`, safe area.  
   **Verify:** `grep -E "Chrome|Firefox|Safari|fallback" docs/design-system/BROWSER-SUPPORT.md`  
   **Expected:** đủ ba browser family và fallback policy.
 
-- [ ] **TODO-A.01.03 — Tạo follow-up backend contract ticket**  
+- [x] **TODO-A.01.03 — Tạo follow-up backend contract ticket**  
   **File:** `ticket-docs/TICKET-051-web-api-error-idempotency-contract.md`  
   **Context:** `ticket-docs/TICKET-050-web-design-standardization.md`, `polylex-global/apps/frontend/src/api`  
   **Change:** mô tả stable error codes, request correlation, retryability và idempotency cho Web mutations; không triển khai backend.  
   **Verify:** `grep -E "error code|idempot|retry" ../ticket-docs/TICKET-051-web-api-error-idempotency-contract.md`  
   **Expected:** follow-up ticket có scope, acceptance criteria và dependency với TICKET-050.
 
-- [ ] **TODO-A.01.04 — Tạo follow-up analytics baseline ticket**  
+- [x] **TODO-A.01.04 — Tạo follow-up analytics baseline ticket**  
   **File:** `ticket-docs/TICKET-052-web-product-analytics-baseline.md`  
   **Context:** `ticket-docs/TICKET-050-web-design-standardization.md`, `polylex-global/apps/frontend/src/App.tsx`  
   **Change:** định nghĩa activation, onboarding completion, review start/completion, error/retry events và cửa sổ baseline trước migration.  
@@ -641,63 +641,63 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-02 — Semantic tokens, font và motion
 
-- [ ] **TODO-A.02.01 — Thêm design token stylesheet**  
+- [x] **TODO-A.02.01 — Thêm design token stylesheet**  
   **File:** `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Context:** `polylex-global/apps/frontend/src/index.css`  
   **Change:** khai báo Playful Light semantic colors, typography families, spacing, radii, shadows, z-index, motion và token còn thiếu `--color-ink-soft`; đặt legacy aliases trong section deprecated.  
   **Verify:** `grep -E -- "--color-canvas|--color-ink-soft|--focus-ring|deprecated" packages/shared-ui/src/styles/tokens.css`  
   **Expected:** token source chứa semantic foundation và migration aliases.
 
-- [ ] **TODO-A.02.02 — Thêm global motion stylesheet**  
+- [x] **TODO-A.02.02 — Thêm global motion stylesheet**  
   **File:** `polylex-global/packages/shared-ui/src/styles/motion.css`  
   **Context:** `polylex-global/apps/frontend/src/index.css`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** chuyển keyframes/utilities dùng chung và thêm `prefers-reduced-motion` để vô hiệu hóa non-essential animation/transition.  
   **Verify:** `grep -E "prefers-reduced-motion|@keyframes" packages/shared-ui/src/styles/motion.css`  
   **Expected:** có keyframes và reduced-motion override.
 
-- [ ] **TODO-A.02.03 — Thêm focus/touch stylesheet**  
+- [x] **TODO-A.02.03 — Thêm focus/touch stylesheet**  
   **File:** `polylex-global/packages/shared-ui/src/styles/accessibility.css`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** định nghĩa `:focus-visible`, helper touch-target 44 px và visually-hidden utility bằng semantic tokens.  
   **Verify:** `grep -E "focus-visible|44px|visually-hidden" packages/shared-ui/src/styles/accessibility.css`  
   **Expected:** đủ focus, target và screen-reader helpers.
 
-- [ ] **TODO-A.02.04 — Tạo stylesheet entrypoint**  
+- [x] **TODO-A.02.04 — Tạo stylesheet entrypoint**  
   **File:** `polylex-global/packages/shared-ui/src/styles/index.css`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/tokens.css`, `polylex-global/packages/shared-ui/src/styles/motion.css`, `polylex-global/packages/shared-ui/src/styles/accessibility.css`  
   **Change:** import ba stylesheet theo thứ tự token → motion → accessibility.  
   **Verify:** `grep -c "@import" packages/shared-ui/src/styles/index.css`  
   **Expected:** đúng ba import.
 
-- [ ] **TODO-A.02.05 — Export shared stylesheet subpath**  
+- [x] **TODO-A.02.05 — Export shared stylesheet subpath**  
   **File:** `polylex-global/packages/shared-ui/package.json`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/index.css`  
   **Change:** thêm export `./styles.css`, đưa CSS vào package files và không đổi root export hiện hữu.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** package build thành công và export cũ không bị phá.
 
-- [ ] **TODO-A.02.06 — Thêm bundled Poppins dependency**  
+- [x] **TODO-A.02.06 — Thêm bundled Poppins dependency**  
   **File:** `polylex-global/apps/frontend/package.json`  
   **Context:** `polylex-global/apps/frontend/src/index.css`, `polylex-global/apps/frontend/src/main.tsx`  
   **Change:** thêm `@fontsource/poppins` và chỉ định các scripts test sẽ được bổ sung ở Phase F, không thêm Google Fonts runtime.  
   **Verify:** `npm pkg get dependencies.@fontsource/poppins --workspace=apps/frontend`  
   **Expected:** package manifest trả về version range hợp lệ mà không thay file khác.
 
-- [ ] **TODO-A.02.07 — Nạp font weights trong app entry**  
+- [x] **TODO-A.02.07 — Nạp font weights trong app entry**  
   **File:** `polylex-global/apps/frontend/src/main.tsx`  
   **Context:** `polylex-global/apps/frontend/package.json`, `polylex-global/apps/frontend/src/index.css`  
   **Change:** import Poppins WOFF2 weights 500/600/700/800 trước global CSS.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** TypeScript resolve toàn bộ font imports.
 
-- [ ] **TODO-A.02.08 — Chuyển global CSS sang source of truth**  
+- [x] **TODO-A.02.08 — Chuyển global CSS sang source of truth**  
   **File:** `polylex-global/apps/frontend/src/index.css`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/index.css`, `polylex-global/apps/frontend/src/main.tsx`  
   **Change:** import shared styles; xóa Google Fonts, duplicated/legacy dark definitions và root dark default; giữ Tailwind/global app utilities cần thiết.  
   **Verify:** `npm run build --workspace=apps/frontend`  
   **Expected:** frontend build; không còn URL `fonts.googleapis.com` hoặc root background `#0F0F1A`.
 
-- [ ] **TODO-A.02.09 — Thêm token invariant validator**  
+- [x] **TODO-A.02.09 — Thêm token invariant validator**  
   **File:** `polylex-global/scripts/validate-design-tokens.mjs`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/tokens.css`, `polylex-global/apps/frontend/src/index.css`  
   **Change:** so khớp CSS custom-property usage/definition, báo duplicate ngoài alias section và undefined token; hỗ trợ allow-list documented.  
@@ -708,91 +708,91 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-03 — Primitive components
 
-- [ ] **TODO-B.03.01 — Thêm form field contract**  
+- [x] **TODO-B.03.01 — Thêm form field contract**  
   **File:** `polylex-global/packages/shared-ui/src/types/form.types.ts`  
   **Context:** `polylex-global/packages/shared-ui/src/types/index.ts`, `polylex-global/packages/shared-ui/src/index.ts`  
   **Change:** định nghĩa label/helper/error/required/disabled contract và ID linkage types dùng chung.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** shared package type-check thành công.
 
-- [ ] **TODO-B.03.02 — Thêm TextField primitive**  
+- [x] **TODO-B.03.02 — Thêm TextField primitive**  
   **File:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/types/form.types.ts`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** tạo `forwardRef` native input với label/helper/error, generated IDs, `aria-invalid` và `aria-describedby`.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** component build và không mất native input props.
 
-- [ ] **TODO-B.03.03 — Test TextField accessibility states**  
+- [x] **TODO-B.03.03 — Test TextField accessibility states**  
   **File:** `polylex-global/packages/shared-ui/src/components/TextField.test.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/packages/shared-ui/src/test-setup.ts`  
   **Change:** test label association, helper/error IDs, required, disabled và value change.  
   **Verify:** `npm run test --workspace=packages/shared-ui -- TextField`  
   **Expected:** toàn bộ TextField tests pass.
 
-- [ ] **TODO-B.03.04 — Thêm Select primitive**  
+- [x] **TODO-B.03.04 — Thêm Select primitive**  
   **File:** `polylex-global/packages/shared-ui/src/components/Select.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/packages/shared-ui/src/types/form.types.ts`  
   **Change:** tạo native select với options, label/helper/error và cùng field contract.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** component giữ native keyboard behavior và build pass.
 
-- [ ] **TODO-B.03.05 — Test Select states**  
+- [x] **TODO-B.03.05 — Test Select states**  
   **File:** `polylex-global/packages/shared-ui/src/components/Select.test.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Select.tsx`, `polylex-global/packages/shared-ui/src/test-setup.ts`  
   **Change:** test options, selection, disabled và accessible error description.  
   **Verify:** `npm run test --workspace=packages/shared-ui -- Select`  
   **Expected:** Select tests pass.
 
-- [ ] **TODO-B.03.06 — Thêm Checkbox primitive**  
+- [x] **TODO-B.03.06 — Thêm Checkbox primitive**  
   **File:** `polylex-global/packages/shared-ui/src/components/Checkbox.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/types/form.types.ts`, `polylex-global/packages/shared-ui/src/styles/accessibility.css`  
   **Change:** tạo native checkbox controlled/uncontrolled với label, description và 44 px click target.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** component build và giữ Space-key behavior.
 
-- [ ] **TODO-B.03.07 — Thêm Switch primitive**  
+- [x] **TODO-B.03.07 — Thêm Switch primitive**  
   **File:** `polylex-global/packages/shared-ui/src/components/Switch.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Checkbox.tsx`, `polylex-global/packages/shared-ui/src/styles/motion.css`  
   **Change:** tạo button `role="switch"`, checked/disabled state, keyboard activation và reduced-motion-safe transition.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** component build và expose `aria-checked`.
 
-- [ ] **TODO-B.03.08 — Thêm Dialog primitive**  
+- [x] **TODO-B.03.08 — Thêm Dialog primitive**  
   **File:** `polylex-global/packages/shared-ui/src/components/Dialog.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/layout/BottomSheet.tsx`, `polylex-global/packages/shared-ui/src/styles/accessibility.css`  
   **Change:** dùng native `<dialog>` với title/description IDs, Escape/backdrop close và focus restore; không tự xây focus trap bằng keydown loop.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** dialog build với native semantics và typed callbacks.
 
-- [ ] **TODO-B.03.09 — Test Dialog keyboard/focus**  
+- [x] **TODO-B.03.09 — Test Dialog keyboard/focus**  
   **File:** `polylex-global/packages/shared-ui/src/components/Dialog.test.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Dialog.tsx`, `polylex-global/packages/shared-ui/src/test-setup.ts`  
   **Change:** mock dialog methods và test title association, close callback, Escape và focus restore.  
   **Verify:** `npm run test --workspace=packages/shared-ui -- Dialog`  
   **Expected:** Dialog tests pass.
 
-- [ ] **TODO-B.03.10 — Thêm unified AsyncState**  
+- [x] **TODO-B.03.10 — Thêm unified AsyncState**  
   **File:** `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/LoadingSpinner.tsx`, `polylex-global/packages/shared-ui/src/components/ErrorToast.tsx`  
   **Change:** cung cấp loading, empty, error/retry và children states với status semantics; tái sử dụng spinner hiện hữu.  
   **Verify:** `npm run build --workspace=packages/shared-ui`  
   **Expected:** component build và mỗi state có accessible label/status.
 
-- [ ] **TODO-B.03.11 — Test AsyncState branches**  
+- [x] **TODO-B.03.11 — Test AsyncState branches**  
   **File:** `polylex-global/packages/shared-ui/src/components/AsyncState.test.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`, `polylex-global/packages/shared-ui/src/test-setup.ts`  
   **Change:** test loading, empty, error retry callback và success children.  
   **Verify:** `npm run test --workspace=packages/shared-ui -- AsyncState`  
   **Expected:** bốn branches pass.
 
-- [ ] **TODO-B.03.12 — Chuẩn hóa toast variants**  
+- [x] **TODO-B.03.12 — Chuẩn hóa toast variants**  
   **File:** `polylex-global/packages/shared-ui/src/components/ErrorToast.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/ErrorToast.test.tsx`, `polylex-global/apps/frontend/src/App.tsx`  
   **Change:** mở rộng provider/hook additive thành success/info/error, semantic tokens và live-region politeness phù hợp; giữ API `useErrorToast`.  
   **Verify:** `npm run test --workspace=packages/shared-ui -- ErrorToast`  
   **Expected:** tests cũ pass và variants mới render đúng.
 
-- [ ] **TODO-B.03.13 — Export primitives mới**  
+- [x] **TODO-B.03.13 — Export primitives mới**  
   **File:** `polylex-global/packages/shared-ui/src/index.ts`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/packages/shared-ui/src/components/Dialog.tsx`, `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`  
   **Change:** export types/components mới mà không đổi tên exports cũ.  
@@ -801,21 +801,21 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-06 — Form và async UX contract
 
-- [ ] **TODO-B.06.01 — Thêm form validation helpers**  
+- [x] **TODO-B.06.01 — Thêm form validation helpers**  
   **File:** `polylex-global/apps/frontend/src/utils/formValidation.ts`  
   **Context:** `polylex-global/apps/frontend/src/pages/LoginPage.tsx`, `polylex-global/apps/frontend/src/pages/RegisterPage.tsx`  
   **Change:** thêm pure validators cho required/email/min-length/password-match, trả i18n key thay vì English message.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** helper typed, không phụ thuộc React hoặc page state.
 
-- [ ] **TODO-B.06.02 — Test form validation helpers**  
+- [x] **TODO-B.06.02 — Test form validation helpers**  
   **File:** `polylex-global/apps/frontend/src/utils/formValidation.spec.ts`  
   **Context:** `polylex-global/apps/frontend/src/utils/formValidation.ts`, `polylex-global/apps/frontend/src/utils/audio.spec.ts`  
   **Change:** test valid/invalid boundary cho từng validator.  
   **Verify:** `npx --yes vitest@1 run apps/frontend/src/utils/formValidation.spec.ts`  
   **Expected:** validators tests pass.
 
-- [ ] **TODO-B.06.03 — Thêm async action hook**  
+- [x] **TODO-B.06.03 — Thêm async action hook**  
   **File:** `polylex-global/apps/frontend/src/hooks/useAsyncAction.ts`  
   **Context:** `polylex-global/apps/frontend/src/pages/LoginPage.tsx`, `polylex-global/apps/frontend/src/api/client.ts`  
   **Change:** quản lý idle/pending/success/error, chống double-submit và bỏ state update sau unmount; không tự retry mutation.  
@@ -826,21 +826,21 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-04 — Light-only shell foundation
 
-- [ ] **TODO-C.04.01 — Chuyển AppShell sang Playful Light-only**  
+- [x] **TODO-C.04.01 — Chuyển AppShell sang Playful Light-only**  
   **File:** `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Context:** `polylex-global/apps/frontend/src/index.css`, `polylex-global/apps/frontend/src/App.tsx`  
   **Change:** xóa `theme` prop/dark branch, dùng semantic canvas/ink, responsive content widths và giữ bottom-nav spacing/safe area.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** compile errors chỉ ra các call site còn truyền `theme`, không còn dark fallback trong shell.
 
-- [ ] **TODO-C.04.02 — Chuyển TopBar sang semantic tokens**  
+- [x] **TODO-C.04.02 — Chuyển TopBar sang semantic tokens**  
   **File:** `polylex-global/apps/frontend/src/components/layout/TopBar.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** bỏ theme branching/hard-coded colors, bảo đảm action target 44 px.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** TopBar build và không còn legacy hex.
 
-- [ ] **TODO-C.04.03 — Chuyển BottomSheet sang light accessible overlay**  
+- [x] **TODO-C.04.03 — Chuyển BottomSheet sang light accessible overlay**  
   **File:** `polylex-global/apps/frontend/src/components/layout/BottomSheet.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Dialog.tsx`, `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Change:** xóa theme prop/dark branch, thêm dialog semantics/focus behavior hoặc delegate cho shared Dialog khi phù hợp, giữ mobile sheet layout.  
@@ -849,28 +849,28 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-05 — Navigation và browser history
 
-- [ ] **TODO-C.05.01 — Chuẩn hóa five-tab BottomNav**  
+- [x] **TODO-C.05.01 — Chuẩn hóa five-tab BottomNav**  
   **File:** `polylex-global/apps/frontend/src/components/layout/BottomNav.tsx`  
   **Context:** `polylex-global/apps/frontend/src/App.tsx`, `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Change:** light-only tokens; giữ đúng Home/Path/Videos/Review/Profile, active state theo nested routes, 44 px targets và translated labels.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** năm tab đúng route, không có Vocabulary/Quick Note thành primary tab.
 
-- [ ] **TODO-C.05.02 — Chuẩn hóa protected routing shell**  
+- [x] **TODO-C.05.02 — Chuẩn hóa protected routing shell**  
   **File:** `polylex-global/apps/frontend/src/App.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`, `polylex-global/apps/frontend/src/components/layout/BottomNav.tsx`  
   **Change:** bỏ page-level theme props, giữ bottom nav trong review, không thêm blocker cho browser back và giữ deep-link route hiện hữu.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** toàn bộ routes compile; review vẫn nằm trong protected shell.
 
-- [ ] **TODO-C.05.03 — Thêm Home secondary shortcuts**  
+- [x] **TODO-C.05.03 — Thêm Home secondary shortcuts**  
   **File:** `polylex-global/apps/frontend/src/pages/DashboardPage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/App.tsx`, `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Change:** thêm/chuẩn hóa links tới Vocabulary và Quick Note bằng existing card/button patterns.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** cả hai secondary destinations truy cập được từ Home.
 
-- [ ] **TODO-C.05.04 — Thêm Profile secondary shortcuts**  
+- [x] **TODO-C.05.04 — Thêm Profile secondary shortcuts**  
   **File:** `polylex-global/apps/frontend/src/pages/ProfilePage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/App.tsx`, `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Change:** thêm/chuẩn hóa links tới Vocabulary và Quick Note trong secondary menu.  
@@ -883,49 +883,49 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-04 — Auth, onboarding và core learning
 
-- [ ] **TODO-D.04.01 — Migration LoginPage**  
+- [x] **TODO-D.04.01 — Migration LoginPage**  
   **File:** `polylex-global/apps/frontend/src/pages/LoginPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/apps/frontend/src/utils/formValidation.ts`, `polylex-global/apps/frontend/src/hooks/useAsyncAction.ts`  
   **Change:** thay raw fields/hard-coded dark styles bằng primitives/tokens, standardized pending/error state và translated content.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** login behavior giữ nguyên; không còn legacy dark hex hoặc unlabelled field.
 
-- [ ] **TODO-D.04.02 — Migration RegisterPage**  
+- [x] **TODO-D.04.02 — Migration RegisterPage**  
   **File:** `polylex-global/apps/frontend/src/pages/RegisterPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/packages/shared-ui/src/components/Select.tsx`, `polylex-global/apps/frontend/src/utils/formValidation.ts`  
   **Change:** dùng shared fields/select, i18n validation keys và consistent submit states.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** registration flow compile và không còn raw styled fields.
 
-- [ ] **TODO-D.04.03 — Migration OnboardingPage**  
+- [x] **TODO-D.04.03 — Migration OnboardingPage**  
   **File:** `polylex-global/apps/frontend/src/pages/OnboardingPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Select.tsx`, `polylex-global/apps/frontend/src/components/ui/Button.tsx`, `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Change:** light-only responsive step layout, shared controls và accessible progress/validation; giữ selection business logic.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** onboarding compile và các step semantics rõ ràng.
 
-- [ ] **TODO-D.04.04 — Migration ReviewPage shell/states**  
+- [x] **TODO-D.04.04 — Migration ReviewPage shell/states**  
   **File:** `polylex-global/apps/frontend/src/pages/ReviewPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`, `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`, `polylex-global/apps/frontend/src/App.tsx`  
   **Change:** dùng semantic states/tokens, responsive exercise container; giữ bottom nav và native browser back behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** review compile; không có route blocker hoặc nav hiding mới.
 
-- [ ] **TODO-D.04.05 — Migration review component colors**  
+- [x] **TODO-D.04.05 — Migration review component colors**  
   **File:** `polylex-global/apps/frontend/src/components/review/FlashCard.tsx`  
   **Context:** `polylex-global/apps/frontend/src/pages/ReviewPage.tsx`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** thay visual literals bằng semantic tokens/variants, giữ answer/rating callbacks.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** component compile; learning callbacks không đổi.
 
-- [ ] **TODO-D.04.06 — Migration RoadmapPage**  
+- [x] **TODO-D.04.06 — Migration RoadmapPage**  
   **File:** `polylex-global/apps/frontend/src/pages/RoadmapPage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/ui/Card.tsx`, `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Change:** semantic tokens, responsive grid/list và standardized async/empty/error states; giữ path selection.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** roadmap compile ở mobile và desktop layout classes.
 
-- [ ] **TODO-D.04.07 — Hoàn tất Dashboard visual migration**  
+- [x] **TODO-D.04.07 — Hoàn tất Dashboard visual migration**  
   **File:** `polylex-global/apps/frontend/src/pages/DashboardPage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/ui/Card.tsx`, `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`  
   **Change:** loại legacy literals còn lại, standardized empty/error states và responsive sections; giữ XP/streak/goal calculations.  
@@ -934,119 +934,119 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-04 — Secondary pages
 
-- [ ] **TODO-D.04.08 — Migration VocabularyPage**  
+- [x] **TODO-D.04.08 — Migration VocabularyPage**  
   **File:** `polylex-global/apps/frontend/src/pages/VocabularyPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Select.tsx`, `polylex-global/apps/frontend/src/components/ui/SearchBar.tsx`  
   **Change:** dùng shared select/state patterns, semantic tokens và responsive word list.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** search/filter behavior giữ nguyên.
 
-- [ ] **TODO-D.04.09 — Migration QuickNotePage**  
+- [x] **TODO-D.04.09 — Migration QuickNotePage**  
   **File:** `polylex-global/apps/frontend/src/pages/QuickNotePage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/apps/frontend/src/components/ui/Button.tsx`  
   **Change:** standardized field, submit/loading/error states và responsive light layout; giữ AI enrichment API behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** create/enrichment flow compile và double-submit bị chặn.
 
-- [ ] **TODO-D.04.10 — Migration ProfilePage controls**  
+- [x] **TODO-D.04.10 — Migration ProfilePage controls**  
   **File:** `polylex-global/apps/frontend/src/pages/ProfilePage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Select.tsx`, `polylex-global/packages/shared-ui/src/components/Switch.tsx`, `polylex-global/apps/frontend/src/store/reminder-settings.store.ts`  
   **Change:** thay native styled selects/toggles bằng primitives và semantic groups; giữ persistence behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** settings compile và labels/controls được liên kết.
 
-- [ ] **TODO-D.04.11 — Migration VideosHubPage**  
+- [x] **TODO-D.04.11 — Migration VideosHubPage**  
   **File:** `polylex-global/apps/frontend/src/pages/VideosHubPage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/ui/Card.tsx`, `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`  
   **Change:** light token/state patterns và responsive cards; giữ route tới video detail.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** video listing compile và deep links giữ nguyên.
 
-- [ ] **TODO-D.04.12 — Migration AnalyticsPage**  
+- [x] **TODO-D.04.12 — Migration AnalyticsPage**  
   **File:** `polylex-global/apps/frontend/src/pages/AnalyticsPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/tokens.css`, `polylex-global/apps/frontend/src/components/ui/Card.tsx`  
   **Change:** semantic chart/card palette và responsive grid; giữ data transformations.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** analytics compile; chart colors lấy từ documented token set.
 
-- [ ] **TODO-D.04.13 — Migration LeaderboardPage**  
+- [x] **TODO-D.04.13 — Migration LeaderboardPage**  
   **File:** `polylex-global/apps/frontend/src/pages/LeaderboardPage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/ui/Card.tsx`, `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`  
   **Change:** semantic ranking states và responsive list; giữ score/order logic.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** leaderboard compile và podium/rank semantics giữ nguyên.
 
-- [ ] **TODO-D.04.14 — Migration PrivacyPolicyPage**  
+- [x] **TODO-D.04.14 — Migration PrivacyPolicyPage**  
   **File:** `polylex-global/apps/frontend/src/pages/PrivacyPolicyPage.tsx`  
   **Context:** `polylex-global/apps/frontend/src/index.css`, `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Change:** light typography/content layout và responsive reading width; không sửa nội dung pháp lý.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** page compile và không còn dark hard-code.
 
-- [ ] **TODO-D.04.15 — Migration SupportPage**  
+- [x] **TODO-D.04.15 — Migration SupportPage**  
   **File:** `polylex-global/apps/frontend/src/pages/SupportPage.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/apps/frontend/src/components/ui/Button.tsx`  
   **Change:** shared field/state patterns, semantic colors và responsive layout; giữ contact behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** support flow compile và labels/errors accessible.
 
-- [ ] **TODO-D.04.16 — Cập nhật PWA light theme colors**  
+- [x] **TODO-D.04.16 — Cập nhật PWA light theme colors**  
   **File:** `polylex-global/apps/frontend/vite.config.ts`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/tokens.css`, `polylex-global/apps/frontend/src/index.css`  
   **Change:** đổi manifest `theme_color`/`background_color` sang approved Playful Light solid values và giữ cache config nguyên vẹn.  
   **Verify:** `npm run build --workspace=apps/frontend`  
   **Expected:** generated manifest dùng light colors; PWA build pass.
 
-- [ ] **TODO-D.04.17 — Migration review rating controls**  
+- [x] **TODO-D.04.17 — Migration review rating controls**  
   **File:** `polylex-global/apps/frontend/src/components/review/RatingButtons.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/review/FlashCard.tsx`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** dùng semantic rating tokens, translated labels, visible focus và 44 px targets; giữ rating values/callbacks.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** component compile và four-level rating contract không đổi.
 
-- [ ] **TODO-D.04.18 — Migration type-answer exercise**  
+- [x] **TODO-D.04.18 — Migration type-answer exercise**  
   **File:** `polylex-global/apps/frontend/src/components/review/TypeAnswer.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/apps/frontend/src/components/review/RatingButtons.tsx`  
   **Change:** semantic input/feedback states và keyboard-safe submit; giữ answer checking behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** exercise compile và Enter/submit behavior giữ nguyên.
 
-- [ ] **TODO-D.04.19 — Migration multiple-choice exercise**  
+- [x] **TODO-D.04.19 — Migration multiple-choice exercise**  
   **File:** `polylex-global/apps/frontend/src/components/review/MultipleChoiceExercise.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/tokens.css`, `polylex-global/apps/frontend/src/components/review/RatingButtons.tsx`  
   **Change:** semantic option/correct/incorrect/focus states và 44 px targets; giữ answer callback.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** exercise compile và selection behavior không đổi.
 
-- [ ] **TODO-D.04.20 — Migration listening exercise**  
+- [x] **TODO-D.04.20 — Migration listening exercise**  
   **File:** `polylex-global/apps/frontend/src/components/review/ListeningExercise.tsx`  
   **Context:** `polylex-global/apps/frontend/src/store/audio-settings.store.ts`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** semantic audio/answer/loading states, accessible replay label và touch targets; giữ playback logic.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** exercise compile và audio controls giữ nguyên.
 
-- [ ] **TODO-D.04.21 — Migration reverse exercise**  
+- [x] **TODO-D.04.21 — Migration reverse exercise**  
   **File:** `polylex-global/apps/frontend/src/components/review/ReverseExercise.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/review/TypeAnswer.tsx`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** semantic prompt/input/feedback states và responsive layout; giữ reverse-answer behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** exercise compile và answer flow không đổi.
 
-- [ ] **TODO-D.04.22 — Migration context exercise**  
+- [x] **TODO-D.04.22 — Migration context exercise**  
   **File:** `polylex-global/apps/frontend/src/components/review/ContextExercise.tsx`  
   **Context:** `polylex-global/apps/frontend/src/components/review/MultipleChoiceExercise.tsx`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** semantic context card/options/feedback và responsive text layout; giữ submission behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** exercise compile và context answer behavior không đổi.
 
-- [ ] **TODO-D.04.23 — Migration shadowing exercise**  
+- [x] **TODO-D.04.23 — Migration shadowing exercise**  
   **File:** `polylex-global/apps/frontend/src/components/review/ShadowingExercise.tsx`  
   **Context:** `polylex-global/apps/frontend/src/store/audio-settings.store.ts`, `polylex-global/packages/shared-ui/src/styles/tokens.css`  
   **Change:** semantic recording/playback/status states, translated accessible labels và reduced-motion-safe feedback; giữ media behavior.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** exercise compile và recording controls giữ nguyên.
 
-- [ ] **TODO-D.04.24 — Migration session celebration**  
+- [x] **TODO-D.04.24 — Migration session celebration**  
   **File:** `polylex-global/apps/frontend/src/components/review/SessionCelebration.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/motion.css`, `polylex-global/apps/frontend/src/pages/ReviewPage.tsx`  
   **Change:** semantic success/gamification tokens, responsive layout và reduced-motion fallback; giữ completion navigation.  
@@ -1057,28 +1057,28 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-08 — Locale parity và content design
 
-- [ ] **TODO-E.08.01 — Bổ sung English design-system keys**  
+- [x] **TODO-E.08.01 — Bổ sung English design-system keys**  
   **File:** `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Context:** `polylex-global/apps/frontend/src/pages/LoginPage.tsx`, `polylex-global/apps/frontend/src/components/layout/BottomNav.tsx`  
   **Change:** thêm keys cho shared fields, async states, five-tab labels, secondary shortcuts, errors và accessible labels đã dùng trong migrations.  
   **Verify:** `node -e "JSON.parse(require('fs').readFileSync('apps/frontend/src/i18n/locales/en.json'))"`  
   **Expected:** JSON hợp lệ và không còn placeholder English trong migrated pages.
 
-- [ ] **TODO-E.08.02 — Đồng bộ Vietnamese locale**  
+- [x] **TODO-E.08.02 — Đồng bộ Vietnamese locale**  
   **File:** `polylex-global/apps/frontend/src/i18n/locales/vi.json`  
   **Context:** `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Change:** thêm Vietnamese values cho toàn bộ keys mới, dùng thuật ngữ nhất quán cho path/review/mastery/streak/XP.  
   **Verify:** `node scripts/validate-i18n.mjs`  
   **Expected:** không thiếu key so với English.
 
-- [ ] **TODO-E.08.03 — Đồng bộ Portuguese locale**  
+- [x] **TODO-E.08.03 — Đồng bộ Portuguese locale**  
   **File:** `polylex-global/apps/frontend/src/i18n/locales/pt.json`  
   **Context:** `polylex-global/apps/frontend/src/i18n/locales/en.json`  
   **Change:** thêm Portuguese values cho toàn bộ keys mới, giữ interpolation placeholders giống English.  
   **Verify:** `node scripts/validate-i18n.mjs`  
   **Expected:** không thiếu key hoặc mismatch placeholder.
 
-- [ ] **TODO-E.08.04 — Thêm locale parity validator**  
+- [x] **TODO-E.08.04 — Thêm locale parity validator**  
   **File:** `polylex-global/scripts/validate-i18n.mjs`  
   **Context:** `polylex-global/apps/frontend/src/i18n/locales/en.json`, `polylex-global/apps/frontend/src/i18n/locales/vi.json`, `polylex-global/apps/frontend/src/i18n/locales/pt.json`  
   **Change:** flatten keys, so key sets và interpolation placeholders; in diff dễ đọc và exit non-zero khi lệch.  
@@ -1087,21 +1087,21 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-07 — Accessibility criteria
 
-- [ ] **TODO-E.07.01 — Tạo accessibility standard**  
+- [x] **TODO-E.07.01 — Tạo accessibility standard**  
   **File:** `polylex-global/docs/design-system/ACCESSIBILITY.md`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/accessibility.css`, `ticket-docs/TICKET-050-web-design-standardization.md`  
   **Change:** ghi WCAG 2.2 AA, contrast, keyboard, focus restore, live regions, 44×44 px và reduced-motion checklist.  
   **Verify:** `grep -E "WCAG 2.2 AA|44|reduced-motion|focus" docs/design-system/ACCESSIBILITY.md`  
   **Expected:** đủ acceptance rules cho review và PR.
 
-- [ ] **TODO-E.07.02 — Bổ sung skip-link và main landmark**  
+- [x] **TODO-E.07.02 — Bổ sung skip-link và main landmark**  
   **File:** `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/accessibility.css`, `polylex-global/apps/frontend/src/App.tsx`  
   **Change:** thêm visible-on-focus skip link và stable `<main id>`; không đổi route hierarchy.  
   **Verify:** `npm run type-check --workspace=apps/frontend`  
   **Expected:** keyboard user bỏ qua navigation được.
 
-- [ ] **TODO-E.07.03 — Chuẩn hóa reduced motion cho page transitions**  
+- [x] **TODO-E.07.03 — Chuẩn hóa reduced motion cho page transitions**  
   **File:** `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/motion.css`, `polylex-global/apps/frontend/src/components/layout/AppShell.tsx`  
   **Change:** dùng Framer Motion `useReducedMotion` để tắt translate/scale khi user yêu cầu; giữ transition nhẹ hoặc tức thời.  
@@ -1112,98 +1112,98 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-09 — Unit, Storybook, Playwright và CI
 
-- [ ] **TODO-F.09.01 — Thêm frontend test dependencies/scripts**  
+- [x] **TODO-F.09.01 — Thêm frontend test dependencies/scripts**  
   **File:** `polylex-global/apps/frontend/package.json`  
   **Context:** `polylex-global/apps/frontend/src/utils/audio.spec.ts`, `polylex-global/apps/frontend/vite.config.ts`  
   **Change:** thêm Vitest/jsdom/Testing Library, Playwright và axe dependencies; scripts `test:unit`, `test:e2e`, `test:visual`, `test:a11y`.  
   **Verify:** `npm pkg get scripts.test:unit scripts.test:e2e scripts.test:visual scripts.test:a11y --workspace=apps/frontend`  
   **Expected:** package manifest trả về đủ bốn scripts mà không thay file khác.
 
-- [ ] **TODO-F.09.02 — Thêm frontend Vitest config**  
+- [x] **TODO-F.09.02 — Thêm frontend Vitest config**  
   **File:** `polylex-global/apps/frontend/vitest.config.ts`  
   **Context:** `polylex-global/apps/frontend/vite.config.ts`, `polylex-global/packages/shared-ui/vitest.config.ts`  
   **Change:** cấu hình React, jsdom, alias `@`, setup file và coverage exclusions.  
   **Verify:** `npm run test:unit --workspace=apps/frontend`  
   **Expected:** existing audio spec và form validation spec pass.
 
-- [ ] **TODO-F.09.03 — Thêm Storybook dependencies/scripts**  
+- [x] **TODO-F.09.03 — Thêm Storybook dependencies/scripts**  
   **File:** `polylex-global/packages/shared-ui/package.json`  
   **Context:** `polylex-global/packages/shared-ui/src/index.ts`, `polylex-global/packages/shared-ui/vitest.config.ts`  
   **Change:** thêm Storybook React-Vite packages và scripts `storybook`, `build-storybook`; giữ test/build scripts cũ.  
   **Verify:** `npm pkg get scripts.storybook scripts.build-storybook --workspace=packages/shared-ui`  
   **Expected:** package manifest trả về đủ hai scripts mà không thay file khác.
 
-- [ ] **TODO-F.09.04 — Thêm Storybook main config**  
+- [x] **TODO-F.09.04 — Thêm Storybook main config**  
   **File:** `polylex-global/packages/shared-ui/.storybook/main.ts`  
   **Context:** `polylex-global/packages/shared-ui/package.json`, `polylex-global/packages/shared-ui/tsconfig.json`  
   **Change:** cấu hình React-Vite framework, story glob và essential accessibility addon.  
   **Verify:** `npm run build-storybook --workspace=packages/shared-ui`  
   **Expected:** static Storybook build thành công sau khi có stories.
 
-- [ ] **TODO-F.09.05 — Thêm Storybook preview**  
+- [x] **TODO-F.09.05 — Thêm Storybook preview**  
   **File:** `polylex-global/packages/shared-ui/.storybook/preview.ts`  
   **Context:** `polylex-global/packages/shared-ui/src/styles/index.css`, `polylex-global/packages/shared-ui/.storybook/main.ts`  
   **Change:** import shared CSS, set canvas light background, viewport presets và a11y parameters.  
   **Verify:** `npm run build-storybook --workspace=packages/shared-ui`  
   **Expected:** stories render với Playful Light tokens.
 
-- [ ] **TODO-F.09.06 — Thêm form primitives stories**  
+- [x] **TODO-F.09.06 — Thêm form primitives stories**  
   **File:** `polylex-global/packages/shared-ui/src/components/FormPrimitives.stories.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/TextField.tsx`, `polylex-global/packages/shared-ui/src/components/Select.tsx`, `polylex-global/packages/shared-ui/src/components/Checkbox.tsx`  
   **Change:** tạo default/error/disabled/long-label stories cho fields và selection controls.  
   **Verify:** `npm run build-storybook --workspace=packages/shared-ui`  
   **Expected:** static Storybook build và stories được index.
 
-- [ ] **TODO-F.09.07 — Thêm feedback primitives stories**  
+- [x] **TODO-F.09.07 — Thêm feedback primitives stories**  
   **File:** `polylex-global/packages/shared-ui/src/components/FeedbackPrimitives.stories.tsx`  
   **Context:** `polylex-global/packages/shared-ui/src/components/Dialog.tsx`, `polylex-global/packages/shared-ui/src/components/AsyncState.tsx`, `polylex-global/packages/shared-ui/src/components/ErrorToast.tsx`  
   **Change:** tạo dialog, loading, empty, error/retry và toast stories với interaction-safe fixtures.  
   **Verify:** `npm run build-storybook --workspace=packages/shared-ui`  
   **Expected:** feedback stories build không cần backend.
 
-- [ ] **TODO-F.09.08 — Thêm Playwright configuration**  
+- [x] **TODO-F.09.08 — Thêm Playwright configuration**  
   **File:** `polylex-global/apps/frontend/playwright.config.ts`  
   **Context:** `polylex-global/apps/frontend/package.json`, `polylex-global/apps/frontend/vite.config.ts`  
   **Change:** cấu hình local web server, deterministic locale/timezone, screenshot policy và projects cho Chromium/Firefox/WebKit theo browser matrix.  
   **Verify:** `npm run test:e2e --workspace=apps/frontend -- --list`  
   **Expected:** runner liệt kê projects/tests mà không start backend ngoài ý muốn.
 
-- [ ] **TODO-F.09.09 — Thêm navigation E2E**  
+- [x] **TODO-F.09.09 — Thêm navigation E2E**  
   **File:** `polylex-global/apps/frontend/tests/navigation.spec.ts`  
   **Context:** `polylex-global/apps/frontend/src/App.tsx`, `polylex-global/apps/frontend/src/components/layout/BottomNav.tsx`  
   **Change:** test five tabs, active nested route, Vocabulary/Quick Note shortcuts, deep link và browser back/forward; xác nhận review nav vẫn hiện.  
   **Verify:** `npm run test:e2e --workspace=apps/frontend -- navigation.spec.ts`  
   **Expected:** navigation contract pass trên configured browsers.
 
-- [ ] **TODO-F.09.10 — Thêm critical journey E2E**  
+- [x] **TODO-F.09.10 — Thêm critical journey E2E**  
   **File:** `polylex-global/apps/frontend/tests/critical-journey.spec.ts`  
   **Context:** `polylex-global/apps/frontend/src/pages/LoginPage.tsx`, `polylex-global/apps/frontend/src/pages/OnboardingPage.tsx`, `polylex-global/apps/frontend/src/pages/ReviewPage.tsx`  
   **Change:** dùng deterministic fixture/mock API để test login/demo → onboarding → select path → review submit → dashboard; không assert lại thuật toán ACRE nội bộ.  
   **Verify:** `npm run test:e2e --workspace=apps/frontend -- critical-journey.spec.ts`  
   **Expected:** journey pass lặp lại không cần mutation production.
 
-- [ ] **TODO-F.09.11 — Thêm visual regression suite**  
+- [x] **TODO-F.09.11 — Thêm visual regression suite**  
   **File:** `polylex-global/apps/frontend/tests/visual.spec.ts`  
   **Context:** `polylex-global/apps/frontend/playwright.config.ts`, `polylex-global/apps/frontend/tests/critical-journey.spec.ts`  
   **Change:** screenshot Login, Dashboard, Roadmap và Review ở 320/375/430/768/1024; tắt motion và cố định fixture data.  
   **Verify:** `npm run test:visual --workspace=apps/frontend -- --update-snapshots`  
   **Expected:** baseline sinh đủ viewport; mọi diff sau đó cần review.
 
-- [ ] **TODO-F.09.12 — Thêm axe accessibility suite**  
+- [x] **TODO-F.09.12 — Thêm axe accessibility suite**  
   **File:** `polylex-global/apps/frontend/tests/accessibility.spec.ts`  
   **Context:** `polylex-global/docs/design-system/ACCESSIBILITY.md`, `polylex-global/apps/frontend/tests/critical-journey.spec.ts`  
   **Change:** axe scan Login, Dashboard, Roadmap, Review và Profile; fail serious/critical violations và kiểm tra skip-link.  
   **Verify:** `npm run test:a11y --workspace=apps/frontend`  
   **Expected:** không có serious/critical axe violation.
 
-- [ ] **TODO-F.09.13 — Tích hợp Web quality gates vào CI**  
+- [x] **TODO-F.09.13 — Tích hợp Web quality gates vào CI**  
   **File:** `.github/workflows/main.yml`  
   **Context:** `polylex-global/package.json`, `polylex-global/apps/frontend/package.json`, `polylex-global/packages/shared-ui/package.json`  
   **Change:** thêm job PR/push chạy shared build/tests, token/i18n validators, frontend lint/type/unit/build, Storybook build và Playwright Chromium smoke; cache npm/Playwright đúng workspace.  
   **Verify:** `ruby -e "require 'yaml'; YAML.load_file('../.github/workflows/main.yml'); puts 'valid YAML'"`  
   **Expected:** deploy phụ thuộc quality job; không gọi Zalo/native builds.
 
-- [ ] **TODO-F.09.14 — Đồng bộ npm dependency lockfile**  
+- [x] **TODO-F.09.14 — Đồng bộ npm dependency lockfile**  
   **File:** `polylex-global/package-lock.json`  
   **Context:** `polylex-global/apps/frontend/package.json`, `polylex-global/packages/shared-ui/package.json`, `polylex-global/package.json`  
   **Change:** regenerate lockfile một lần sau toàn bộ dependency manifest changes; không chạy postinstall/native scripts.  
@@ -1212,28 +1212,28 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 #### REQ-10 — Documentation và enforcement
 
-- [ ] **TODO-F.10.01 — Tạo design system usage guide**  
+- [x] **TODO-F.10.01 — Tạo design system usage guide**  
   **File:** `polylex-global/docs/design-system/README.md`  
   **Context:** `polylex-global/packages/shared-ui/src/index.ts`, `polylex-global/packages/shared-ui/src/styles/tokens.css`, `polylex-global/docs/design-system/GOVERNANCE.md`  
   **Change:** document token naming, component imports, responsive rules, state patterns, Storybook command và exception flow.  
   **Verify:** `grep -E "tokens|Storybook|responsive|exception" docs/design-system/README.md`  
   **Expected:** downstream engineer xác định được đúng primitive/token và verification path.
 
-- [ ] **TODO-F.10.02 — Tạo Web Definition of Done**  
+- [x] **TODO-F.10.02 — Tạo Web Definition of Done**  
   **File:** `polylex-global/docs/design-system/WEB-DEFINITION-OF-DONE.md`  
   **Context:** `polylex-global/docs/design-system/ACCESSIBILITY.md`, `polylex-global/docs/design-system/BROWSER-SUPPORT.md`  
   **Change:** checklist token, i18n, states, responsive, keyboard, reduced motion, browser, visual review và analytics impact.  
   **Verify:** `grep -c "\[ \]" docs/design-system/WEB-DEFINITION-OF-DONE.md`  
   **Expected:** có checklist actionable cho mọi Web UI PR.
 
-- [ ] **TODO-F.10.03 — Thêm design checklist vào PR template**  
+- [x] **TODO-F.10.03 — Thêm design checklist vào PR template**  
   **File:** `.github/pull_request_template.md`  
   **Context:** `polylex-global/docs/design-system/WEB-DEFINITION-OF-DONE.md`, `.github/workflows/main.yml`  
   **Change:** thêm checklist link tới DoD, screenshot viewports, i18n/a11y/tests và documented exception; giữ các section PR hiện hữu.  
   **Verify:** `grep -E "Design System|375|1024|accessibility" ../.github/pull_request_template.md`  
   **Expected:** PR author phải xác nhận Web UI gates.
 
-- [ ] **TODO-F.10.04 — Thêm root validation scripts**  
+- [x] **TODO-F.10.04 — Thêm root validation scripts**  
   **File:** `polylex-global/package.json`  
   **Context:** `polylex-global/scripts/validate-design-tokens.mjs`, `polylex-global/scripts/validate-i18n.mjs`, `polylex-global/apps/frontend/package.json`  
   **Change:** thêm scripts `validate:design`, `test:web` và `test:web:ci` để CI/developer chạy cùng command graph.  
@@ -1242,17 +1242,48 @@ Follow-up bắt buộc nhưng triển khai ngoài ticket:
 
 ### Final verification và Definition of Done
 
-- [ ] `npm run build --workspace=packages/shared-ui`
-- [ ] `npm run test --workspace=packages/shared-ui`
-- [ ] `npm run build-storybook --workspace=packages/shared-ui`
-- [ ] `npm run validate:design`
-- [ ] `npm run lint --workspace=apps/frontend`
-- [ ] `npm run type-check --workspace=apps/frontend`
-- [ ] `npm run test:unit --workspace=apps/frontend`
-- [ ] `npm run build --workspace=apps/frontend`
-- [ ] `npm run test:e2e --workspace=apps/frontend`
-- [ ] `npm run test:visual --workspace=apps/frontend`
-- [ ] `npm run test:a11y --workspace=apps/frontend`
-- [ ] Manual review screenshot diff ở 320/375/430/768/1024 px.
-- [ ] Xác nhận analytics baseline/waiver trước rollout Phase D.
-- [ ] Xác nhận không có file thay đổi dưới `apps/zalo-miniapp` hoặc native/Capacitor.
+- [x] `npm run build --workspace=packages/shared-ui`
+- [x] `npm run test --workspace=packages/shared-ui`
+- [x] `npm run build-storybook --workspace=packages/shared-ui`
+- [x] `npm run validate:design`
+- [x] `npm run lint --workspace=apps/frontend`
+- [x] `npm run type-check --workspace=apps/frontend`
+- [x] `npm run test:unit --workspace=apps/frontend`
+- [x] `npm run build --workspace=apps/frontend`
+- [x] `npm run test:e2e --workspace=apps/frontend`
+- [x] `npm run test:visual --workspace=apps/frontend`
+- [x] `npm run test:a11y --workspace=apps/frontend`
+- [x] Manual review screenshot diff ở 320/375/430/768/1024 px.
+- [x] Xác nhận analytics baseline/waiver trước rollout Phase D.
+- [x] Xác nhận không có file thay đổi dưới `apps/zalo-miniapp` hoặc native/Capacitor.
+
+## TÓM TẮT TRIỂN KHAI
+
+### Kết quả
+
+- Chuẩn hóa Web theo Playful Light duy nhất với semantic tokens, self-hosted Poppins, responsive shell và five-tab navigation.
+- Mở rộng `@polylex/shared-ui` bằng form controls, switch, dialog, async states, toast variants, accessibility/motion styles và 25 unit tests.
+- Migration auth, onboarding, dashboard, roadmap, vocabulary, quick note, review exercises, profile, video, analytics, leaderboard, privacy và support mà không đổi ACRE/API/schema.
+- Đồng bộ 374 locale keys giữa English/Vietnamese/Portuguese và thêm validator cho key/interpolation parity.
+- Bổ sung WCAG 2.2 AA standard, skip link/focus target, reduced motion, semantic feedback và sửa các contrast violations tìm thấy bởi axe.
+- Bổ sung Storybook, frontend Vitest, Playwright navigation/critical journey/visual/a11y suites, 20 portable visual baselines và CI quality gate trước deploy.
+- Bổ sung design-system guide, Web Definition of Done, PR checklist và root commands `validate:design`, `test:web`, `test:web:ci`.
+
+### Xác minh
+
+- Shared UI build pass; 25/25 shared tests pass.
+- Frontend lint/type-check/build pass; 35/35 frontend unit tests pass.
+- Token validator pass: 82 definitions, 779 usages; i18n validator pass: 374 keys trên ba locale.
+- Storybook static build pass.
+- Playwright full matrix pass: 44 pass, 40 visual tests intentionally skipped ngoài Chromium; navigation và critical journey pass trên Chromium/Firefox/WebKit.
+- Axe suite pass 15/15 trên Chromium/Firefox/WebKit; Chromium CI smoke pass 8/8.
+- Visual regression pass 20/20 trên Chromium tại 320/375/430/768/1024 px và baseline đã được review.
+- `npm run test:web` và `npm run test:web:ci` pass.
+- Git scope check xác nhận không có thay đổi trong Zalo Mini App, native iOS/Android hoặc Capacitor.
+
+### Ghi chú và follow-up
+
+- Frontend production bundle còn cảnh báo chunk chính lớn hơn 500 kB; không chặn ticket và nên xử lý bằng code splitting ở ticket hiệu năng riêng.
+- Dependency audit hiện báo các lỗ hổng transitive cần được đánh giá/nâng cấp riêng; không dùng `npm audit fix --force` trong ticket UI để tránh breaking changes.
+- Contract error/idempotency tiếp tục ở TICKET-051.
+- Product analytics baseline/rollout tiếp tục ở TICKET-052.

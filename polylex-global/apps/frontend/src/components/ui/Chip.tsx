@@ -3,37 +3,20 @@ interface ChipProps {
   selected?: boolean;
   onClick?: () => void;
   className?: string;
+  /** @deprecated PolyLex Web uses Playful Light exclusively. */
   light?: boolean;
 }
 
-export default function Chip({ label, selected = false, onClick, className = '', light = false }: ChipProps) {
-  if (light) {
-    return (
-      <button
-        onClick={onClick}
-        className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap min-h-[36px] ${
-          selected
-            ? 'text-white'
-            : 'border'
-        } ${className}`}
-        style={{
-          background: selected ? 'var(--color-coral)' : 'var(--color-card-2)',
-          color: selected ? 'white' : 'var(--color-ink-soft)',
-          borderColor: selected ? 'transparent' : 'var(--color-line)',
-        }}
-      >
-        {label}
-      </button>
-    );
-  }
-
+export default function Chip({ label, selected = false, onClick, className = '' }: ChipProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap min-h-[36px] ${
+      aria-pressed={selected}
+      className={`inline-flex min-h-11 items-center whitespace-nowrap rounded-[var(--radius-pill)] border px-3 py-1.5 text-sm font-medium transition-colors ${
         selected
-          ? 'bg-[#6366F1] text-white'
-          : 'bg-white/5 text-[#94A3B8] border border-white/10 hover:bg-white/10'
+          ? 'border-[var(--color-coral)] bg-[var(--color-coral)] text-[var(--color-on-brand)]'
+          : 'border-[var(--color-line)] bg-[var(--color-card-2)] text-[var(--color-ink-3)] hover:bg-[var(--color-card)]'
       } ${className}`}
     >
       {label}

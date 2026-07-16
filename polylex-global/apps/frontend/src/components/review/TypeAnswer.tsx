@@ -228,7 +228,7 @@ function isTypingClose(input: string, translations: string[]): boolean {
   return false;
 }
 
-export default function TypeAnswer({ item, disabled = false, light = false, onComplete }: TypeAnswerProps) {
+export default function TypeAnswer({ item, disabled = false, onComplete }: TypeAnswerProps) {
   const { t } = useTranslation();
   const rate = useAudioSettingsStore((s) => s.rate);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -236,13 +236,13 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
   const [grade, setGrade] = useState<Grade | null>(null);
   const startRef = useRef(Date.now());
 
-  const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
-  const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textPrimary = light ? 'var(--color-ink)' : '#F1F5F9';
-  const textMuted = light ? 'var(--color-red-400)' : '#ffc9c9';
-  const textSecondary = light ? 'var(--color-red-300)' : '#ffc9c9';
-  const inputBg = light ? 'var(--color-card-2)' : '#12121F';
-  const buttonBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';
+  const cardBg = 'var(--color-card)';
+  const cardBorder = 'var(--color-line)';
+  const textPrimary = 'var(--color-ink)';
+  const textMuted = 'var(--color-ink-3)';
+  const textSecondary = 'var(--color-ink-2)';
+  const inputBg = 'var(--color-card-2)';
+  const buttonBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
 
   const translations = item.vocabularyBase.translations.map((tr) => tr.translation);
   const primary = translations[0] ?? '';
@@ -296,7 +296,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
   };
 
   const gradeColor =
-    grade === 'correct' ? '#10B981' : grade === 'close' ? '#F59E0B' : '#EF4444';
+    grade === 'correct' ? 'var(--color-ok)' : grade === 'close' ? 'var(--color-warn)' : 'var(--color-bad)';
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -309,7 +309,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
         {item.isLeech && (
           <span
             className="text-xs px-2 py-0.5 rounded-full mb-3"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+            style={{ background: 'var(--color-bad-soft)', color: 'var(--color-bad)' }}
           >
             {t('review.leech')}
           </span>
@@ -320,7 +320,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
         <LanguageBadge
           code={item.vocabularyBase.language.code}
           name={item.vocabularyBase.language.name}
-          light={light}
+          light
         />
         <p className="text-xs mt-4" style={{ color: textMuted }}>{t('review.typePrompt')}</p>
 
@@ -338,7 +338,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
                   : t('review.answerWrong')}
             </span>
             <div className="flex items-center gap-2">
-              <p className="text-2xl font-bold text-center" style={{ color: light ? 'var(--color-grape)' : '#A78BFA' }}>{primary}</p>
+              <p className="text-2xl font-bold text-center text-[var(--color-grape)]">{primary}</p>
               <button
                 onClick={() =>
                   playAudio(
@@ -348,11 +348,10 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
                     rate,
                   )
                 }
-                className="w-7 h-7 rounded-full flex items-center justify-center"
-                style={{ background: light ? 'rgba(161,98,255,0.1)' : 'rgba(99,102,241,0.15)' }}
-                aria-label="Pronounce term"
+                className="w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-grape)]"
+                aria-label={t('review.pronounceTerm')}
               >
-                <Volume2 size={13} style={{ color: light ? 'var(--color-grape)' : '#6366F1' }} />
+                <Volume2 size={17} />
               </button>
             </div>
             <PhoneticDisplay
@@ -374,9 +373,8 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
                       rate,
                     )
                   }
-                  className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5"
-                  style={{ background: light ? 'rgba(99,99,99,0.1)' : 'rgba(148,163,184,0.12)' }}
-                  aria-label="Pronounce example sentence"
+                  className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-ink-2)]"
+                  aria-label={t('review.pronounceExample')}
                 >
                   <Volume2 size={11} style={{ color: textSecondary }} />
                 </button>
@@ -407,11 +405,11 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
             grade !== null 
               ? gradeColor 
               : typingClose 
-                ? (light ? 'rgba(16,185,129,0.4)' : 'rgba(16,185,129,0.5)') // Green hint when typing close
-                : (light ? 'var(--color-line)' : 'rgba(99,102,241,0.3)')
+                ? 'var(--color-ok)'
+                : 'var(--color-line)'
           }`,
           boxShadow: typingClose && grade === null
-            ? (light ? '0 0 0 3px rgba(16,185,129,0.1)' : '0 0 0 3px rgba(16,185,129,0.15)')
+            ? '0 0 0 3px var(--color-ok-soft)'
             : 'none'
         }}
       />
@@ -431,7 +429,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
           onClick={handleContinue}
           disabled={disabled}
           className="w-full py-4 rounded-2xl font-semibold text-sm text-white transition-opacity disabled:opacity-50 min-h-[56px]"
-          style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}
+          style={{ background: buttonBg }}
         >
           {t('review.continue')}
         </button>
@@ -440,7 +438,7 @@ export default function TypeAnswer({ item, disabled = false, light = false, onCo
       {(grade === 'correct' || grade === 'close') && (
         <button
           onClick={() => onComplete(0, 1)}
-          className="w-full text-center text-xs text-[#94A3B8] underline"
+          className="w-full min-h-11 text-center text-xs text-[var(--color-ink-3)] underline"
         >
           {t('review.markWrong')}
         </button>

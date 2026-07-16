@@ -99,7 +99,7 @@ export default function DailyGoalRing({
                   disabled={loading}
                   className="press rounded-xl py-2 text-xs font-semibold border disabled:opacity-50"
                   style={{
-                    background: selected ? 'color-mix(in srgb, var(--color-coral) 12%, white)' : 'var(--color-card-2)',
+                    background: selected ? 'var(--color-coral-soft)' : 'var(--color-card-2)',
                     borderColor: selected ? 'var(--color-coral)' : 'var(--color-line)',
                     color: selected ? 'var(--color-coral)' : 'var(--color-ink-3)',
                   }}

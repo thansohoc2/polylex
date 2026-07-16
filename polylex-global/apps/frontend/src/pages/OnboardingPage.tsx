@@ -5,18 +5,22 @@ import { ArrowLeft } from 'lucide-react';
 import { languageApi, userApi, pathApi } from '@/api/client';
 import { useAuthStore } from '@/store/auth.store';
 import { LanguageDto } from '@polylex/shared-types';
+import { Select } from '@polylex/shared-ui';
+import Button from '@/components/ui/Button';
+import { useTranslation } from 'react-i18next';
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
-const GOAL_PRESETS = [
-  'Giao tiếp hằng ngày',
-  'Du lịch',
-  'Công việc & phỏng vấn',
-  'Luyện thi',
-  'Xem phim & giải trí',
-];
+const GOAL_PRESET_KEYS = [
+  'onboarding.goals.dailyConversation',
+  'onboarding.goals.travel',
+  'onboarding.goals.work',
+  'onboarding.goals.exam',
+  'onboarding.goals.entertainment',
+] as const;
 
 export default function OnboardingPage() {
+  const { t } = useTranslation();
   const [languages, setLanguages] = useState<LanguageDto[]>([]);
   const [step, setStep] = useState<1 | 2>(1);
   const [nativeLanguageCode, setNativeLanguageCode] = useState('');
@@ -39,7 +43,7 @@ export default function OnboardingPage() {
 
   const goToStep2 = () => {
     if (!nativeLanguageCode) {
-      setError('Vui lòng chọn ngôn ngữ mẹ đẻ của bạn');
+      setError(t('onboarding.errors.nativeRequired'));
       return;
     }
     setError('');
@@ -48,7 +52,7 @@ export default function OnboardingPage() {
 
   const finish = async (createPath: boolean) => {
     if (createPath && (!targetLanguageCode || !goal.trim())) {
-      setError('Vui lòng chọn ngôn ngữ muốn học và mục tiêu');
+      setError(t('onboarding.errors.targetAndGoalRequired'));
       return;
     }
     setError('');
@@ -65,9 +69,9 @@ export default function OnboardingPage() {
             nativeLanguageCode,
             targetCefrLevel: cefrLevel,
           });
-          toast.success('Đã tạo lộ trình học đầu tiên cho bạn! 🎉');
+          toast.success(t('onboarding.pathCreated'));
         } catch {
-          toast.error('Chưa tạo được lộ trình, bạn có thể tạo lại sau.');
+          toast.error(t('onboarding.pathCreateFailed'));
         }
       }
 
@@ -75,110 +79,111 @@ export default function OnboardingPage() {
       setUser(updated);
       navigate(createPath ? '/roadmap' : '/dashboard');
     } catch {
-      setError('Không thể lưu. Vui lòng thử lại.');
+      setError(t('onboarding.errors.saveFailed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-end sm:items-center justify-center bg-[#0F0F1A] px-4 pb-8">
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen flex items-center justify-center bg-[var(--color-canvas)] px-4 py-8 text-[var(--color-ink)]">
+      <div className="w-full max-w-2xl rounded-[var(--radius-card)] bg-[var(--color-card)] p-6 shadow-soft sm:p-8">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl overflow-hidden mx-auto mb-4">
             <img src="/icons/icon.svg" alt="PolyLex" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-2xl font-bold text-[#F1F5F9]">
-            {step === 1 ? 'Chào mừng đến PolyLex! 🎉' : 'Bạn muốn học gì?'}
+          <h1 className="text-h1 text-[var(--color-ink)]">
+            {step === 1 ? t('onboarding.welcome') : t('onboarding.learningQuestion')}
           </h1>
-          <p className="text-[#94A3B8] text-sm mt-1">
+          <p className="text-[var(--color-ink-3)] text-sm mt-1">
             {step === 1
-              ? 'Hãy cho chúng tôi biết ngôn ngữ mẹ đẻ của bạn'
-              : 'Chọn ngôn ngữ và mục tiêu để tạo lộ trình đầu tiên'}
+              ? t('onboarding.nativeSubtitle')
+              : t('onboarding.targetSubtitle')}
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-2xl mb-4">
+          <div role="alert" className="bg-[var(--color-bad-soft)] border border-[var(--color-bad)] text-[var(--color-bad)] text-sm px-4 py-3 rounded-2xl mb-4">
             {error}
           </div>
         )}
 
         {step === 1 ? (
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[#94A3B8] mb-1.5">Ngôn ngữ mẹ đẻ</label>
-              <select
+            <Select
+                label={t('onboarding.nativeLanguage')}
                 value={nativeLanguageCode}
                 onChange={(e) => setNativeLanguageCode(e.target.value)}
-                className="w-full bg-[#1A1A2E] border border-white/10 rounded-2xl px-4 py-3 text-[#F1F5F9] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50"
+                required
               >
-                <option value="">Chọn ngôn ngữ của bạn...</option>
+                <option value="">{t('onboarding.selectNative')}</option>
                 {languages.map((l) => (
                   <option key={l.code} value={l.code}>
                     {l.flagEmoji} {l.name} — {l.nativeName}
                   </option>
                 ))}
-              </select>
-            </div>
+            </Select>
 
-            <button
+            <Button
               type="button"
               onClick={goToStep2}
               disabled={!nativeLanguageCode}
-              className="w-full bg-gradient-to-r from-[#6366F1] to-[#A78BFA] text-white font-semibold py-4 rounded-2xl transition-opacity disabled:opacity-50 mt-2"
+              fullWidth
+              size="lg"
             >
-              Tiếp tục
-            </button>
+              {t('common.continue')}
+            </Button>
           </div>
         ) : (
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[#94A3B8] mb-1.5">Ngôn ngữ muốn học</label>
-              <select
+            <Select
+                label={t('onboarding.targetLanguage')}
                 value={targetLanguageCode}
                 onChange={(e) => setTargetLanguageCode(e.target.value)}
-                className="w-full bg-[#1A1A2E] border border-white/10 rounded-2xl px-4 py-3 text-[#F1F5F9] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50"
+                required
               >
-                <option value="">Chọn ngôn ngữ muốn học...</option>
+                <option value="">{t('onboarding.selectTarget')}</option>
                 {targetOptions.map((l) => (
                   <option key={l.code} value={l.code}>
                     {l.flagEmoji} {l.name} — {l.nativeName}
                   </option>
                 ))}
-              </select>
-            </div>
+            </Select>
 
             <div>
-              <label className="block text-sm font-medium text-[#94A3B8] mb-1.5">Mục tiêu của bạn</label>
+              <label htmlFor="learning-goal" className="block text-sm font-medium text-[var(--color-ink-2)] mb-1.5">{t('onboarding.goal')}</label>
               <div className="flex flex-wrap gap-2 mb-2">
-                {GOAL_PRESETS.map((preset) => (
+                {GOAL_PRESET_KEYS.map((presetKey) => {
+                  const preset = t(presetKey);
+                  return (
                   <button
-                    key={preset}
+                    key={presetKey}
                     type="button"
                     onClick={() => setGoal(preset)}
                     className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                       goal === preset
-                        ? 'bg-[#6366F1] border-[#6366F1] text-white'
-                        : 'bg-[#1A1A2E] border-white/10 text-[#94A3B8]'
+                        ? 'bg-[var(--color-coral)] border-[var(--color-coral)] text-white'
+                        : 'bg-[var(--color-card-2)] border-[var(--color-line)] text-[var(--color-ink-2)]'
                     }`}
                   >
                     {preset}
                   </button>
-                ))}
+                  );
+                })}
               </div>
               <textarea
+                id="learning-goal"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
-                placeholder="Ví dụ: giao tiếp khi đi du lịch Nhật Bản"
+                placeholder={t('onboarding.goalPlaceholder')}
                 rows={2}
-                className="w-full resize-none bg-[#1A1A2E] border border-white/10 rounded-2xl px-4 py-3 text-[#F1F5F9] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50"
+                className="w-full resize-none bg-[var(--color-card)] border border-[var(--color-line)] rounded-2xl px-4 py-3 text-[var(--color-ink)] text-sm focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#94A3B8] mb-1.5">Trình độ hiện tại</label>
+              <p className="block text-sm font-medium text-[var(--color-ink-2)] mb-1.5">{t('onboarding.currentLevel')}</p>
               <div className="grid grid-cols-6 gap-2">
                 {CEFR_LEVELS.map((l) => (
                   <button
@@ -187,8 +192,8 @@ export default function OnboardingPage() {
                     onClick={() => setCefrLevel(l)}
                     className={`py-2 rounded-xl text-sm font-medium border transition-colors ${
                       cefrLevel === l
-                        ? 'bg-[#6366F1] border-[#6366F1] text-white'
-                        : 'bg-[#1A1A2E] border-white/10 text-[#94A3B8]'
+                        ? 'bg-[var(--color-coral)] border-[var(--color-coral)] text-white'
+                        : 'bg-[var(--color-card-2)] border-[var(--color-line)] text-[var(--color-ink-2)]'
                     }`}
                   >
                     {l}
@@ -197,35 +202,36 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            <button
+            <Button
               type="button"
               onClick={() => finish(true)}
               disabled={loading || !targetLanguageCode || !goal.trim()}
-              className="w-full bg-gradient-to-r from-[#6366F1] to-[#A78BFA] text-white font-semibold py-4 rounded-2xl transition-opacity disabled:opacity-50 mt-2"
+              fullWidth
+              size="lg"
             >
-              {loading ? 'Đang tạo lộ trình...' : 'Tạo lộ trình & bắt đầu'}
-            </button>
+              {loading ? t('onboarding.creatingPath') : t('onboarding.createPath')}
+            </Button>
 
             <button
               type="button"
               onClick={() => finish(false)}
               disabled={loading}
-              className="w-full text-[#94A3B8] text-sm py-2 disabled:opacity-50"
+              className="w-full text-[var(--color-ink-3)] text-sm py-2 disabled:opacity-50"
             >
-              Bỏ qua, tạo sau
+              {t('onboarding.skip')}
             </button>
 
             <button
               type="button"
               onClick={() => { setError(''); setStep(1); }}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-1.5 text-[#64748B] text-xs disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-1.5 text-[var(--color-ink-3)] text-xs disabled:opacity-50"
             >
-              <ArrowLeft size={14} /> Quay lại
+              <ArrowLeft size={14} /> {t('common.back')}
             </button>
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

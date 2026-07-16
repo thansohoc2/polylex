@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -66,7 +66,7 @@ function gradeAnswer(input: string, term: string): Grade {
   return 'wrong';
 }
 
-export default function ListeningExercise({ item, disabled = false, light = false, onComplete }: ListeningExerciseProps) {
+export default function ListeningExercise({ item, disabled = false, onComplete }: ListeningExerciseProps) {
   const { t } = useTranslation();
   const rate = useAudioSettingsStore((s) => s.rate);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,14 +76,14 @@ export default function ListeningExercise({ item, disabled = false, light = fals
 
   const translation = item.vocabularyBase.translations[0]?.translation ?? '';
 
-  const replay = () => {
+  const replay = useCallback(() => {
     playAudio(
       item.vocabularyBase.term,
       item.vocabularyBase.language.code,
       item.vocabularyBase.audioUrl,
       rate,
     );
-  };
+  }, [item.vocabularyBase.audioUrl, item.vocabularyBase.language.code, item.vocabularyBase.term, rate]);
 
   useEffect(() => {
     setValue('');
@@ -91,7 +91,7 @@ export default function ListeningExercise({ item, disabled = false, light = fals
     startRef.current = Date.now();
     inputRef.current?.focus();
     replay();
-  }, [item.id]);
+  }, [item.id, replay]);
 
   const handleCheck = () => {
     if (grade !== null || disabled) return;
@@ -124,17 +124,17 @@ export default function ListeningExercise({ item, disabled = false, light = fals
   };
 
   const gradeColor =
-    grade === 'correct' ? '#10B981' : grade === 'close' ? '#F59E0B' : '#EF4444';
+    grade === 'correct' ? 'var(--color-ok)' : grade === 'close' ? 'var(--color-warn)' : 'var(--color-bad)';
 
-  const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
-  const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textPrimary = light ? 'var(--color-red-400)' : '#f86156';
-  const textSoft = light ? 'var(--color-red-300)' : '#f27b5d';
-  const textMuted = light ? 'var(--color-red-200)' : '#94A3B8';
-  const accentColor = light ? 'var(--color-coral)' : '#A78BFA';
-  const inputBg = light ? 'var(--color-card-2)' : '#12121F';
-  const btnBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';
-  const playBg = light ? 'rgba(255,100,70,0.12)' : 'rgba(99,102,241,0.2)';
+  const cardBg = 'var(--color-card)';
+  const cardBorder = 'var(--color-line)';
+  const textPrimary = 'var(--color-ink)';
+  const textSoft = 'var(--color-ink-2)';
+  const textMuted = 'var(--color-ink-3)';
+  const accentColor = 'var(--color-coral)';
+  const inputBg = 'var(--color-card-2)';
+  const btnBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
+  const playBg = 'var(--color-coral-soft)';
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -146,7 +146,7 @@ export default function ListeningExercise({ item, disabled = false, light = fals
         {item.isLeech && (
           <span
             className="text-xs px-2 py-0.5 rounded-full mb-3"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+            style={{ background: 'var(--color-bad-soft)', color: 'var(--color-bad)' }}
           >
             {t('review.leech')}
           </span>
@@ -194,11 +194,10 @@ export default function ListeningExercise({ item, disabled = false, light = fals
               <p className="text-2xl font-bold text-center" style={{ color: accentColor }}>{item.vocabularyBase.term}</p>
               <button
                 onClick={replay}
-                className="w-7 h-7 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(99,102,241,0.15)' }}
+                className="w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-grape)]"
                 aria-label={t('review.replay')}
               >
-                <Volume2 size={13} className="text-[#6366F1]" />
+                <Volume2 size={17} />
               </button>
             </div>
             <PhoneticDisplay
@@ -221,11 +220,10 @@ export default function ListeningExercise({ item, disabled = false, light = fals
                       rate,
                     )
                   }
-                  className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5"
-                  style={{ background: 'rgba(148,163,184,0.12)' }}
-                  aria-label="Pronounce example sentence"
+                  className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-ink-3)]"
+                  aria-label={t('review.pronounceExample')}
                 >
-                  <Volume2 size={11} className="text-[#94A3B8]" />
+                  <Volume2 size={16} />
                 </button>
               </div>
             )}

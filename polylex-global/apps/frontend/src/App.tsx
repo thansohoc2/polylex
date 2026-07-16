@@ -97,7 +97,7 @@ export default function App() {
   }, [storeHydrated, accessToken, setTokens]);
 
   if (isBootstrapping) {
-    return <div className="min-h-screen bg-[#0A0A14]" />;
+    return <div className="min-h-screen bg-[var(--color-canvas)]" />;
   }
 
   return (

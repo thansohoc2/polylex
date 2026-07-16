@@ -10,22 +10,20 @@ const tabs = [
   { path: '/profile', icon: User, labelKey: 'nav.profile' },
 ];
 
-export default function BottomNav({ theme = 'dark' }: { theme?: 'dark' | 'light' }) {
+export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const light = theme === 'light';
-  const activeColor = light ? 'var(--color-coral)' : '#6366F1';
-  const idleColor = light ? 'var(--color-ink-3)' : '#475569';
+  const activeColor = 'var(--color-coral)';
+  const idleColor = 'var(--color-ink-3)';
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto flex items-stretch justify-around"
+      aria-label={t('nav.primary', { defaultValue: 'Primary navigation' })}
+      className="fixed bottom-0 left-0 right-0 z-50 w-full max-w-screen-xl mx-auto flex items-stretch justify-around bg-[rgba(251,246,242,0.98)] border-t border-[var(--color-line)] supports-[backdrop-filter]:bg-[rgba(251,246,242,0.92)]"
       style={{
-        background: light ? 'rgba(251, 246, 242, 0.92)' : 'rgba(15, 15, 26, 0.92)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderTop: light ? '1px solid var(--color-line)' : '1px solid rgba(255,255,255,0.05)',
         paddingBottom: 'env(safe-area-inset-bottom)',
         height: 'calc(64px + env(safe-area-inset-bottom))',
       }}
@@ -39,6 +37,7 @@ export default function BottomNav({ theme = 'dark' }: { theme?: 'dark' | 'light'
             onClick={() => navigate(tab.path)}
             className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 min-w-[44px]"
             aria-label={t(tab.labelKey)}
+            aria-current={isActive ? 'page' : undefined}
           >
             <Icon
               size={22}

@@ -5,7 +5,8 @@
     "videos": "Vídeos",
     "notes": "Notas",
     "review": "Revisão",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "primary": "Navegação principal"
   },
   "auth": {
     "welcomeBack": "Bem-vindo de volta",
@@ -30,7 +31,75 @@
     "alreadyHaveAccount": "Já tem conta?",
     "enterHome": "Experimente agora",
     "enteringHome": "Entrando na experiência…",
-    "guestEntryFailed": "Não foi possível entrar na experiência agora. Tente novamente."
+    "guestEntryFailed": "Não foi possível entrar na experiência agora. Tente novamente.",
+    "or": "ou"
+  },
+  "common": {
+    "continue": "Continuar",
+    "back": "Voltar"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório.",
+    "email": "Insira um endereço de email válido.",
+    "minLength": "Use pelo menos {{minimum}} caracteres.",
+    "passwordMatch": "As senhas devem ser iguais."
+  },
+  "legal": {
+    "privacy": "Política de Privacidade",
+    "support": "Suporte"
+  },
+  "support": {
+    "title": "Suporte",
+    "heroTitle": "Como podemos ajudar?",
+    "heroDescription": "Consulte as perguntas frequentes ou entre em contato — normalmente respondemos em até 48 horas.",
+    "emailSubject": "[{{appName}}] Solicitação de suporte",
+    "emailSupport": "Suporte por email",
+    "quickLinks": "Links rápidos",
+    "deleteAccount": "Excluir conta",
+    "faqTitle": "Perguntas frequentes",
+    "appTagline": "{{appName}} · Aprendizado de idiomas",
+    "developedBy": "Desenvolvido por {{name}}",
+    "faq": {
+      "addWord": { "question": "Como adiciono uma palavra nova?", "answer": "Toque no botão + da página de Vocabulário, digite a palavra e, se quiser, use o enriquecimento por IA para preencher definição e exemplo." },
+      "review": { "question": "Como funciona o sistema de revisão?", "answer": "O {{appName}} usa repetição espaçada. As palavras voltam mais cedo quando são difíceis e mais tarde quando são fáceis." },
+      "language": { "question": "Como altero meu idioma nativo?", "answer": "Abra o Perfil, escolha seu idioma nativo e salve a configuração." },
+      "deleteAccount": { "question": "Como excluo minha conta?", "answer": "Abra o Perfil e selecione Excluir conta para remover permanentemente sua conta e seus dados." },
+      "socialLogin": { "question": "O login com Google ou Apple não funciona", "answer": "Verifique sua conexão. No iOS, confirme que as Chaves do iCloud estão ativadas para Entrar com a Apple. Contate o suporte se o problema continuar." },
+      "offline": { "question": "Posso usar o PolyLex offline?", "answer": "Alguns conteúdos salvos podem estar disponíveis no cache. O enriquecimento por IA e o áudio de texto para fala precisam de internet." }
+    }
+  },
+  "a11y": {
+    "skipToContent": "Ir para o conteúdo principal"
+  },
+  "onboarding": {
+    "welcome": "Bem-vindo ao PolyLex! 🎉",
+    "learningQuestion": "O que você quer aprender?",
+    "nativeSubtitle": "Conte qual é o seu idioma nativo",
+    "targetSubtitle": "Escolha um idioma e uma meta para seu primeiro roteiro",
+    "nativeLanguage": "Idioma nativo",
+    "selectNative": "Selecione seu idioma...",
+    "targetLanguage": "Idioma para aprender",
+    "selectTarget": "Selecione um idioma para aprender...",
+    "goal": "Sua meta",
+    "goalPlaceholder": "Por exemplo: conversar durante uma viagem ao Japão",
+    "currentLevel": "Nível atual",
+    "creatingPath": "Criando seu roteiro...",
+    "createPath": "Criar roteiro e começar",
+    "skip": "Pular e criar depois",
+    "pathCreated": "Seu primeiro roteiro de aprendizado está pronto! 🎉",
+    "pathCreateFailed": "Ainda não foi possível criar o roteiro. Tente novamente mais tarde.",
+    "goals": {
+      "dailyConversation": "Conversa do dia a dia",
+      "travel": "Viagens",
+      "work": "Trabalho e entrevistas",
+      "exam": "Preparação para provas",
+      "entertainment": "Filmes e entretenimento"
+    },
+    "errors": {
+      "nativeRequired": "Escolha seu idioma nativo.",
+      "targetAndGoalRequired": "Escolha o idioma de destino e sua meta.",
+      "saveFailed": "Não foi possível salvar suas escolhas. Tente novamente."
+    }
   },
   "dashboard": {
     "title": "Início",
@@ -123,6 +192,8 @@
     "viewDialogue": "💬 Ver Diálogo",
     "viewVideos": "▶️ Ver Vídeos",
     "tapToReveal": "Toque para revelar",
+    "pronounceTerm": "Pronunciar termo",
+    "pronounceExample": "Pronunciar frase de exemplo",
     "strength": "Força",
     "leech": "🐛 Leech",
     "again": "🔁 De novo",
@@ -266,6 +337,10 @@
     "adding": "Adicionando…",
     "addNote": "Adicionar Nota",
     "failedToSubmit": "Falha ao enviar. Tente novamente."
+  },
+  "demoLimit": {
+    "pathReached": "Você atingiu o limite de roteiros da demonstração. Cadastre-se para continuar.",
+    "noteReached": "Você atingiu o limite de notas rápidas da demonstração. Cadastre-se para continuar."
   },
   "wordDetail": {
     "example": "Exemplo",

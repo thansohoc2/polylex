@@ -1,0 +1,159 @@
+.field {
+  display: grid;
+  gap: 0.375rem;
+  color: var(--color-ink, #221b2e);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.required {
+  color: var(--color-bad, #c52d48);
+  margin-inline-start: 0.25rem;
+}
+
+.control {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--color-line, #dfd5cc);
+  border-radius: var(--radius-control, 0.75rem);
+  background: var(--color-card, #fff);
+  color: var(--color-ink, #221b2e);
+  font: inherit;
+  line-height: 1.4;
+  padding: 0.6875rem 0.875rem;
+  transition: border-color var(--duration-fast, 120ms) ease, box-shadow var(--duration-fast, 120ms) ease;
+}
+
+.control::placeholder {
+  color: var(--color-ink-3, #6f6879);
+}
+
+.control:hover:not(:disabled) {
+  border-color: var(--color-ink-3, #6f6879);
+}
+
+.control:focus-visible {
+  border-color: var(--focus-ring, #6545d6);
+}
+
+.control:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.invalid {
+  border-color: var(--color-bad, #c52d48);
+}
+
+.helper,
+.error {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.helper {
+  color: var(--color-ink-3, #6f6879);
+}
+
+.error {
+  color: var(--color-bad, #c52d48);
+  font-weight: 600;
+}
+
+.checkField {
+  display: grid;
+  gap: 0.25rem;
+  color: var(--color-ink, #221b2e);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+.checkLabel {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.625rem;
+  min-height: 44px;
+  width: fit-content;
+}
+
+.checkLabelDisabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.checkbox {
+  accent-color: var(--color-grape, #6545d6);
+  flex: 0 0 auto;
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.indentedText {
+  margin-inline-start: 1.875rem;
+}
+
+.switchButton {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--color-ink, #221b2e);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 0.625rem;
+  min-height: 44px;
+  padding: 0;
+  text-align: start;
+}
+
+.switchButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.switchTrack {
+  background: var(--color-line, #dfd5cc);
+  border: 1px solid var(--color-ink-3, #6f6879);
+  border-radius: var(--radius-pill, 999px);
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  height: 1.75rem;
+  padding: 0.1875rem;
+  transition: background-color var(--duration-normal, 180ms) ease, border-color var(--duration-normal, 180ms) ease;
+  width: 3rem;
+}
+
+.switchChecked {
+  background: var(--color-grape, #6545d6);
+  border-color: var(--color-grape, #6545d6);
+}
+
+.switchThumb {
+  background: var(--color-card, #fff);
+  border-radius: 50%;
+  box-shadow: var(--shadow-soft, 0 2px 6px rgba(34, 27, 46, 0.15));
+  display: block;
+  height: 1.25rem;
+  transform: translateX(0);
+  transition: transform var(--duration-normal, 180ms) var(--ease-out-soft, ease-out);
+  width: 1.25rem;
+}
+
+.switchChecked .switchThumb {
+  transform: translateX(1.1875rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control,
+  .switchTrack,
+  .switchThumb {
+    transition: none;
+  }
+}

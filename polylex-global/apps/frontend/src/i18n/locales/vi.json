@@ -5,7 +5,8 @@
     "videos": "Videos",
     "notes": "Ghi chú",
     "review": "Ôn tập",
-    "profile": "Hồ sơ"
+    "profile": "Hồ sơ",
+    "primary": "Điều hướng chính"
   },
   "auth": {
     "welcomeBack": "Chào mừng trở lại",
@@ -30,7 +31,75 @@
     "alreadyHaveAccount": "Đã có tài khoản?",
     "enterHome": "Trải nghiệm ngay",
     "enteringHome": "Đang vào trải nghiệm…",
-    "guestEntryFailed": "Không thể vào trang chủ lúc này. Vui lòng thử lại."
+    "guestEntryFailed": "Không thể vào trang chủ lúc này. Vui lòng thử lại.",
+    "or": "hoặc"
+  },
+  "common": {
+    "continue": "Tiếp tục",
+    "back": "Quay lại"
+  },
+  "validation": {
+    "required": "Vui lòng điền trường này.",
+    "email": "Vui lòng nhập email hợp lệ.",
+    "minLength": "Vui lòng dùng ít nhất {{minimum}} ký tự.",
+    "passwordMatch": "Mật khẩu phải trùng khớp."
+  },
+  "legal": {
+    "privacy": "Chính sách bảo mật",
+    "support": "Hỗ trợ"
+  },
+  "support": {
+    "title": "Hỗ trợ",
+    "heroTitle": "Chúng tôi có thể giúp gì?",
+    "heroDescription": "Xem câu hỏi thường gặp hoặc liên hệ trực tiếp — chúng tôi thường phản hồi trong vòng 48 giờ.",
+    "emailSubject": "[{{appName}}] Yêu cầu hỗ trợ",
+    "emailSupport": "Hỗ trợ qua email",
+    "quickLinks": "Liên kết nhanh",
+    "deleteAccount": "Xóa tài khoản",
+    "faqTitle": "Câu hỏi thường gặp",
+    "appTagline": "{{appName}} · Học ngôn ngữ",
+    "developedBy": "Phát triển bởi {{name}}",
+    "faq": {
+      "addWord": { "question": "Làm thế nào để thêm từ mới?", "answer": "Nhấn nút + ở trang Từ vựng, nhập từ và có thể chọn làm giàu bằng AI để tự động điền định nghĩa và ví dụ." },
+      "review": { "question": "Hệ thống ôn tập hoạt động thế nào?", "answer": "{{appName}} dùng phương pháp lặp lại ngắt quãng. Từ sẽ xuất hiện lại sớm hơn nếu khó nhớ và muộn hơn nếu dễ nhớ." },
+      "language": { "question": "Làm thế nào để đổi ngôn ngữ mẹ đẻ?", "answer": "Mở Hồ sơ, chọn ngôn ngữ mẹ đẻ rồi lưu cài đặt." },
+      "deleteAccount": { "question": "Làm thế nào để xóa tài khoản?", "answer": "Mở Hồ sơ và chọn Xóa tài khoản để xóa vĩnh viễn tài khoản cùng dữ liệu." },
+      "socialLogin": { "question": "Không thể đăng nhập bằng Google hoặc Apple", "answer": "Hãy kiểm tra kết nối mạng. Trên iOS, bảo đảm Chuỗi khóa iCloud đã bật cho Đăng nhập bằng Apple. Liên hệ hỗ trợ nếu lỗi vẫn tiếp diễn." },
+      "offline": { "question": "Tôi có thể dùng PolyLex ngoại tuyến không?", "answer": "Một số nội dung đã lưu có thể dùng từ bộ nhớ đệm. Làm giàu bằng AI và âm thanh chuyển văn bản thành giọng nói cần kết nối mạng." }
+    }
+  },
+  "a11y": {
+    "skipToContent": "Bỏ qua để đến nội dung chính"
+  },
+  "onboarding": {
+    "welcome": "Chào mừng đến PolyLex! 🎉",
+    "learningQuestion": "Bạn muốn học gì?",
+    "nativeSubtitle": "Hãy cho chúng tôi biết ngôn ngữ mẹ đẻ của bạn",
+    "targetSubtitle": "Chọn ngôn ngữ và mục tiêu cho lộ trình đầu tiên",
+    "nativeLanguage": "Ngôn ngữ mẹ đẻ",
+    "selectNative": "Chọn ngôn ngữ của bạn...",
+    "targetLanguage": "Ngôn ngữ muốn học",
+    "selectTarget": "Chọn ngôn ngữ muốn học...",
+    "goal": "Mục tiêu của bạn",
+    "goalPlaceholder": "Ví dụ: giao tiếp khi đi du lịch Nhật Bản",
+    "currentLevel": "Trình độ hiện tại",
+    "creatingPath": "Đang tạo lộ trình...",
+    "createPath": "Tạo lộ trình và bắt đầu",
+    "skip": "Bỏ qua, tạo sau",
+    "pathCreated": "Đã tạo lộ trình học đầu tiên cho bạn! 🎉",
+    "pathCreateFailed": "Chưa tạo được lộ trình, bạn có thể tạo lại sau.",
+    "goals": {
+      "dailyConversation": "Giao tiếp hằng ngày",
+      "travel": "Du lịch",
+      "work": "Công việc và phỏng vấn",
+      "exam": "Luyện thi",
+      "entertainment": "Xem phim và giải trí"
+    },
+    "errors": {
+      "nativeRequired": "Vui lòng chọn ngôn ngữ mẹ đẻ của bạn.",
+      "targetAndGoalRequired": "Vui lòng chọn ngôn ngữ muốn học và mục tiêu.",
+      "saveFailed": "Không thể lưu. Vui lòng thử lại."
+    }
   },
   "dashboard": {
     "title": "Trang chủ",
@@ -123,6 +192,8 @@
     "viewDialogue": "💬 Xem hội thoại",
     "viewVideos": "▶️ Xem video",
     "tapToReveal": "Nhấn để lật",
+    "pronounceTerm": "Phát âm từ",
+    "pronounceExample": "Phát âm câu ví dụ",
     "strength": "Độ thuộc",
     "leech": "🐛 Từ khó",
     "again": "🔁 Học lại",

@@ -4,6 +4,8 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export type LoadingSpinnerSize = 'xs' | 'sm' | 'md' | 'lg';
 export type LoadingSpinnerVariant = 'dots' | 'ring' | 'bars';
 
+export type { FormFieldContract, FormFieldIds } from './form.types';
+
 export interface SocialLoginResult {
   accessToken: string;
   refreshToken: string;

@@ -4,9 +4,13 @@
   "private": true,
   "description": "PolyLex Global NestJS Backend",
   "scripts": {
+    "prisma:generate": "prisma generate",
+    "prebuild": "npm run prisma:generate",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prestart": "npm run prisma:generate",
     "start": "nest start",
+    "predev": "npm run prisma:generate",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

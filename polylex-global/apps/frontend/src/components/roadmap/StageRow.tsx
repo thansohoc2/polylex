@@ -66,7 +66,7 @@ export default function StageRow({ stage, isLast, onComplete, userPathId }: Prop
           background: stage.isCompleted
             ? 'color-mix(in srgb, var(--color-ok) 14%, white)'
             : stage.isUnlocked
-            ? 'color-mix(in srgb, var(--color-coral) 12%, white)'
+            ? 'var(--color-coral-soft)'
             : 'var(--color-card-2)',
           border: stage.isCompleted
             ? '1.5px solid var(--color-ok)'

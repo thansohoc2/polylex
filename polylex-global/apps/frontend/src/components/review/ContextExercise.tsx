@@ -82,7 +82,7 @@ function gradeAnswer(input: string, term: string): Grade {
   return 'wrong';
 }
 
-export default function ContextExercise({ item, disabled = false, light = false, onComplete }: ContextExerciseProps) {
+export default function ContextExercise({ item, disabled = false, onComplete }: ContextExerciseProps) {
   const { t } = useTranslation();
   const rate = useAudioSettingsStore((s) => s.rate);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -138,16 +138,16 @@ export default function ContextExercise({ item, disabled = false, light = false,
   };
 
   const gradeColor =
-    grade === 'correct' ? '#10B981' : grade === 'close' ? '#F59E0B' : '#EF4444';
+    grade === 'correct' ? 'var(--color-ok)' : grade === 'close' ? 'var(--color-warn)' : 'var(--color-bad)';
 
-  const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
-  const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textPrimary = light ? 'var(--color-ink)' : '#F1F5F9';
-  const textSoft = light ? 'var(--color-red-400)' : '#ffc9c9';
-  const textMuted = light ? 'var(--color-red-300)' : '#ffc9c9';
-  const accentColor = light ? 'var(--color-coral)' : '#A78BFA';
-  const inputBg = light ? 'var(--color-card-2)' : '#12121F';
-  const btnBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';
+  const cardBg = 'var(--color-card)';
+  const cardBorder = 'var(--color-line)';
+  const textPrimary = 'var(--color-ink)';
+  const textSoft = 'var(--color-ink-2)';
+  const textMuted = 'var(--color-ink-3)';
+  const accentColor = 'var(--color-coral)';
+  const inputBg = 'var(--color-card-2)';
+  const btnBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -160,7 +160,7 @@ export default function ContextExercise({ item, disabled = false, light = false,
         {item.isLeech && (
           <span
             className="text-xs px-2 py-0.5 rounded-full mb-3"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+            style={{ background: 'var(--color-bad-soft)', color: 'var(--color-bad)' }}
           >
             {t('review.leech')}
           </span>
@@ -186,11 +186,10 @@ export default function ContextExercise({ item, disabled = false, light = false,
           {grade !== null && (
             <button
               onClick={() => speakText(sentence, item.vocabularyBase.language.code, rate)}
-              className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center mt-1"
-              style={{ background: 'rgba(99,102,241,0.15)' }}
-              aria-label="Pronounce sentence"
+              className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-[var(--color-card-2)] text-[var(--color-grape)]"
+              aria-label={t('review.pronounceExample')}
             >
-              <Volume2 size={13} className="text-[#6366F1]" />
+              <Volume2 size={17} />
             </button>
           )}
         </div>

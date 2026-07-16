@@ -1,0 +1,103 @@
+/* PolyLex Web-first Playful Light design tokens. */
+@theme {
+  /* Surfaces and content */
+  --color-canvas: #fbf6f2;
+  --color-card: #ffffff;
+  --color-card-2: #fff3ec;
+  --color-line: #dfd5cc;
+  --color-ink: #221b2e;
+  --color-ink-2: #51495c;
+  --color-ink-3: #6f6879;
+  --color-ink-soft: var(--color-ink-3);
+
+  /* Brand and actions. White on coral/grape meets WCAG AA for normal text. */
+  --color-coral: #c2412d;
+  --color-coral-2: #b83a25;
+  --color-pink: #b83268;
+  --color-gold: #a86400;
+  --color-grape: #6545d6;
+  --color-grape-light: #f4f0ff;
+  --color-grape-bright: #cbbdf8;
+  --color-grape-dark: #4c329f;
+  --color-on-brand: #ffffff;
+  --color-on-brand-tint-sm: rgba(255, 255, 255, 0.18);
+  --color-on-brand-tint-md: rgba(255, 255, 255, 0.22);
+  --color-on-brand-tint-lg: rgba(255, 255, 255, 0.25);
+  --color-media-scrim: rgba(34, 27, 46, 0.48);
+
+  /* Feedback and gamification */
+  --color-ok: #087a46;
+  --color-warn: #9a5700;
+  --color-bad: #c52d48;
+  --color-info: #2563b8;
+  --color-ok-soft: #e8f7ef;
+  --color-warn-soft: #fff3dc;
+  --color-bad-soft: #fdecef;
+  --color-info-soft: #eaf2ff;
+  --color-coral-soft: #fff0ec;
+  --color-heat-1: #fbe1da;
+  --color-heat-2: #f3b9aa;
+  --color-heat-3: #e78d79;
+  --color-heat-4: #d96650;
+  --color-heat-5: var(--color-coral);
+  --color-streak: var(--color-coral);
+  --color-xp: var(--color-gold);
+  --color-mastery: var(--color-grape);
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --text-caption: 0.75rem;
+  --text-body: 1rem;
+  --text-heading: 1.35rem;
+  --text-display: 2rem;
+
+  /* Spacing and shape */
+  --spacing-touch: 2.75rem;
+  --spacing-page-inline: 1rem;
+  --spacing-page-block: 1.5rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1.25rem;
+  --radius-dialog: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Elevation and focus */
+  --shadow-soft: 0 6px 20px rgba(34, 27, 46, 0.06), 0 2px 6px rgba(34, 27, 46, 0.04);
+  --shadow-pop: 0 12px 32px rgba(34, 27, 46, 0.1), 0 4px 10px rgba(34, 27, 46, 0.06);
+  --shadow-coral: 0 10px 26px rgba(194, 65, 45, 0.26);
+  --shadow-grape: 0 10px 26px rgba(101, 69, 214, 0.24);
+  --focus-ring: #6545d6;
+  --focus-ring-offset: #fbf6f2;
+
+  /* Layering */
+  --z-navigation: 30;
+  --z-overlay: 40;
+  --z-dialog: 50;
+  --z-toast: 60;
+
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-normal: 180ms;
+  --duration-slow: 400ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* deprecated aliases:start — remove after all Web journeys use semantic Playful Light tokens. */
+  --color-surface: var(--color-canvas);
+  --color-surface-2: var(--color-card);
+  --color-surface-3: var(--color-card-2);
+  --color-primary: var(--color-coral);
+  --color-primary-dark: var(--color-coral-2);
+  --color-accent: var(--color-grape);
+  --color-text-1: var(--color-ink);
+  --color-text-2: var(--color-ink-2);
+  --color-text-3: var(--color-ink-3);
+  --color-success: var(--color-ok);
+  --color-warning: var(--color-warn);
+  --color-error: var(--color-bad);
+  --color-border: var(--color-line);
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+  /* deprecated aliases:end */
+}

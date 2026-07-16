@@ -1,20 +1,15 @@
 interface TopBarProps {
   title: string;
   rightAction?: React.ReactNode;
-  theme?: 'dark' | 'light';
 }
 
-export default function TopBar({ title, rightAction, theme = 'dark' }: TopBarProps) {
-  const light = theme === 'light';
+export default function TopBar({ title, rightAction }: TopBarProps) {
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 max-w-md mx-auto"
+      className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 w-full max-w-screen-xl mx-auto bg-[rgba(251,246,242,0.96)] border-b border-[var(--color-line)] supports-[backdrop-filter]:bg-[rgba(251,246,242,0.85)]"
       style={{
-        background: light ? 'rgba(251, 246, 242, 0.85)' : 'rgba(15, 15, 26, 0.85)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: light ? '1px solid var(--color-line)' : '1px solid rgba(255,255,255,0.05)',
-       
       }}
     >
       {/* Logo */}
@@ -23,15 +18,14 @@ export default function TopBar({ title, rightAction, theme = 'dark' }: TopBarPro
       </div>
 
       {/* Title */}
-      <span
-        className="flex-1 text-center font-display font-bold text-base ml-[-2rem]"
-        style={{ color: light ? 'var(--color-ink)' : '#F1F5F9' }}
-      >
+      <span className="flex-1 text-center font-display font-bold text-base ml-[-2rem] text-[var(--color-ink)]">
         {title}
       </span>
 
       {/* Right action */}
-      <div className="flex items-center">{rightAction ?? <div className="w-8" />}</div>
+      <div className="flex min-h-11 min-w-11 items-center justify-center">
+        {rightAction ?? <div className="w-8" />}
+      </div>
     </header>
   );
 }

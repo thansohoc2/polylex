@@ -26,7 +26,6 @@ interface QuickNoteContextValue {
 
 const QuickNoteContext = createContext<QuickNoteContextValue | null>(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useQuickNote(): QuickNoteContextValue {
   const ctx = useContext(QuickNoteContext);
   if (!ctx) throw new Error('useQuickNote must be used within QuickNoteProvider');

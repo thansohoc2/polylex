@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { AsyncState, Select } from '@polylex/shared-ui';
 import { vocabularyApi, languageApi } from '@/api/client';
 import type { LanguageDto } from '@polylex/shared-types';
 import AppShell from '@/components/layout/AppShell';
@@ -24,11 +25,13 @@ export default function VocabularyPage() {
   const [langFilter, setLangFilter] = useState<string>('all');
   const [languages, setLanguages] = useState<LanguageDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState<VocabItem | null>(null);
 
   const loadMyList = useCallback(async () => {
     setLoading(true);
+    setLoadFailed(false);
     try {
       const res = await vocabularyApi.getMyList(1, 100);
       const items = (res.items as unknown[]).map((uv: unknown) => {
@@ -38,6 +41,7 @@ export default function VocabularyPage() {
       setAllItems(items);
     } catch {
       setAllItems([]);
+      setLoadFailed(true);
     } finally {
       setLoading(false);
     }
@@ -71,55 +75,37 @@ export default function VocabularyPage() {
 
   const topBarAction = (
     <button
+      type="button"
       onClick={() => setShowModal(true)}
-      className="w-9 h-9 rounded-full flex items-center justify-center bg-coral-100"
-      aria-label="Add word"
+      className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-[var(--color-coral-soft)] text-[var(--color-coral)]"
+      aria-label={t('addWord.addWord')}
     >
-      <Plus size={18} className="text-coral" />
+      <Plus size={18} aria-hidden="true" />
     </button>
   );
 
-  const btnBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
-
   return (
-    <AppShell title={t('vocab.title')} rightAction={topBarAction} theme="light">
-      <div className="px-4 pt-3 space-y-3 pb-6">
+    <AppShell title={t('vocab.title')} rightAction={topBarAction}>
+      <div className="space-y-3 px-4 pb-6 pt-3 sm:px-6 lg:px-8">
 
         {/* Search */}
-        <SearchBar value={search} onChange={setSearch} placeholder={t('vocab.searchPlaceholder')} light />
+        <SearchBar value={search} onChange={setSearch} placeholder={t('vocab.searchPlaceholder')} />
 
-        {/* Language filter tabs (only when multiple languages) */}
+        {/* A labelled shared select remains compact at every responsive width. */}
         {availableLangs.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-            <button
-              onClick={() => setLangFilter('all')}
-              className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-                langFilter === 'all'
-                  ? 'text-white'
-                  : 'bg-card text-ink-3 hover:bg-card-2'
-              }`}
-              style={langFilter === 'all' ? { background: btnBg } : undefined}
-            >
-              {t('vocab.allCount', { count: allItems.length })}
-            </button>
-            {availableLangs.map((lang) => {
-              const count = allItems.filter((w) => w.language.code === lang.code).length;
-              const flag = flagMap[lang.code] ?? '🌐';
-              return (
-                <button
-                  key={lang.code}
-                  onClick={() => setLangFilter(lang.code)}
-                  className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-                    langFilter === lang.code
-                      ? 'text-white'
-                      : 'bg-card text-ink-3 hover:bg-card-2'
-                  }`}
-                  style={langFilter === lang.code ? { background: btnBg } : undefined}
-                >
-                  {flag} {lang.name} · {count}
-                </button>
-              );
-            })}
+          <div className="max-w-sm">
+            <Select
+              label={t('addWord.languageToLearn')}
+              value={langFilter}
+              onChange={(event) => setLangFilter(event.target.value)}
+              options={[
+                { value: 'all', label: t('vocab.allCount', { count: allItems.length }) },
+                ...availableLangs.map((language) => ({
+                  value: language.code,
+                  label: `${flagMap[language.code] ?? '🌐'} ${language.name} · ${allItems.filter((word) => word.language.code === language.code).length}`,
+                })),
+              ]}
+            />
           </div>
         )}
 
@@ -133,9 +119,16 @@ export default function VocabularyPage() {
 
         {/* Word list */}
         {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => <SkeletonCard key={i} light />)}
+          <div className="grid gap-3 md:grid-cols-2">
+            {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
           </div>
+        ) : loadFailed ? (
+          <AsyncState
+            status="error"
+            errorMessage={t('addWord.failedToCreate')}
+            retryLabel={t('review.tryAgain')}
+            onRetry={() => void loadMyList()}
+          />
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             {allItems.length === 0 ? (
@@ -156,7 +149,7 @@ export default function VocabularyPage() {
           </div>
         ) : langFilter === 'all' && availableLangs.length > 1 ? (
           /* Multi-language "All" view — group by language */
-          <div className="space-y-3">
+          <div className="grid items-start gap-3 md:grid-cols-2">
             {availableLangs.map((lang) => {
               const langWords = filtered.filter((w) => w.language.code === lang.code);
               if (langWords.length === 0) return null;

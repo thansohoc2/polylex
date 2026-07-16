@@ -71,7 +71,7 @@ export default function DialoguePage() {
           window.speechSynthesis.speak(u);
         });
       }),
-    [],
+    [rate],
   );
 
   const playAll = useCallback(async () => {

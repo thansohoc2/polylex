@@ -309,7 +309,7 @@ export default function ReviewPage() {
 
   if (phase === 'loading' || phase === 'redirecting') {
     return (
-      <AppShell title={title} theme="light">
+      <AppShell title={title}>
         <div className="px-4 space-y-4">
           {[1, 2].map((i) => <SkeletonCard key={i} light />)}
         </div>
@@ -320,7 +320,7 @@ export default function ReviewPage() {
   if (phase === 'idle') {
     if (userPathId) {
       return (
-        <AppShell title={title} theme="light">
+        <AppShell title={title}>
           <div className="flex flex-col items-center justify-center py-20 text-center px-8">
             <p className="text-6xl mb-4 animate-bounce-soft">🎉</p>
             <h2 className="text-h1 text-[var(--color-ink)]">{t('review.pathDoneTitle')}</h2>
@@ -339,7 +339,7 @@ export default function ReviewPage() {
       );
     }
     return (
-      <AppShell title={title} theme="light">
+      <AppShell title={title}>
         <div className="flex flex-col items-center justify-center py-20 text-center px-8">
           <p className="text-6xl mb-4 animate-bounce-soft">🎉</p>
           <h2 className="text-h1 text-[var(--color-ink)]">{t('review.allCaughtUp')}</h2>
@@ -398,7 +398,7 @@ export default function ReviewPage() {
     ) : undefined;
 
     return (
-      <AppShell title={title} theme="light">
+      <AppShell title={title}>
         <SessionCelebration
           reviewed={sessionStats.reviewed}
           accuracy={accuracy}
@@ -406,7 +406,6 @@ export default function ReviewPage() {
           currentStreak={sessionCurrentStreak}
           newBadges={sessionNewBadges}
           stageMode={!!currentPathStageId}
-          light={true}
           primaryAction={primaryAction}
           secondaryAction={secondaryAction}
         />
@@ -418,7 +417,7 @@ export default function ReviewPage() {
   const itemMode = pickMode(item, current);
 
   return (
-    <AppShell title={title} theme="light">
+    <AppShell title={title}>
       <div className="px-4 pb-6 flex flex-col gap-4">
 
         {/* Progress */}
@@ -435,7 +434,6 @@ export default function ReviewPage() {
             key={item.id}
             item={item}
             disabled={submitting}
-            light={true}
             onComplete={(quality, confidence) => handleRate(quality, confidence)}
           />
         ) : itemMode === 'reverse' ? (
@@ -444,7 +442,6 @@ export default function ReviewPage() {
             key={item.id}
             item={item}
             disabled={submitting}
-            light={true}
             onComplete={(quality, confidence) => handleRate(quality, confidence)}
           />
         ) : itemMode === 'multiple_choice' ? (
@@ -454,7 +451,6 @@ export default function ReviewPage() {
             item={item}
             allItems={queue}
             disabled={submitting}
-            light={true}
             onComplete={(quality, confidence) => handleRate(quality, confidence)}
           />
         ) : itemMode === 'listening' ? (
@@ -463,7 +459,6 @@ export default function ReviewPage() {
             key={item.id}
             item={item}
             disabled={submitting}
-            light={true}
             onComplete={(quality, confidence) => handleRate(quality, confidence)}
           />
         ) : itemMode === 'shadowing' ? (
@@ -472,7 +467,6 @@ export default function ReviewPage() {
             key={item.id}
             item={item}
             disabled={submitting}
-            light={true}
             onComplete={(quality, confidence) => handleRate(quality, confidence)}
           />
         ) : itemMode === 'context' ? (
@@ -481,14 +475,13 @@ export default function ReviewPage() {
             key={item.id}
             item={item}
             disabled={submitting}
-            light={true}
             onComplete={(quality, confidence) => handleRate(quality, confidence)}
           />
         ) : (
           <>
             {/* Flash card — recognition for new/weak words */}
-            <FlashCard key={item.id} item={item} isFlipped={showAnswer} light={true} onFlip={handleReveal} />
-            {showAnswer && <RatingButtons onRate={handleRate} disabled={submitting} light={true} />}
+            <FlashCard key={item.id} item={item} isFlipped={showAnswer} onFlip={handleReveal} />
+            {showAnswer && <RatingButtons onRate={handleRate} disabled={submitting} />}
           </>
         )}
 

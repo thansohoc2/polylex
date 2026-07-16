@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Volume2, Mic, Play, RotateCcw } from 'lucide-react';
+import { Volume2, Mic, Play, RotateCcw, Square } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageBadge } from '@/components/ui/Badge';
 import { PhoneticDisplay } from '@/components/ui/PhoneticDisplay';
@@ -33,47 +33,7 @@ interface ShadowingExerciseProps {
 
 type Stage = 'idle' | 'recording' | 'recorded' | 'scored';
 
-/** Normalise text for pronunciation comparison. */
-function normalize(s: string): string {
-  return s
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[.,!?;:'"¿¡]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function levenshtein(a: string, b: string): number {
-  const m = a.length;
-  const n = b.length;
-  if (m === 0) return n;
-  if (n === 0) return m;
-  let prev = Array.from({ length: n + 1 }, (_, i) => i);
-  let curr = new Array(n + 1).fill(0);
-  for (let i = 1; i <= m; i++) {
-    curr[0] = i;
-    for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
-    }
-    [prev, curr] = [curr, prev];
-  }
-  return prev[n];
-}
-
-/** Character-level similarity as a 0–100 percentage. */
-function similarity(a: string, b: string): number {
-  const na = normalize(a);
-  const nb = normalize(b);
-  if (!na && !nb) return 100;
-  if (!na || !nb) return 0;
-  const dist = levenshtein(na, nb);
-  const maxLen = Math.max(na.length, nb.length);
-  return Math.round(Math.max(0, 1 - dist / maxLen) * 100);
-}
-
-export default function ShadowingExercise({ item, disabled = false, light = false, onComplete }: ShadowingExerciseProps) {
+export default function ShadowingExercise({ item, disabled = false, onComplete }: ShadowingExerciseProps) {
   const { t } = useTranslation();
   const rate = useAudioSettingsStore((s) => s.rate);
 
@@ -252,16 +212,15 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
     onComplete(quality, confidence);
   };
 
-  // ── Theme tokens (mirrors ListeningExercise) ──
-  const cardBg = light ? 'var(--color-card)' : '#1A1A2E';
-  const cardBorder = light ? 'var(--color-line)' : 'rgba(99,102,241,0.2)';
-  const textSoft = light ? 'var(--color-red-300)' : '#f27b5d';
-  const textMuted = light ? 'var(--color-red-200)' : '#94A3B8';
-  const accentColor = light ? 'var(--color-coral)' : '#A78BFA';
-  const btnBg = light ? 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' : 'linear-gradient(135deg, #6366F1, #8B5CF6)';
-  const playBg = light ? 'rgba(255,100,70,0.12)' : 'rgba(99,102,241,0.2)';
+  const cardBg = 'var(--color-card)';
+  const cardBorder = 'var(--color-line)';
+  const textSoft = 'var(--color-ink-2)';
+  const textMuted = 'var(--color-ink-3)';
+  const accentColor = 'var(--color-coral)';
+  const btnBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
+  const playBg = 'var(--color-coral-soft)';
 
-  const scoreColor = score === null ? textMuted : score >= 75 ? '#10B981' : score >= 50 ? '#F59E0B' : '#EF4444';
+  const scoreColor = score === null ? textMuted : score >= 75 ? 'var(--color-ok)' : score >= 50 ? 'var(--color-warn)' : 'var(--color-bad)';
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -273,7 +232,7 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
         {item.isLeech && (
           <span
             className="text-xs px-2 py-0.5 rounded-full mb-3"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444' }}
+            style={{ background: 'var(--color-bad-soft)', color: 'var(--color-bad)' }}
           >
             {t('review.leech')}
           </span>
@@ -337,7 +296,7 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
         )}
 
         {micError && (
-          <p className="mt-4 text-xs text-center" style={{ color: '#EF4444' }}>{micError}</p>
+          <p role="alert" className="mt-4 text-xs text-center text-[var(--color-bad)]">{micError}</p>
         )}
       </div>
 
@@ -357,7 +316,7 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
         <button
           onClick={stopRecording}
           className="w-full py-4 rounded-2xl font-semibold text-sm text-white flex items-center justify-center gap-2 min-h-[56px]"
-          style={{ background: '#EF4444' }}
+          style={{ background: 'var(--color-bad)' }}
         >
           <Square size={16} /> {t('review.stopRecording')}
         </button>
@@ -398,7 +357,7 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
                 onClick={() => onComplete(1, 2)}
                 disabled={disabled}
                 className="py-3 rounded-2xl font-semibold text-sm text-white min-h-[52px]"
-                style={{ background: '#EF4444' }}
+                style={{ background: 'var(--color-bad)' }}
               >
                 {t('review.hard')}
               </button>
@@ -406,7 +365,7 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
                 onClick={() => onComplete(3, 3)}
                 disabled={disabled}
                 className="py-3 rounded-2xl font-semibold text-sm text-white min-h-[52px]"
-                style={{ background: '#F59E0B' }}
+                style={{ background: 'var(--color-warn)' }}
               >
                 {t('review.ok')}
               </button>
@@ -414,7 +373,7 @@ export default function ShadowingExercise({ item, disabled = false, light = fals
                 onClick={() => onComplete(5, 5)}
                 disabled={disabled}
                 className="py-3 rounded-2xl font-semibold text-sm text-white min-h-[52px]"
-                style={{ background: '#10B981' }}
+                style={{ background: 'var(--color-ok)' }}
               >
                 {t('review.easy')}
               </button>

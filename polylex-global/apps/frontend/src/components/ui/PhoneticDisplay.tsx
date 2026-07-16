@@ -25,10 +25,10 @@ export function PhoneticDisplay({ phonetic, phoneticRomaji, className = '', lang
   return (
     <span className={`inline-flex flex-col gap-0.5 ${className}`}>
       {displayRomaji && (
-        <span className="font-mono text-[#475569]">{displayRomaji}</span>
+        <span className="font-mono text-[var(--color-ink-2)]">{displayRomaji}</span>
       )}
       {phonetic && (
-        <span className={`font-mono text-[#94A3B8] ${displayRomaji ? 'text-xs' : ''}`}>
+        <span className={`font-mono text-[var(--color-ink-3)] ${displayRomaji ? 'text-xs' : ''}`}>
           {phonetic}
         </span>
       )}

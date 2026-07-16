@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/auth.store';
 import { userApi, gamificationApi, reviewApi, quickNoteApi, pathApi, ReviewQueueResponse } from '@/api/client';
 import { GamificationStats } from '@polylex/shared-types';
+import { AsyncState } from '@polylex/shared-ui';
 import AppShell from '@/components/layout/AppShell';
 import GreetingCard from '@/components/home/GreetingCard';
 import DailyGoalRing from '@/components/home/DailyGoalRing';
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const [quickNoteCount, setQuickNoteCount] = useState(0);
   const [recentNotes, setRecentNotes] = useState<QuickNote[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [savingGoal, setSavingGoal] = useState(false);
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function DashboardPage() {
       if (q.status === 'fulfilled') setDueItems((q.value as ReviewQueueResponse).items as QueueItem[]);
       if (n.status === 'fulfilled') setRecentNotes((n.value as QuickNote[]).slice(0, 5));
       if (qn.status === 'fulfilled') setQuickNoteCount(((qn.value as ReviewQueueResponse).items as QueueItem[]).length);
+      setLoadFailed([s, q, n, qn].every((result) => result.status === 'rejected'));
       setLoading(false);
       if (p.status === 'fulfilled' && (p.value as unknown[]).length === 0) {
         navigate('/roadmap', { replace: true });
@@ -72,12 +75,16 @@ export default function DashboardPage() {
   };
 
   return (
-    <AppShell title={t('dashboard.title')} theme="light">
-      <div className="px-4 space-y-5 pb-6">
+    <AppShell title={t('dashboard.title')}>
+      <div className="space-y-5 px-4 pb-6 sm:px-6 lg:px-8">
+
+        {loadFailed && (
+          <AsyncState status="error" errorMessage={t('addWord.failedToCreate')} />
+        )}
 
         {/* Greeting */}
         {loading ? (
-          <SkeletonCard light />
+          <SkeletonCard />
         ) : (
           <GreetingCard displayName={user?.displayName ?? ''} stats={stats} />
         )}
@@ -86,8 +93,7 @@ export default function DashboardPage() {
         {!loading && (
           <button
             onClick={() => navigate(quickNoteCount > 0 ? '/review/quicknotes' : '/review')}
-            className="press w-full rounded-[var(--radius-card)] p-4 text-left text-white shadow-coral"
-            style={{ background: 'linear-gradient(135deg, #6366f1 0%, #14b86a 100%)' }}
+            className="press w-full rounded-[var(--radius-card)] bg-[linear-gradient(135deg,var(--color-grape),var(--color-ok))] p-4 text-left text-[var(--color-on-brand)] shadow-grape"
           >
             <div className="flex items-center gap-3">
               <span className="text-3xl">🚀</span>
@@ -137,22 +143,20 @@ export default function DashboardPage() {
         </button>
 
         {/* Quick start buttons */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <button
             onClick={() => navigate('/review')}
-            className="press rounded-[var(--radius-card)] p-3 text-left text-white shadow-grape"
-            style={{ background: 'linear-gradient(135deg, var(--color-grape), #9D7BFF)' }}
+            className="press rounded-[var(--radius-card)] bg-[var(--color-grape)] p-3 text-left text-[var(--color-on-brand)] shadow-grape"
           >
             <p className="text-lg mb-1">🔁</p>
             <p className="font-display font-bold text-xs">{t('dashboard.review')}</p>
-            <p className="text-white/75 text-[10px] mt-0.5">
+            <p className="text-[var(--color-on-brand)] text-[10px] mt-0.5">
               {dueItems.length > 0 ? t('dashboard.dueCount', { count: dueItems.length }) : t('dashboard.caughtUp')}
             </p>
           </button>
           <button
             onClick={() => navigate('/review/quicknotes')}
-            className="press rounded-[var(--radius-card)] p-3 text-left text-white relative shadow-soft"
-            style={{ background: 'linear-gradient(135deg, var(--color-gold), #FFD166)' }}
+            className="press relative rounded-[var(--radius-card)] bg-[var(--color-gold)] p-3 text-left text-[var(--color-on-brand)] shadow-soft"
           >
             {quickNoteCount > 0 && (
               <span className="absolute top-2 right-2 bg-white/35 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
@@ -161,7 +165,7 @@ export default function DashboardPage() {
             )}
             <p className="text-lg mb-1">⚡</p>
             <p className="font-display font-bold text-xs">{t('dashboard.quickNotes')}</p>
-            <p className="text-white/80 text-[10px] mt-0.5">
+            <p className="text-[var(--color-on-brand)] text-[10px] mt-0.5">
               {quickNoteCount > 0 ? t('dashboard.toLearnCount', { count: quickNoteCount }) : t('dashboard.allDone')}
             </p>
           </button>

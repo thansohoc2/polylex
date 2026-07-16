@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { AsyncState } from '@polylex/shared-ui';
 import { pathApi, type VideoDto, type PathDto } from '@/api/client';
 import AppShell from '@/components/layout/AppShell';
+import Button from '@/components/ui/Button';
 import { youtubeProxyUrl } from '@/utils/youtube';
 
 interface HubVideo extends VideoDto {
@@ -17,10 +19,12 @@ export default function VideosHubPage() {
 
   const [videos, setVideos] = useState<HubVideo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [expandedVideoId, setExpandedVideoId] = useState<string | null>(null);
 
   const loadVideos = useCallback(async () => {
     setLoading(true);
+    setLoadFailed(false);
     try {
       const paths = (await pathApi.getMyPaths()) as PathDto[];
 
@@ -51,6 +55,7 @@ export default function VideosHubPage() {
       setVideos(results.flat());
     } catch {
       setVideos([]);
+      setLoadFailed(true);
     } finally {
       setLoading(false);
     }
@@ -63,11 +68,21 @@ export default function VideosHubPage() {
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <AppShell title={t('videosHub.title')} theme="light">
-        <div className="flex items-center justify-center py-32">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-coral)]" />
-          <span className="ml-3 text-sm text-[var(--color-ink-3)]">{t('videosHub.loading')}</span>
-        </div>
+      <AppShell title={t('videosHub.title')}>
+        <AsyncState status="loading" loadingLabel={t('videosHub.loading')} />
+      </AppShell>
+    );
+  }
+
+  if (loadFailed) {
+    return (
+      <AppShell title={t('videosHub.title')}>
+        <AsyncState
+          status="error"
+          errorMessage={t('dialogue.loadError')}
+          retryLabel={t('review.tryAgain')}
+          onRetry={() => void loadVideos()}
+        />
       </AppShell>
     );
   }
@@ -75,7 +90,7 @@ export default function VideosHubPage() {
   // ── Empty ────────────────────────────────────────────────────────────────────
   if (videos.length === 0) {
     return (
-      <AppShell title={t('videosHub.title')} theme="light">
+      <AppShell title={t('videosHub.title')}>
         <div className="flex flex-col items-center justify-center py-24 px-8 text-center">
           <p className="text-5xl mb-4">📹</p>
           <h3 className="font-semibold text-base" style={{ color: 'var(--color-ink)' }}>
@@ -84,13 +99,9 @@ export default function VideosHubPage() {
           <p className="text-sm mt-1 mb-6" style={{ color: 'var(--color-ink-3)' }}>
             {t('videosHub.emptyHint')}
           </p>
-          <button
-            onClick={() => navigate('/roadmap')}
-            className="px-5 py-2.5 rounded-xl font-semibold text-white text-sm"
-            style={{ background: 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))' }}
-          >
+          <Button onClick={() => navigate('/roadmap')}>
             {t('videosHub.goToRoadmap')}
-          </button>
+          </Button>
         </div>
       </AppShell>
     );
@@ -98,15 +109,15 @@ export default function VideosHubPage() {
 
   // ── Main ─────────────────────────────────────────────────────────────────────
   return (
-    <AppShell title={t('videosHub.title')} theme="light">
-      <div className="px-4 pt-3 pb-2">
+    <AppShell title={t('videosHub.title')}>
+      <div className="px-4 pb-2 pt-3 sm:px-6 lg:px-8">
         <p className="text-sm text-[var(--color-ink-3)]">{t('videosHub.subtitle')}</p>
         <p className="text-xs text-[var(--color-ink-3)] mt-0.5">
           {t('videosHub.videosCount', { count: videos.length })}
         </p>
       </div>
 
-      <div className="px-4 py-2 flex flex-col gap-6 pb-16">
+      <div className="grid items-start gap-6 px-4 py-2 pb-16 sm:px-6 md:grid-cols-2 lg:px-8 xl:grid-cols-3">
         {videos.map((video) => {
           const isExpanded = expandedVideoId === video.id;
           const videoEmbedUrl = youtubeProxyUrl(video.youtubeVideoId);
@@ -114,9 +125,8 @@ export default function VideosHubPage() {
           return (
             <div
               key={video.id}
-              className="rounded-2xl overflow-hidden border transition-all"
+              className="overflow-hidden rounded-[var(--radius-card)] border bg-[var(--color-card)] shadow-soft transition-all"
               style={{
-                background: 'var(--color-card)',
                 borderColor: isExpanded ? 'var(--color-coral)' : 'var(--color-line)',
               }}
             >
@@ -143,8 +153,8 @@ export default function VideosHubPage() {
                     alt={video.title}
                     className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)' }}>
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--color-coral)' }}>
+                  <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-media-scrim)]">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-coral)]">
                       <span className="text-2xl">▶️</span>
                     </div>
                   </div>

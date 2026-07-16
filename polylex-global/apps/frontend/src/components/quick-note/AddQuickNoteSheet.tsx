@@ -3,9 +3,11 @@ import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Select, TextField } from '@polylex/shared-ui';
 import { quickNoteApi, languageApi } from '@/api/client';
 import { useUserDefaults } from '@/hooks/useUserDefaults';
 import BottomSheet from '@/components/layout/BottomSheet';
+import Button from '@/components/ui/Button';
 import type { QuickNote } from './QuickNoteCard';
 
 interface Language {
@@ -29,6 +31,7 @@ export default function AddQuickNoteSheet({ isOpen, onClose, onAdded }: AddQuick
   const [targetLang, setTargetLang] = useState(defaults.nativeLangCode);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [termError, setTermError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -52,11 +55,18 @@ export default function AddQuickNoteSheet({ isOpen, onClose, onAdded }: AddQuick
 
   const handleClose = () => {
     setTerm('');
+    setTermError('');
     onClose();
   };
 
   const handleSubmit = async () => {
-    if (!term.trim()) return;
+    if (submitting) return;
+    if (!term.trim()) {
+      setTermError(t('addNote.placeholder'));
+      inputRef.current?.focus();
+      return;
+    }
+    setTermError('');
     setSubmitting(true);
     try {
       const note = await quickNoteApi.create({
@@ -81,63 +91,58 @@ export default function AddQuickNoteSheet({ isOpen, onClose, onAdded }: AddQuick
     }
   };
 
-  const selectCls = "w-full bg-card-2 border-transparent rounded-xl px-3 py-2.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-grape/50";  const btnBg = 'linear-gradient(135deg, var(--color-coral), var(--color-coral-2))';
   return (
-    <BottomSheet isOpen={isOpen} onClose={handleClose} title={t('addNote.title')} theme="light">
+    <BottomSheet isOpen={isOpen} onClose={handleClose} title={t('addNote.title')}>
       <div className="px-5 pt-4 pb-20 space-y-5">
         {/* Term input */}
-        <div>
-          <input
-            ref={inputRef}
-            type="text"
-            value={term}
-            onChange={(e) => setTerm(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && !submitting && handleSubmit()}
-            placeholder={t('addNote.placeholder')}
-            className="w-full bg-transparent text-2xl font-semibold text-ink placeholder:text-ink-3 outline-none pb-2 border-b border-line"
+        <TextField
+          ref={inputRef}
+          label={t('addNote.placeholder')}
+          type="text"
+          value={term}
+          onChange={(e) => {
+            setTerm(e.target.value);
+            if (termError) setTermError('');
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') void handleSubmit();
+          }}
+          error={termError}
+          required
+          disabled={submitting}
+        />
+
+        {/* Language row */}
+        <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
+          <Select
+            label={t('addNote.wordIn')}
+            value={sourceLang}
+            onChange={(e) => setSourceLang(e.target.value)}
             disabled={submitting}
+            options={languages.map((language) => ({
+              value: language.code,
+              label: `${language.flagEmoji ? `${language.flagEmoji} ` : ''}${language.name}`,
+            }))}
+          />
+          <span className="hidden min-h-11 items-center text-[var(--color-ink-3)] sm:flex" aria-hidden="true">→</span>
+          <Select
+            label={t('addNote.translateTo')}
+            value={targetLang}
+            onChange={(e) => setTargetLang(e.target.value)}
+            disabled={submitting}
+            options={languages.map((language) => ({
+              value: language.code,
+              label: `${language.flagEmoji ? `${language.flagEmoji} ` : ''}${language.name}`,
+            }))}
           />
         </div>
 
-        {/* Language row */}
-        <div className="flex items-center gap-3">
-          <div className="flex-1">
-            <p className="text-xs text-ink-2 mb-1.5 uppercase tracking-wide">{t('addNote.wordIn')}</p>
-            <select
-              value={sourceLang}
-              onChange={(e) => setSourceLang(e.target.value)}
-              className={selectCls}
-            >
-              {languages.map((l) => (
-                <option key={l.code} value={l.code}>
-                  {l.flagEmoji ? `${l.flagEmoji} ` : ''}{l.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <span className="text-ink-3 mt-5">→</span>
-          <div className="flex-1">
-            <p className="text-xs text-ink-2 mb-1.5 uppercase tracking-wide">{t('addNote.translateTo')}</p>
-            <select
-              value={targetLang}
-              onChange={(e) => setTargetLang(e.target.value)}
-              className={selectCls}
-            >
-              {languages.map((l) => (
-                <option key={l.code} value={l.code}>
-                  {l.flagEmoji ? `${l.flagEmoji} ` : ''}{l.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
         {/* Submit */}
-        <button
-          onClick={handleSubmit}
+        <Button
+          onClick={() => void handleSubmit()}
           disabled={submitting || !term.trim()}
-          className="w-full py-4 rounded-2xl font-semibold text-white text-base hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
-          style={{ background: btnBg }}
+          fullWidth
+          size="lg"
         >
           {submitting ? (
             <>
@@ -147,7 +152,7 @@ export default function AddQuickNoteSheet({ isOpen, onClose, onAdded }: AddQuick
           ) : (
             t('addNote.addNote')
           )}
-        </button>
+        </Button>
       </div>
     </BottomSheet>
   );

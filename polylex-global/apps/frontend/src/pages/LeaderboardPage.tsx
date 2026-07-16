@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { gamificationApi } from '@/api/client';
 import type { WeeklyLeaderboardResponse } from '@polylex/shared-types';
+import { AsyncState } from '@polylex/shared-ui';
 import AppShell from '@/components/layout/AppShell';
 import SkeletonCard from '@/components/ui/SkeletonCard';
 
@@ -13,14 +14,20 @@ export default function LeaderboardPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<WeeklyLeaderboardResponse | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
 
-  useEffect(() => {
+  const loadLeaderboard = useCallback(() => {
     let mounted = true;
+    setLoading(true);
+    setLoadFailed(false);
     gamificationApi
       .getLeaderboard(20)
       .then((res) => {
         if (!mounted) return;
         setData(res);
+      })
+      .catch(() => {
+        if (mounted) setLoadFailed(true);
       })
       .finally(() => {
         if (!mounted) return;
@@ -32,6 +39,10 @@ export default function LeaderboardPage() {
     };
   }, []);
 
+  useEffect(() => {
+    return loadLeaderboard();
+  }, [loadLeaderboard]);
+
   const resetAtText = useMemo(() => {
     if (!data?.resetAt) return '—';
     const parsed = new Date(data.resetAt);
@@ -40,8 +51,8 @@ export default function LeaderboardPage() {
   }, [data?.resetAt]);
 
   return (
-    <AppShell title={t('leaderboard.title')} theme="light">
-      <div className="px-4 pb-6 space-y-4">
+    <AppShell title={t('leaderboard.title')}>
+      <div className="space-y-4 px-4 pb-6 sm:px-6 lg:px-8">
         <div className="rounded-2xl p-4 border border-line bg-card">
           <h2 className="text-ink font-semibold">{t('leaderboard.weeklyTitle')}</h2>
           <p className="text-[var(--color-ink-3)] text-sm mt-1">{t('leaderboard.resetAt', { datetime: resetAtText })}</p>
@@ -49,21 +60,28 @@ export default function LeaderboardPage() {
 
         {loading ? (
           <div className="space-y-2">
-            <SkeletonCard light />
-            <SkeletonCard light />
+            <SkeletonCard />
+            <SkeletonCard />
           </div>
+        ) : loadFailed ? (
+          <AsyncState
+            status="error"
+            errorMessage={t('dialogue.loadError')}
+            retryLabel={t('review.tryAgain')}
+            onRetry={() => loadLeaderboard()}
+          />
         ) : (
-          <section className="space-y-2">
+          <section className="grid gap-2 md:grid-cols-2">
             {data?.items.length ? (
-              data.items.map((entry, index) => (
+              data.items.map((entry) => (
                 <div
                   key={`${entry.rank}-${entry.displayName}`}
                   className={`rounded-2xl px-4 py-3 border flex items-center gap-3 ${
-                    entry.isMe ? 'bg-grape-light border-grape-bright' : 'bg-card border-line'
+                    entry.isMe ? 'bg-[var(--color-grape-light)] border-[var(--color-grape-bright)]' : 'bg-card border-line'
                   }`}
                 >
                   <div className={`w-8 text-center text-lg ${entry.isMe ? 'text-grape-dark' : 'text-ink'}`}>
-                    {MEDALS[index] ?? `#${entry.rank}`}
+                      {MEDALS[entry.rank - 1] ?? `#${entry.rank}`}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p
@@ -78,7 +96,7 @@ export default function LeaderboardPage() {
                     </p>
                   </div>
                   {entry.isMe && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-grape text-white">
+                    <span className="rounded-full bg-[var(--color-grape)] px-2 py-1 text-xs text-[var(--color-on-brand)]">
                       {t('leaderboard.you')}
                     </span>
                   )}
@@ -105,7 +123,7 @@ export default function LeaderboardPage() {
                   {t('leaderboard.weeklyXp', { xp: data.me.weeklyXp })}
                 </p>
               </div>
-              <span className="text-xs px-2 py-1 rounded-full bg-grape text-white">{t('leaderboard.you')}</span>
+              <span className="rounded-full bg-[var(--color-grape)] px-2 py-1 text-xs text-[var(--color-on-brand)]">{t('leaderboard.you')}</span>
             </div>
           </section>
         )}
