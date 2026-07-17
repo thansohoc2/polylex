@@ -58,8 +58,6 @@ services:
       context: .
       dockerfile: apps/whisper-stt/Dockerfile
     restart: unless-stopped
-    ports:
-      - '9000:9000'
     networks:
       - shared-network
     healthcheck:

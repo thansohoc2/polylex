@@ -1,7 +1,14 @@
-import { Injectable, Logger, OnModuleInit, ServiceUnavailableException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleInit,
+  PayloadTooLargeException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { SpeechClient } from '@google-cloud/speech';
+import { MAX_SPEECH_AUDIO_BYTES } from './speech.constants';
 
 function parseCredentials(value?: string): Record<string, unknown> | null {
   if (!value || !value.trim()) return null;
@@ -106,6 +113,9 @@ export class SpeechToTextService implements OnModuleInit {
     const content = stripDataUri(base64Audio);
     if (!content) {
       throw new Error('Empty audio payload');
+    }
+    if (Buffer.byteLength(content, 'base64') > MAX_SPEECH_AUDIO_BYTES) {
+      throw new PayloadTooLargeException('Audio payload exceeds the 5 MiB limit');
     }
 
     if (this.whisperEnabled && this.whisperUrl) {

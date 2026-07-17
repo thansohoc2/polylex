@@ -12,6 +12,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CefrLevel } from '@polylex/shared-types';
+import { MAX_SPEECH_AUDIO_BASE64_LENGTH } from '../speech.constants';
 
 const CEFR_LEVELS: CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 const PARTS_OF_SPEECH = ['noun', 'verb', 'adjective', 'adverb', 'phrase', 'other'];
@@ -100,6 +101,7 @@ export class SpeechRecognitionDto {
 
   @ApiProperty({ description: 'Base64-encoded audio content (WEBM_OPUS or similar)', example: 'UklGRiIAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=' })
   @IsString()
+  @MaxLength(MAX_SPEECH_AUDIO_BASE64_LENGTH)
   audioBase64: string;
 
   @ApiProperty({ example: 'I eat an apple every day.' })

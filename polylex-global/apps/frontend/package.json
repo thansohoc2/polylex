@@ -16,15 +16,16 @@
     "test:a11y": "playwright test accessibility.spec.ts",
     "cap:add:ios": "cap add ios",
     "cap:add:android": "cap add android",
-    "cap:sync": "cap sync",
-    "cap:open:ios": "npm run build:capacitor && cap sync && cap open ios",
-    "cap:open:android": "npm run build:capacitor && cap sync && cap open android",
-    "cap:run:ios": "npm run build:capacitor && cap sync && cap run ios",
-    "ios:fix": "rm -rf ~/Library/Developer/Xcode/DerivedData && npx cap sync ios",
-    "cap:run:android": "npm run build:capacitor && cap sync && cap run android",
+    "patch:capacitor": "node scripts/patch-capacitor-plugins.mjs",
+    "cap:sync": "npm run patch:capacitor && cap sync",
+    "cap:open:ios": "npm run build:capacitor && npm run cap:sync && cap open ios",
+    "cap:open:android": "npm run build:capacitor && npm run cap:sync && cap open android",
+    "cap:run:ios": "npm run build:capacitor && npm run cap:sync && cap run ios",
+    "ios:fix": "rm -rf ~/Library/Developer/Xcode/DerivedData && npm run patch:capacitor && npx cap sync ios",
+    "cap:run:android": "npm run build:capacitor && npm run cap:sync && cap run android",
     "generate:pwa-icons": "pwa-assets-generator --config pwa-assets.config.ts",
     "generate:icons": "tsx scripts/generate-icons.ts",
-    "postinstall": "node -e \"const fs=require('fs'),base='node_modules/@codetrix-studio/capacitor-google-auth';if(fs.existsSync(base)){const pkgSrc='patches/capacitor-google-auth-Package.swift',pkgDst=base+'/Package.swift';if(!fs.existsSync(pkgDst)){fs.copyFileSync(pkgSrc,pkgDst);console.log('✔ Patched capacitor-google-auth: added Package.swift');}const plgSrc='patches/capacitor-google-auth-Plugin.swift',plgDst=base+'/ios/Plugin/Plugin.swift';fs.copyFileSync(plgSrc,plgDst);console.log('✔ Patched capacitor-google-auth: updated Plugin.swift');}\" 2>/dev/null || true"
+    "postinstall": "npm run patch:capacitor"
   },
   "dependencies": {
     "@capacitor-community/apple-sign-in": "^7.1.0",

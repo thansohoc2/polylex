@@ -2,12 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { configureBodyParsers } from './config/body-parser.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  // ✅ Parse form-data (giữ nguyên)
-  app.use(require('express').urlencoded({ extended: true }));
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  configureBodyParsers(app);
 
   app.setGlobalPrefix('api/v1');
 
