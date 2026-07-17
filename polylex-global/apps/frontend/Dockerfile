@@ -9,7 +9,9 @@ COPY apps/frontend/package*.json ./apps/frontend/
 COPY packages/shared-types/package*.json ./packages/shared-types/
 COPY packages/shared-ui/package*.json ./packages/shared-ui/
 
-RUN npm ci --workspaces --include-workspace-root
+# This image only builds the Web app. Native Capacitor postinstall patches are
+# applied by mobile workflows and are intentionally skipped here.
+RUN npm ci --workspaces --include-workspace-root --ignore-scripts
 
 COPY . .
 
