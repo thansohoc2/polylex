@@ -412,8 +412,7 @@ export default function ProfilePage() {
           </h3>
           <div className="bg-[var(--color-card)] rounded-[var(--radius-card)] shadow-soft overflow-hidden divide-y divide-[var(--color-line)]">
             {[
-              { label: t('profile.vocabularyMenu'), icon: '📚', path: '/vocabulary' },
-              { label: t('dashboard.quickNotes'), icon: '⚡', path: '/quick-notes' },
+              { label: t('profile.libraryMenu'), icon: '📚', path: '/vocabulary' },
               { label: t('profile.analyticsMenu'), icon: '📊', path: '/analytics' },
               { label: t('profile.leaderboardMenu'), icon: '🏆', path: '/leaderboard' },
             ].map(({ label, icon, path }) => (

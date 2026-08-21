@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { AsyncState } from '@polylex/shared-ui';
 import { quickNoteApi, vocabularyApi } from '@/api/client';
-import AppShell from '@/components/layout/AppShell';
 import SearchBar from '@/components/ui/SearchBar';
 import SkeletonCard from '@/components/ui/SkeletonCard';
 import LanguageFilterChips from '@/components/quick-note/LanguageFilterChips';
@@ -20,7 +19,7 @@ const itemVariants = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' as const } },
 };
 
-export default function QuickNotePage() {
+export default function QuickNotesTab() {
   const { t } = useTranslation();
   const [notes, setNotes] = useState<QuickNote[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,9 +78,9 @@ export default function QuickNotePage() {
   };
 
   return (
-    <AppShell title={t('quicknote.title')}>
+    <>
       {/* Search + filter */}
-      <div className="space-y-3 px-4 pb-3 pt-4 sm:px-6 lg:px-8">
+      <div className="space-y-3 px-4 pb-3 pt-3 sm:px-6 lg:px-8">
         <SearchBar value={search} onChange={setSearch} placeholder={t('quicknote.searchPlaceholder')} />
         <LanguageFilterChips notes={notes} selected={langFilter} onSelect={setLangFilter} />
       </div>
@@ -126,20 +125,20 @@ export default function QuickNotePage() {
       )}
 
       {/* FAB */}
-      <button
+     {/*  <button
         type="button"
         onClick={() => setSheetOpen(true)}
         className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-coral)] text-[var(--color-on-brand)] shadow-coral"
         aria-label={t('quicknote.newNote')}
       >
         <span className="text-2xl font-light leading-none">+</span>
-      </button>
+      </button> */}
 
       <AddQuickNoteSheet
         isOpen={sheetOpen}
         onClose={() => setSheetOpen(false)}
         onAdded={(note) => setNotes((prev) => [note, ...prev])}
       />
-    </AppShell>
+    </>
   );
 }

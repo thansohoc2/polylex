@@ -104,8 +104,13 @@
   "dashboard": {
     "title": "Home",
     "review": "Review",
+    "keepLearning": "Keep learning",
     "dueCount": "{{count}} due",
     "caughtUp": "Caught up!",
+    "caughtUpSub": "You're done for today ✨",
+    "quickActions": "Quick access",
+    "leaderboardShort": "Compete this week",
+    "analyticsShort": "Your progress",
     "leaderboardTitle": "🏆 Weekly Leaderboard",
     "leaderboardSubtitle": "See your rank and challenge friends",
     "dailyGoalTitle": "Daily Goal",
@@ -150,6 +155,11 @@
     "noMatchesTitle": "No matches",
     "noMatchesSubtitle": "Try a different search term",
     "langWordsCount": "{{count}} words"
+  },
+  "library": {
+    "title": "Words & Notes",
+    "tabVocab": "Vocabulary",
+    "tabNotes": "Quick Notes"
   },
   "addWord": {
     "title": "＋ Add New Word",
@@ -382,6 +392,7 @@
     "learning": "Learning",
     "settings": "Settings",
     "vocabularyMenu": "Vocabulary",
+    "libraryMenu": "Words & Notes",
     "analyticsMenu": "Analytics",
     "leaderboardMenu": "Leaderboard",
     "signOut": "Sign Out",

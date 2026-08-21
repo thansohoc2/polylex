@@ -29,10 +29,18 @@ export default function GreetingCard({ displayName, stats }: GreetingCardProps) 
   const streak = stats?.currentStreak ?? 0;
   const freezes = stats?.streakFreezes ?? 0;
   const xp = stats?.totalXp ?? 0;
+  const words = stats?.totalWordCount ?? 0;
+
+  const statItems = [
+    { icon: '🔥', value: streak, label: t('greeting.dayStreak'), animate: streak > 0 },
+    { icon: '🧊', value: freezes, label: t('greeting.freezes') },
+    { icon: '⭐', value: xp.toLocaleString(), label: t('greeting.totalXp') },
+    { icon: '📚', value: words, label: t('greeting.words') },
+  ];
 
   return (
     <div
-      className=" rounded-[var(--radius-card)] p-5 mb-4 text-white shadow-coral animate-pop"
+      className=" rounded-[var(--radius-card)] p-5 text-white shadow-coral animate-pop"
       style={{ background: 'linear-gradient(135deg, #14b86a 0%, #a78bfa 100%)' }}
     >
       {/* Top row */}
@@ -53,40 +61,22 @@ export default function GreetingCard({ displayName, stats }: GreetingCardProps) 
         </div>
       </div>
 
-      {/* Stats row */}
-      <div className="flex gap-4">
-        <div className="flex items-center gap-1.5">
-          <span className="text-lg" style={{ animation: streak > 0 ? 'float 3s ease-in-out infinite' : undefined }}>
-            🔥
-          </span>
-          <div>
-            <p className="text-white font-bold text-sm">{streak}</p>
-            <p className="text-white/75 text-xs">{t('greeting.dayStreak')}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-lg">🧊</span>
-          <div>
-            <p className="text-white font-bold text-sm">{freezes}</p>
-            <p className="text-white/75 text-xs">{t('greeting.freezes')}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-lg">⭐</span>
-          <div>
-            <p className="text-white font-bold text-sm">{xp.toLocaleString()}</p>
-            <p className="text-white/75 text-xs">{t('greeting.totalXp')}</p>
-          </div>
-        </div>
-        {stats && (
-          <div className="flex items-center gap-1.5">
-            <span className="text-lg">📚</span>
-            <div>
-              <p className="text-white font-bold text-sm">{stats.totalWordCount}</p>
-              <p className="text-white/75 text-xs">{t('greeting.words')}</p>
+      {/* Stats — evenly distributed across the full width */}
+      <div className="grid grid-cols-4 divide-x divide-white/15 rounded-2xl bg-white/10">
+        {statItems.map((item) => (
+          <div key={item.label} className="flex flex-col items-center justify-center px-1 py-2.5 text-center">
+            <div className="flex items-center gap-1">
+              <span
+                className="text-base"
+                style={{ animation: item.animate ? 'float 3s ease-in-out infinite' : undefined }}
+              >
+                {item.icon}
+              </span>
+              <span className="font-bold text-sm leading-none">{item.value}</span>
             </div>
+            <span className="mt-1 text-[11px] leading-tight text-white/75">{item.label}</span>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

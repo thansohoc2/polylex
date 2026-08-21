@@ -74,9 +74,56 @@ export default function DashboardPage() {
     }
   };
 
+  const hasWork = dueItems.length > 0 || quickNoteCount > 0;
+  const pendingTotal = Math.max(dueItems.length, quickNoteCount);
+
+  const quickActions: {
+    key: string;
+    icon: string;
+    chip: string;
+    label: string;
+    sub: string;
+    badge?: number;
+    onClick: () => void;
+  }[] = [
+    {
+      key: 'quicknotes',
+      icon: '⚡',
+      chip: 'var(--color-warn-soft)',
+      label: t('dashboard.quickNotes'),
+      sub: quickNoteCount > 0 ? t('dashboard.toLearnCount', { count: quickNoteCount }) : t('dashboard.allDone'),
+      badge: quickNoteCount > 0 ? quickNoteCount : undefined,
+      onClick: () => navigate('/review/quicknotes'),
+    },
+    {
+      key: 'vocabulary',
+      icon: '📚',
+      chip: 'var(--color-info-soft)',
+      label: t('dashboard.vocabulary'),
+      sub: t('dashboard.browseWords'),
+      onClick: () => navigate('/vocabulary'),
+    },
+    {
+      key: 'leaderboard',
+      icon: '🏆',
+      chip: 'var(--color-grape-light)',
+      label: t('profile.leaderboardMenu'),
+      sub: t('dashboard.leaderboardShort'),
+      onClick: () => navigate('/leaderboard'),
+    },
+    {
+      key: 'analytics',
+      icon: '📊',
+      chip: 'var(--color-ok-soft)',
+      label: t('profile.analyticsMenu'),
+      sub: t('dashboard.analyticsShort'),
+      onClick: () => navigate('/analytics'),
+    },
+  ];
+
   return (
     <AppShell title={t('dashboard.title')}>
-      <div className="space-y-5 px-4 pb-6 sm:px-6 lg:px-8">
+      <div className="space-y-4 px-4 pb-6 sm:px-6 lg:px-8">
 
         {loadFailed && (
           <AsyncState status="error" errorMessage={t('addWord.failedToCreate')} />
@@ -89,95 +136,90 @@ export default function DashboardPage() {
           <GreetingCard displayName={user?.displayName ?? ''} stats={stats} />
         )}
 
-        {/* Hero CTA — primary "keep learning" action (visual hierarchy) */}
+        {/* Primary CTA — the single, adaptive "do this next" action. */}
         {!loading && (
           <button
             onClick={() => navigate(quickNoteCount > 0 ? '/review/quicknotes' : '/review')}
-            className="press w-full rounded-[var(--radius-card)] bg-[linear-gradient(135deg,var(--color-grape),var(--color-ok))] p-4 text-left text-[var(--color-on-brand)] shadow-grape"
+            className="press group relative w-full overflow-hidden rounded-[var(--radius-card)] p-5 text-left text-[var(--color-on-brand)] shadow-grape"
+            style={{ background: 'linear-gradient(135deg, var(--color-grape) 0%, var(--color-ok) 100%)' }}
           >
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🚀</span>
-              <div className="flex-1 min-w-0">
-                <p className="font-display font-extrabold text-lg leading-tight">
-                  {t('dashboard.review')}
+            {/* decorative glow */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full opacity-30"
+              style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)' }}
+            />
+            <div className="relative flex items-center gap-4">
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl"
+                style={{ background: 'var(--color-on-brand-tint-md)' }}
+              >
+                {hasWork ? '🚀' : '✅'}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-lg font-extrabold leading-tight">
+                  {hasWork ? t('dashboard.keepLearning') : t('dashboard.caughtUp')}
                 </p>
-                <p className="text-white/85 text-sm mt-0.5">
-                  {dueItems.length > 0 || quickNoteCount > 0
-                    ? t('dashboard.dueCount', { count: Math.max(dueItems.length, quickNoteCount) })
-                    : t('dashboard.caughtUp')}
+                <p className="mt-0.5 text-sm text-white/85">
+                  {hasWork ? t('dashboard.dueCount', { count: pendingTotal }) : t('dashboard.caughtUpSub')}
                 </p>
               </div>
-              <span className="text-2xl">›</span>
+              <span className="text-2xl transition-transform group-hover:translate-x-0.5">›</span>
             </div>
           </button>
         )}
 
-        {/* Daily goal ring */}
+        {/* Progress bento — goal ring + level sit side by side on wide screens. */}
         {!loading && stats && (
-          <DailyGoalRing
-            dailyXp={stats.dailyXp}
-            dailyGoal={stats.dailyGoal}
-            dailyProgressPercent={stats.dailyProgressPercent}
-            isReached={stats.isDailyGoalReached}
-            onSelectGoal={handleSelectGoal}
-            loading={savingGoal}
-          />
+          <div className="grid gap-4 lg:grid-cols-2">
+            <DailyGoalRing
+              dailyXp={stats.dailyXp}
+              dailyGoal={stats.dailyGoal}
+              dailyProgressPercent={stats.dailyProgressPercent}
+              isReached={stats.isDailyGoalReached}
+              onSelectGoal={handleSelectGoal}
+              loading={savingGoal}
+            />
+            <LevelMasteryCard
+              level={stats.level}
+              xpInLevel={stats.xpInLevel}
+              xpForNextLevel={stats.xpForNextLevel}
+              masteredWordCount={stats.masteredWordCount}
+            />
+          </div>
         )}
 
-        {!loading && stats && (
-          <LevelMasteryCard
-            level={stats.level}
-            xpInLevel={stats.xpInLevel}
-            xpForNextLevel={stats.xpForNextLevel}
-            masteredWordCount={stats.masteredWordCount}
-          />
-        )}
-
-        {/* Leaderboard entry point */}
-        <button
-          onClick={() => navigate('/leaderboard')}
-          className="press w-full rounded-[var(--radius-card)] p-3 text-left bg-[var(--color-card)] shadow-soft"
-        >
-          <p className="text-sm font-display font-bold text-[var(--color-ink)]">{t('dashboard.leaderboardTitle')}</p>
-          <p className="text-xs text-[var(--color-ink-3)] mt-1">{t('dashboard.leaderboardSubtitle')}</p>
-        </button>
-
-        {/* Quick start buttons */}
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          <button
-            onClick={() => navigate('/review')}
-            className="press rounded-[var(--radius-card)] bg-[var(--color-grape)] p-3 text-left text-[var(--color-on-brand)] shadow-grape"
-          >
-            <p className="text-lg mb-1">🔁</p>
-            <p className="font-display font-bold text-xs">{t('dashboard.review')}</p>
-            <p className="text-[var(--color-on-brand)] text-[10px] mt-0.5">
-              {dueItems.length > 0 ? t('dashboard.dueCount', { count: dueItems.length }) : t('dashboard.caughtUp')}
-            </p>
-          </button>
-          <button
-            onClick={() => navigate('/review/quicknotes')}
-            className="press relative rounded-[var(--radius-card)] bg-[var(--color-gold)] p-3 text-left text-[var(--color-on-brand)] shadow-soft"
-          >
-            {quickNoteCount > 0 && (
-              <span className="absolute top-2 right-2 bg-white/35 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
-                {quickNoteCount}
-              </span>
-            )}
-            <p className="text-lg mb-1">⚡</p>
-            <p className="font-display font-bold text-xs">{t('dashboard.quickNotes')}</p>
-            <p className="text-[var(--color-on-brand)] text-[10px] mt-0.5">
-              {quickNoteCount > 0 ? t('dashboard.toLearnCount', { count: quickNoteCount }) : t('dashboard.allDone')}
-            </p>
-          </button>
-          <button
-            onClick={() => navigate('/vocabulary')}
-            className="press bg-[var(--color-card)] rounded-[var(--radius-card)] p-3 text-left shadow-soft"
-          >
-            <p className="text-lg mb-1">📚</p>
-            <p className="font-display font-bold text-[var(--color-ink)] text-xs">{t('dashboard.vocabulary')}</p>
-            <p className="text-[var(--color-ink-3)] text-[10px] mt-0.5">{t('dashboard.browseWords')}</p>
-          </button>
-        </div>
+        {/* Quick access — surfaces destinations that aren't in the bottom nav. */}
+        <section>
+          <h3 className="mb-2 px-1 font-display font-bold text-[var(--color-ink)]">
+            {t('dashboard.quickActions')}
+          </h3>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {quickActions.map((action) => (
+              <button
+                key={action.key}
+                onClick={action.onClick}
+                className="press relative flex items-center gap-3 rounded-[var(--radius-card)] bg-[var(--color-card)] p-3.5 text-left shadow-soft"
+              >
+                <span
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xl"
+                  style={{ background: action.chip }}
+                >
+                  {action.icon}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-display text-sm font-bold text-[var(--color-ink)]">{action.label}</p>
+                  <p className="truncate text-xs text-[var(--color-ink-3)]">{action.sub}</p>
+                </div>
+                {action.badge != null && (
+                  <span className="absolute right-2 top-2 rounded-full bg-[var(--color-coral)] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                    {action.badge}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </section>
 
         {/* Recent quick notes */}
         {recentNotes.length > 0 && (
@@ -193,9 +235,10 @@ export default function DashboardPage() {
             </div>
             <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
               {recentNotes.map((note) => (
-                <div
+                <button
                   key={note.id}
-                  className="flex-shrink-0 w-36 bg-[var(--color-card)] rounded-[var(--radius-card)] p-3 shadow-soft"
+                  onClick={() => navigate('/quick-notes')}
+                  className="press flex-shrink-0 w-36 bg-[var(--color-card)] rounded-[var(--radius-card)] p-3 text-left shadow-soft"
                 >
                   <p className="text-sm font-semibold text-[var(--color-ink)] truncate">{note.term}</p>
                   {note.vocabularyBase?.translations?.[0]?.translation && (
@@ -206,7 +249,7 @@ export default function DashboardPage() {
                   <span className="mt-2 inline-block text-xs bg-[var(--color-card-2)] text-[var(--color-ink-2)] px-2 py-0.5 rounded-full">
                     {note.sourceLanguageCode}
                   </span>
-                </div>
+                </button>
               ))}
             </div>
           </section>

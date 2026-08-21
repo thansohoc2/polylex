@@ -104,8 +104,13 @@
   "dashboard": {
     "title": "Trang chủ",
     "review": "Ôn tập",
+    "keepLearning": "Tiếp tục học",
     "dueCount": "{{count}} bài",
     "caughtUp": "Xong rồi!",
+    "caughtUpSub": "Bạn đã ôn hết hôm nay ✨",
+    "quickActions": "Truy cập nhanh",
+    "leaderboardShort": "Thi đua tuần này",
+    "analyticsShort": "Tiến độ học",
     "leaderboardTitle": "🏆 Bảng xếp hạng tuần",
     "leaderboardSubtitle": "Xem thứ hạng của bạn và thi đua cùng mọi người",
     "quickNotes": "Ghi chú nhanh",
@@ -150,6 +155,11 @@
     "noMatchesTitle": "Không có kết quả",
     "noMatchesSubtitle": "Thử tìm kiếm với từ khác",
     "langWordsCount": "{{count}} từ"
+  },
+  "library": {
+    "title": "Từ vựng & Ghi chú",
+    "tabVocab": "Từ vựng",
+    "tabNotes": "Ghi chú nhanh"
   },
   "addWord": {
     "title": "＋ Thêm từ mới",
@@ -382,6 +392,7 @@
     "learning": "Đang học",
     "settings": "Cài đặt",
     "vocabularyMenu": "Từ vựng",
+    "libraryMenu": "Từ vựng & Ghi chú",
     "analyticsMenu": "Phân tích",
     "leaderboardMenu": "Bảng xếp hạng",
     "signOut": "Đăng xuất",

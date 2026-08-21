@@ -13,7 +13,9 @@ COPY apps/frontend/package*.json ./apps/frontend/
 COPY packages/shared-types/package*.json ./packages/shared-types/
 COPY packages/shared-ui/package*.json ./packages/shared-ui/
 
-RUN npm ci --workspaces --include-workspace-root
+# The backend image installs the monorepo workspaces but does not build native
+# Capacitor targets. Prisma generation runs explicitly after sources are copied.
+RUN npm ci --workspaces --include-workspace-root --ignore-scripts
 
 COPY . .
 

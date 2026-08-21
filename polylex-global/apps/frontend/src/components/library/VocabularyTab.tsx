@@ -1,10 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { AsyncState, Select } from '@polylex/shared-ui';
 import { vocabularyApi, languageApi } from '@/api/client';
 import type { LanguageDto } from '@polylex/shared-types';
-import AppShell from '@/components/layout/AppShell';
 import SearchBar from '@/components/ui/SearchBar';
 import SkeletonCard from '@/components/ui/SkeletonCard';
 import AddWordModal from '@/components/AddWordModal';
@@ -18,7 +16,14 @@ const flagMap: Record<string, string> = {
   zh: '🇨🇳', ko: '🇰🇷', es: '🇪🇸', pt: '🇵🇹', it: '🇮🇹',
 };
 
-export default function VocabularyPage() {
+interface VocabularyTabProps {
+  /** Whether the Add Word modal (opened from the shared top bar) is visible. */
+  addOpen: boolean;
+  /** Close the Add Word modal. */
+  onAddClose: () => void;
+}
+
+export default function VocabularyTab({ addOpen, onAddClose }: VocabularyTabProps) {
   const { t } = useTranslation();
   const [allItems, setAllItems] = useState<VocabItem[]>([]);
   const [search, setSearch] = useState('');
@@ -26,7 +31,6 @@ export default function VocabularyPage() {
   const [languages, setLanguages] = useState<LanguageDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState<VocabItem | null>(null);
 
   const loadMyList = useCallback(async () => {
@@ -67,27 +71,15 @@ export default function VocabularyPage() {
       list = list.filter(
         (w) =>
           w.term.toLowerCase().includes(q) ||
-          w.translations.some((t) => t.translation.toLowerCase().includes(q)),
+          w.translations.some((tr) => tr.translation.toLowerCase().includes(q)),
       );
     }
     return list;
   }, [allItems, langFilter, search]);
 
-  const topBarAction = (
-    <button
-      type="button"
-      onClick={() => setShowModal(true)}
-      className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-[var(--color-coral-soft)] text-[var(--color-coral)]"
-      aria-label={t('addWord.addWord')}
-    >
-      <Plus size={18} aria-hidden="true" />
-    </button>
-  );
-
   return (
-    <AppShell title={t('vocab.title')} rightAction={topBarAction}>
+    <>
       <div className="space-y-3 px-4 pb-6 pt-3 sm:px-6 lg:px-8">
-
         {/* Search */}
         <SearchBar value={search} onChange={setSearch} placeholder={t('vocab.searchPlaceholder')} />
 
@@ -192,11 +184,11 @@ export default function VocabularyPage() {
 
       {/* Add word modal */}
       <AddWordModal
-        isOpen={showModal}
+        isOpen={addOpen}
         languages={languages}
         onSuccess={loadMyList}
-        onClose={() => setShowModal(false)}
+        onClose={onAddClose}
       />
-    </AppShell>
+    </>
   );
 }

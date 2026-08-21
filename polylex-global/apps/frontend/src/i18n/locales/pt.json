@@ -104,8 +104,13 @@
   "dashboard": {
     "title": "Início",
     "review": "Revisão",
+    "keepLearning": "Continuar aprendendo",
     "dueCount": "{{count}} pendentes",
     "caughtUp": "Em dia!",
+    "caughtUpSub": "Você terminou por hoje ✨",
+    "quickActions": "Acesso rápido",
+    "leaderboardShort": "Compita esta semana",
+    "analyticsShort": "Seu progresso",
     "leaderboardTitle": "🏆 Ranking semanal",
     "leaderboardSubtitle": "Veja sua posição e dispute com a comunidade",
     "dailyGoalTitle": "Meta diária",
@@ -150,6 +155,11 @@
     "noMatchesTitle": "Sem resultados",
     "noMatchesSubtitle": "Tente um termo de busca diferente",
     "langWordsCount": "{{count}} palavras"
+  },
+  "library": {
+    "title": "Palavras e Notas",
+    "tabVocab": "Vocabulário",
+    "tabNotes": "Notas rápidas"
   },
   "addWord": {
     "title": "＋ Adicionar Palavra",
@@ -382,6 +392,7 @@
     "learning": "Aprendendo",
     "settings": "Configurações",
     "vocabularyMenu": "Vocabulário",
+    "libraryMenu": "Palavras e Notas",
     "analyticsMenu": "Análise",
     "leaderboardMenu": "Ranking",
     "signOut": "Sair",

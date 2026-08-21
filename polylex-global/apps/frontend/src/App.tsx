@@ -8,12 +8,11 @@ import { useReviewReminder } from '@/hooks/useReviewReminder';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
-import VocabularyPage from '@/pages/VocabularyPage';
+import LibraryPage from '@/pages/LibraryPage';
 import ReviewPage from '@/pages/ReviewPage';
 import RoadmapPage from '@/pages/RoadmapPage';
 import AnalyticsPage from '@/pages/AnalyticsPage';
 import LeaderboardPage from '@/pages/LeaderboardPage';
-import QuickNotePage from '@/pages/QuickNotePage';
 import ProfilePage from '@/pages/ProfilePage';
 import DialoguePage from '@/pages/DialoguePage';
 import VideosPage from '@/pages/VideosPage';
@@ -126,14 +125,14 @@ export default function App() {
           <Route element={<ProtectedShell />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="vocabulary" element={<VocabularyPage />} />
+            <Route path="vocabulary" element={<LibraryPage />} />
             <Route path="review" element={<ReviewPage />} />
             <Route path="review/path/:userPathId" element={<ReviewPage />} />
             <Route path="review/:filter" element={<ReviewPage />} />
             <Route path="roadmap" element={<RoadmapPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="leaderboard" element={<LeaderboardPage />} />
-            <Route path="quick-notes" element={<QuickNotePage />} />
+            <Route path="quick-notes" element={<LibraryPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="dialogue/:pathStageId" element={<DialoguePage />} />
             <Route path="videos" element={<VideosHubPage />} />

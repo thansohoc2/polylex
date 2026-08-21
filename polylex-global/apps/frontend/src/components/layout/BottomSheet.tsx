@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 interface BottomSheetProps {
@@ -13,8 +14,11 @@ interface BottomSheetProps {
 export default function BottomSheet({ isOpen, onClose, title, children }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
   const titleId = useId();
   const reduceMotion = useReducedMotion();
+
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -22,16 +26,16 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Bottom
     sheetRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') onCloseRef.current();
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       previousFocusRef.current?.focus();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -86,6 +90,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Bottom
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
