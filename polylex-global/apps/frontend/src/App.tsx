@@ -18,6 +18,7 @@ import DialoguePage from '@/pages/DialoguePage';
 import VideosPage from '@/pages/VideosPage';
 import VideosHubPage from '@/pages/VideosHubPage';
 import OnboardingPage from '@/pages/OnboardingPage';
+import WordAnalysisPage from '@/pages/WordAnalysisPage';
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import SupportPage from '@/pages/SupportPage';
 import { QuickNoteProvider } from '@/contexts/QuickNoteContext';
@@ -126,6 +127,7 @@ export default function App() {
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="vocabulary" element={<LibraryPage />} />
+            <Route path="word-analysis" element={<WordAnalysisPage />} />
             <Route path="review" element={<ReviewPage />} />
             <Route path="review/path/:userPathId" element={<ReviewPage />} />
             <Route path="review/:filter" element={<ReviewPage />} />

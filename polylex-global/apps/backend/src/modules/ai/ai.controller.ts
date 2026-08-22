@@ -11,6 +11,14 @@ class ContextSentenceDto {
   @ApiProperty() @IsString() cefrLevel: string;
 }
 
+class WordAnalysisDto {
+  @ApiProperty() @IsString() term: string;
+  @ApiProperty() @IsString() languageCode: string;
+  @ApiProperty() @IsString() nativeLanguageCode: string;
+  @ApiProperty({ required: false }) @IsString() cefrLevel?: string;
+  @ApiProperty({ required: false }) @IsString() partOfSpeech?: string;
+}
+
 @ApiTags('ai')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -28,5 +36,17 @@ export class AiController {
   @ApiOperation({ summary: 'Generate AI memory/mnemonic hint' })
   generateMemoryHint(@Body() dto: AiHintDto) {
     return this.svc.generateMemoryHint(dto.term, dto.termLanguageCode, dto.userNativeLanguageCode);
+  }
+
+  @Post('word-analysis')
+  @ApiOperation({ summary: 'Generate a structured AI analysis for a word or phrase' })
+  generateWordAnalysis(@Body() dto: WordAnalysisDto) {
+    return this.svc.generateWordAnalysis(
+      dto.term,
+      dto.languageCode,
+      dto.nativeLanguageCode,
+      dto.cefrLevel,
+      dto.partOfSpeech,
+    );
   }
 }

@@ -8,25 +8,25 @@ import { z } from 'zod';
 export class GenerateExampleDto {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   @IsString()
-  vocabularyBaseId: string;
+  vocabularyBaseId!: string;
 
   @ApiProperty({ example: 'vi', description: 'Context language code' })
   @IsString()
-  targetLanguageCode: string;
+  targetLanguageCode!: string;
 }
 
 export class AiHintDto {
   @ApiProperty()
   @IsString()
-  term: string;
+  term!: string;
 
   @ApiProperty({ example: 'en' })
   @IsString()
-  termLanguageCode: string;
+  termLanguageCode!: string;
 
   @ApiProperty({ example: 'vi' })
   @IsString()
-  userNativeLanguageCode: string;
+  userNativeLanguageCode!: string;
 }
 
 export interface EnrichedWordResult {
@@ -60,6 +60,26 @@ export interface GeneratedPath {
   description?: string | null;
   emoji: string;
   stages: GeneratedPathStage[];
+}
+
+export interface WordAnalysisSection {
+  title: string;
+  summary: string | null;
+  examples: string[];
+}
+
+export interface WordAnalysisResult {
+  term: string;
+  languageCode: string;
+  nuance: WordAnalysisSection;
+  nounForms?: WordAnalysisSection | null;
+  verbForms?: WordAnalysisSection | null;
+  adjectiveForms?: WordAnalysisSection | null;
+  adverbForms?: WordAnalysisSection | null;
+  tenseUsage?: WordAnalysisSection | null;
+  prepositions?: WordAnalysisSection | null;
+  phrasalVerbs?: WordAnalysisSection | null;
+  collocations?: WordAnalysisSection | null;
 }
 
 // ─── Zod schemas for AI output validation ─────────────────────────────────────
@@ -103,6 +123,29 @@ const DialogueLineSchema = z.object({
 });
 
 const DialogueSchema = z.array(DialogueLineSchema).min(6).max(20);
+
+const WordAnalysisSectionSchema = z.object({
+  title: z.string().min(1),
+  summary: z.string().min(1).nullable(),
+  examples: z
+    .array(z.string().min(1))
+    .nullable()
+    .transform((value) => value ?? []),
+});
+
+const WordAnalysisSchema = z.object({
+  term: z.string().min(1),
+  languageCode: z.string().min(2),
+  nuance: WordAnalysisSectionSchema,
+  nounForms: WordAnalysisSectionSchema.nullish(),
+  verbForms: WordAnalysisSectionSchema.nullish(),
+  adjectiveForms: WordAnalysisSectionSchema.nullish(),
+  adverbForms: WordAnalysisSectionSchema.nullish(),
+  tenseUsage: WordAnalysisSectionSchema.nullish(),
+  prepositions: WordAnalysisSectionSchema.nullish(),
+  phrasalVerbs: WordAnalysisSectionSchema.nullish(),
+  collocations: WordAnalysisSectionSchema.nullish(),
+});
 
 // ─── Video-related interfaces & schemas ───────────────────────────────────────
 
@@ -273,6 +316,102 @@ Target language: ${targetLanguageCode}`;
     const json = raw.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
     const parsed = JSON.parse(json) as EnrichedWordResult;
     return parsed;
+  }
+
+  async generateWordAnalysis(
+    term: string,
+    languageCode: string,
+    nativeLanguageCode: string,
+    cefrLevel?: string | null,
+    partOfSpeech?: string | null,
+  ): Promise<WordAnalysisResult> {
+    this.ensureEnabled();
+
+    const safeLevel = cefrLevel?.trim() || 'B1';
+    const safePartOfSpeech = partOfSpeech?.trim() || 'unknown';
+
+    const prompt = `You are an expert language teacher and linguist.
+Analyze the word/phrase "${term}" in ${languageCode} for a learner whose native language is ${nativeLanguageCode}.
+Current CEFR level: ${safeLevel}. Part of speech hint: ${safePartOfSpeech}.
+
+Return ONLY valid JSON with this exact structure:
+{
+  "term": "${term}",
+  "languageCode": "${languageCode}",
+  "nuance": {
+    "title": "Nuance and meaning",
+    "summary": "Clear explanation of the core meaning and its subtle differences.",
+    "examples": ["short natural example 1", "short natural example 2"]
+  },
+  "nounForms": {
+    "title": "Noun forms",
+    "summary": "Different noun or count/non-count uses, if applicable.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "verbForms": {
+    "title": "Verb forms",
+    "summary": "How the verb changes across forms, if applicable.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "adjectiveForms": {
+    "title": "Adjective forms",
+    "summary": "Comparative/superlative or adjective patterns, if applicable.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "adverbForms": {
+    "title": "Adverb forms",
+    "summary": "How the word behaves as an adverb or modifies a verb/adjective.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "tenseUsage": {
+    "title": "Tense usage",
+    "summary": "How this word is used across common tenses.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "prepositions": {
+    "title": "Prepositions and collocations",
+    "summary": "Common prepositions or patterns used with this word.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "phrasalVerbs": {
+    "title": "Phrasal verbs",
+    "summary": "Relevant phrasal verbs and how they differ.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  },
+  "collocations": {
+    "title": "Collocations",
+    "summary": "Common expressions or word combinations.",
+    "examples": ["example sentence 1", "example sentence 2"]
+  }
+}
+
+Rules:
+- Use the learner's native language for explanation clarity, but keep examples in ${languageCode} when possible.
+- Keep each example short, natural, and realistic for a language learner.
+- If a section does not really apply, set the value to null instead of inventing content.
+- Do not add extra keys. Do not wrap in markdown code fences.
+- Focus on practical language use rather than dictionary-only definitions.
+- Prefer examples that clearly show nuance, grammar patterns, and common uses.
+- Explicitly cover noun, verb, adjective, and adverb forms whenever the word allows them.
+`;
+
+    const result = await this.withRetry(() => this.geminiJson!.generateContent(prompt));
+    const raw = result.response.text().trim();
+    const cleaned = raw.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
+
+    let json: unknown;
+    try {
+      json = JSON.parse(cleaned);
+    } catch {
+      throw new ServiceUnavailableException('AI returned invalid JSON for word analysis');
+    }
+
+    try {
+      return WordAnalysisSchema.parse(json);
+    } catch (zodErr) {
+      this.logger.error('Zod validation failed for AI word analysis', zodErr);
+      throw new ServiceUnavailableException('AI returned malformed word analysis data');
+    }
   }
 
   async generateLearningPath(

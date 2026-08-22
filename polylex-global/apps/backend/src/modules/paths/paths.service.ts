@@ -70,6 +70,21 @@ export class PathsService {
       where: { code: dto.targetLanguageCode },
     });
 
+    const existingActivePath = await this.prisma.userPath.findFirst({
+      where: {
+        userId,
+        pathTemplate: { targetLanguageId: targetLang.id },
+        completedAt: null,
+      },
+      select: { id: true },
+    });
+
+    if (existingActivePath) {
+      throw new ForbiddenException(
+        'You already have an active learning path for this language. Finish it before creating a new one.',
+      );
+    }
+
     let nativeLangId: string | null = null;
     let nativeLangName = 'English';
 

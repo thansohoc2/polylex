@@ -71,6 +71,10 @@ export default function PathGeneratorSheet({ isOpen, onClose, onCreated }: Props
         navigate('/login');
         return;
       }
+      if (msg?.includes('active learning path for this language')) {
+        toast.error('Bạn đã có lộ trình đang học cho ngôn ngữ này. Hoàn tất nó trước khi tạo mới.');
+        return;
+      }
       toast.error(msg ?? t('generator.failed'));
     } finally {
       setIsLoading(false);

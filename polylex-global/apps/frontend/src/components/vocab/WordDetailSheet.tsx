@@ -113,6 +113,23 @@ export default function WordDetailSheet({ item, onClose }: WordDetailSheetProps)
               </div>
             </div>
           )}
+          {/* Annaly word */}
+          <button
+            onClick={() => {
+              const params = new URLSearchParams({
+                term: item.term,
+                language: item.language.code,
+                cefrLevel: item.cefrLevel ?? '',
+                partOfSpeech: item.partOfSpeech ?? '',
+              });
+              onClose();
+              navigate(`/word-analysis?${params.toString()}`);
+            }}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm text-[var(--color-ink)] bg-[var(--color-card-2)] border border-[var(--color-line)] hover:opacity-90 transition-opacity"
+          >
+            <span aria-hidden="true">✨</span>
+            Analyze word
+          </button>
 
           {/* ── Practice CTA ────────────────────────────── */}
           <button
