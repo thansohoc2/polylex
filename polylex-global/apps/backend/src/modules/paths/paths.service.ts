@@ -9,6 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../ai/ai.service';
 import { VocabularyService } from '../vocabulary/vocabulary.service';
 import { YouTubeService } from '../youtube/youtube.service';
+import { GeneratedPath } from '../ai/ai.service';
 import {
   GeneratePathDto,
   PathDto,
@@ -18,6 +19,50 @@ import {
   StageDialogueDto,
   DialogueLineDto,
 } from './dto/paths.dto';
+
+const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
+function normalizeTerm(term: string): string {
+  return term.normalize('NFKC').toLocaleLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+export function getMinimumPathCefrLevel(
+  currentCefrLevel: string,
+  targetCefrLevel: string,
+): string {
+  const targetIndex = CEFR_LEVELS.indexOf(targetCefrLevel);
+  const currentIndex = Math.max(0, CEFR_LEVELS.indexOf(currentCefrLevel));
+  const minimumIndex = Math.min(targetIndex, Math.max(currentIndex, targetIndex - 1));
+  return CEFR_LEVELS[minimumIndex];
+}
+
+export function filterGeneratedPathVocabulary(
+  path: GeneratedPath,
+  excludedTerms: string[],
+  currentCefrLevel: string,
+  targetCefrLevel: string,
+): GeneratedPath {
+  const excluded = new Set(excludedTerms.map(normalizeTerm));
+  const currentIndex = CEFR_LEVELS.indexOf(currentCefrLevel);
+  const targetIndex = CEFR_LEVELS.indexOf(targetCefrLevel);
+  const minimumIndex = Math.min(currentIndex, targetIndex);
+  const maximumIndex = Math.max(currentIndex, targetIndex);
+
+  return {
+    ...path,
+    stages: path.stages.map((stage) => ({
+      ...stage,
+      vocab: stage.vocab.filter((word) => {
+        const normalizedTerm = normalizeTerm(word.term);
+        const levelIndex = CEFR_LEVELS.indexOf(word.cefrLevel ?? '');
+        const isAllowedLevel = levelIndex >= minimumIndex && levelIndex <= maximumIndex;
+        if (!normalizedTerm || excluded.has(normalizedTerm) || !isAllowedLevel) return false;
+        excluded.add(normalizedTerm);
+        return true;
+      }),
+    })),
+  };
+}
 
 @Injectable()
 export class PathsService {
@@ -107,11 +152,55 @@ export class PathsService {
       }
     }
 
+    const learningProfile = await this.prisma.learningPath.findUnique({
+      where: {
+        userId_targetLanguageId: {
+          userId,
+          targetLanguageId: targetLang.id,
+        },
+      },
+      select: { currentCefrLevel: true },
+    });
+    const minimumCefrLevel = getMinimumPathCefrLevel(
+      learningProfile?.currentCefrLevel ?? 'A1',
+      dto.targetCefrLevel,
+    );
+    const easierCefrLevels = CEFR_LEVELS.slice(0, CEFR_LEVELS.indexOf(minimumCefrLevel));
+    const priorVocabulary = await this.prisma.vocabularyBase.findMany({
+      where: {
+        languageId: targetLang.id,
+        OR: [
+          { cefrLevel: { in: easierCefrLevels } },
+          {
+            userVocabularies: {
+              some: {
+                userId,
+                memoryStrength: { gte: 1 },
+              },
+            },
+          },
+        ],
+      },
+      select: { term: true },
+    });
+
+    const excludedTerms = priorVocabulary.map((word) => word.term);
+
     // Generate path via AI
-    const aiResult = await this.aiService.generateLearningPath(
+    const generatedPath = await this.aiService.generateLearningPath(
       dto.goal,
       targetLang.name,
       nativeLangName,
+      dto.targetCefrLevel,
+      {
+        currentCefrLevel: minimumCefrLevel,
+        excludedTerms,
+      },
+    );
+    const aiResult = filterGeneratedPathVocabulary(
+      generatedPath,
+      excludedTerms,
+      minimumCefrLevel,
       dto.targetCefrLevel,
     );
 

@@ -62,6 +62,11 @@ export interface GeneratedPath {
   stages: GeneratedPathStage[];
 }
 
+export interface LearningPathGenerationContext {
+  currentCefrLevel: string;
+  excludedTerms: string[];
+}
+
 export interface WordAnalysisSection {
   title: string;
   summary: string | null;
@@ -419,6 +424,7 @@ Rules:
     targetLanguage: string,
     nativeLanguage: string,
     targetCefrLevel: string,
+    context?: LearningPathGenerationContext,
   ): Promise<GeneratedPath> {
     this.ensureEnabled();
 
@@ -427,12 +433,16 @@ Rules:
     const prompt = `You are an expert language curriculum designer.
 Create a vocabulary learning path in ${targetLanguage} for a ${nativeLanguage} speaker.
 Goal: "${goal}"
+Learner's current level: ${context?.currentCefrLevel ?? targetCefrLevel}
 Target level: ${targetCefrLevel}
 
 Requirements:
 - 5–7 stages, each with 8–12 words
 - Progress from simple to complex
+- Every word must be suitable for the CEFR range from ${context?.currentCefrLevel ?? targetCefrLevel} through ${targetCefrLevel}; do not include easier words below the learner's current level
 - Words must be practical and directly related to the goal
+- Do not repeat a term within this path
+- Do not use any of these terms; they are already mastered or below the intended level: ${JSON.stringify(context?.excludedTerms ?? [])}
 - Each word must have: term, phonetic (IPA), phoneticRomaji, cefrLevel, partOfSpeech, translation (in ${nativeLanguage}), exampleSentence
 - phoneticRomaji rule: ${phoneticRomajiGuide}
 
