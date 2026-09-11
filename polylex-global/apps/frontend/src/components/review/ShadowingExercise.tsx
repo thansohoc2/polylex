@@ -109,7 +109,8 @@ export default function ShadowingExercise({ item, disabled = false, onComplete }
           const base64 = result.split(',')[1] ?? '';
           resolve(base64);
         } else {
-          reject(new Error('Unable to serialize audio'));        }
+          reject(new Error('Unable to serialize audio'));
+        }
       };
       reader.onerror = () => reject(new Error('Failed to encode audio'));
       reader.readAsDataURL(blob);
@@ -122,6 +123,7 @@ export default function ShadowingExercise({ item, disabled = false, onComplete }
       const result = await vocabularyApi.recognizeSpeech({
         languageCode: langCode,
         audioBase64: base64Audio,
+        audioMimeType: blob.type,
         targetText: targetPhrase,
       });
       setTranscript(result.transcript);
@@ -166,7 +168,9 @@ export default function ShadowingExercise({ item, disabled = false, onComplete }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       chunksRef.current = [];
-      const recorder = new MediaRecorder(stream);
+      const preferredMimeType = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus']
+        .find((mimeType) => MediaRecorder.isTypeSupported(mimeType));
+      const recorder = new MediaRecorder(stream, preferredMimeType ? { mimeType: preferredMimeType } : undefined);
       mediaRecorderRef.current = recorder;
 
       recorder.ondataavailable = (e) => {

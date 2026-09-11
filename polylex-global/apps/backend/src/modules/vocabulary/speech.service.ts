@@ -9,6 +9,17 @@ import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { SpeechClient } from '@google-cloud/speech';
 import { MAX_SPEECH_AUDIO_BYTES } from './speech.constants';
+import { getVoiceConfig } from './voice-map.constants';
+
+type GoogleAudioEncoding = 'WEBM_OPUS' | 'OGG_OPUS' | 'FLAC' | 'LINEAR16';
+
+function getGoogleAudioEncoding(audioMimeType?: string): GoogleAudioEncoding {
+  const mimeType = audioMimeType?.split(';')[0].toLowerCase();
+  if (mimeType === 'audio/ogg') return 'OGG_OPUS';
+  if (mimeType === 'audio/flac') return 'FLAC';
+  if (mimeType === 'audio/wav' || mimeType === 'audio/x-wav') return 'LINEAR16';
+  return 'WEBM_OPUS';
+}
 
 function parseCredentials(value?: string): Record<string, unknown> | null {
   if (!value || !value.trim()) return null;
@@ -109,6 +120,7 @@ export class SpeechToTextService implements OnModuleInit {
     base64Audio: string,
     languageCode: string,
     targetText: string,
+    audioMimeType?: string,
   ): Promise<{ transcript: string; confidence: number; accuracyPercent: number }> {
     const content = stripDataUri(base64Audio);
     if (!content) {
@@ -119,20 +131,21 @@ export class SpeechToTextService implements OnModuleInit {
     }
 
     if (this.whisperEnabled && this.whisperUrl) {
-      return this.transcribeWithWhisper(content, languageCode, targetText);
+      return this.transcribeWithWhisper(content, languageCode, targetText, audioMimeType);
     }
 
     if (!this.googleEnabled || !this.googleClient) {
       throw new ServiceUnavailableException('No STT provider is configured');
     }
 
-    return this.transcribeWithGoogle(content, languageCode, targetText);
+    return this.transcribeWithGoogle(content, languageCode, targetText, audioMimeType);
   }
 
   private async transcribeWithWhisper(
     content: string,
     languageCode: string,
     targetText: string,
+    audioMimeType?: string,
   ): Promise<{ transcript: string; confidence: number; accuracyPercent: number }> {
     if (!this.whisperUrl) {
       throw new ServiceUnavailableException('Whisper STT is not configured');
@@ -143,6 +156,7 @@ export class SpeechToTextService implements OnModuleInit {
       {
         audioBase64: content,
         languageCode,
+        audioMimeType,
       },
       { timeout: 120_000 },
     );
@@ -162,12 +176,14 @@ export class SpeechToTextService implements OnModuleInit {
     content: string,
     languageCode: string,
     targetText: string,
+    audioMimeType?: string,
   ): Promise<{ transcript: string; confidence: number; accuracyPercent: number }> {
+    const googleLanguageCode = getVoiceConfig(languageCode, 'FEMALE').languageCode;
     const [response] = await this.googleClient!.recognize({
       audio: { content },
       config: {
-        encoding: 'WEBM_OPUS' as const,
-        languageCode,
+        encoding: getGoogleAudioEncoding(audioMimeType),
+        languageCode: googleLanguageCode,
         enableAutomaticPunctuation: true,
         model: 'latest_long',
         audioChannelCount: 1,

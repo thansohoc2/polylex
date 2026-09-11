@@ -10,6 +10,7 @@ import whisper
 class TranscribeRequest(BaseModel):
     audioBase64: str
     languageCode: str | None = None
+    audioMimeType: str | None = None
 
 
 class TranscribeResponse(BaseModel):
@@ -26,6 +27,18 @@ def strip_data_uri(data: str) -> str:
 
 def get_env(name: str, default: str) -> str:
     return os.getenv(name, default)
+
+
+def audio_suffix(mime_type: str | None) -> str:
+    media_type = (mime_type or '').split(';', 1)[0].lower()
+    return {
+        'audio/flac': '.flac',
+        'audio/mp4': '.m4a',
+        'audio/mpeg': '.mp3',
+        'audio/ogg': '.ogg',
+        'audio/wav': '.wav',
+        'audio/x-wav': '.wav',
+    }.get(media_type, '.webm')
 
 
 MODEL_NAME = get_env('WHISPER_MODEL', 'small')
@@ -52,7 +65,7 @@ def transcribe(request: TranscribeRequest) -> TranscribeResponse:
     except Exception:
         raise HTTPException(status_code=400, detail='Invalid base64 audio content')
 
-    with tempfile.NamedTemporaryFile(suffix='.webm', delete=False) as tmp_file:
+    with tempfile.NamedTemporaryFile(suffix=audio_suffix(request.audioMimeType), delete=False) as tmp_file:
         tmp_file.write(audio_bytes)
         tmp_path = tmp_file.name
 

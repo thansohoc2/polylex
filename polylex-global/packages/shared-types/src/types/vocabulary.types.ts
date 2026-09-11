@@ -35,6 +35,7 @@ export interface TtsPreviewPayload {
 export interface SpeechRecognitionPayload {
   languageCode: string;
   audioBase64: string;
+  audioMimeType?: string;
   targetText: string;
 }
 

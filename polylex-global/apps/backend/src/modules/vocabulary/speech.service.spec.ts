@@ -14,4 +14,31 @@ describe('SpeechToTextService', () => {
       service.transcribe(oversizedAudio, 'en', 'hello'),
     ).rejects.toMatchObject({ status: 413 });
   });
+
+  it('normalizes the language locale and uses the recording MIME encoding for Google STT', async () => {
+    const config = {
+      get: jest.fn((key: string, defaultValue: unknown) =>
+        key === 'GOOGLE_STT_ENABLED' ? true : defaultValue,
+      ),
+    } as unknown as ConfigService;
+    const service = new SpeechToTextService(config);
+    const recognize = jest.fn().mockResolvedValue([{ results: [] }]);
+    service['googleClient'] = { recognize } as never;
+
+    await service.transcribe(
+      Buffer.from('audio').toString('base64'),
+      'en',
+      'hello',
+      'audio/ogg;codecs=opus',
+    );
+
+    expect(recognize).toHaveBeenCalledWith(
+      expect.objectContaining({
+        config: expect.objectContaining({
+          encoding: 'OGG_OPUS',
+          languageCode: 'en-US',
+        }),
+      }),
+    );
+  });
 });

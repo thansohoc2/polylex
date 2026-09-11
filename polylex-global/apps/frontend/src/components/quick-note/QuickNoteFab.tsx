@@ -16,9 +16,12 @@ export default function QuickNoteFab() {
   const location = useLocation();
 
   // Hide while an active review exercise is running so it never overlaps the
-  // answer / continue controls, and while the sheet itself is open.
+  // answer / continue controls, and while the sheet itself is open. Also hidden
+  // on the roadmap page, which shows its own FAB in this same spot for
+  // creating a new path instead.
   const inReviewSession = location.pathname.startsWith('/review');
-  const hidden = sheetOpen || inReviewSession;
+  const inRoadmap = location.pathname.startsWith('/roadmap');
+  const hidden = sheetOpen || inReviewSession || inRoadmap;
 
   return (
     <AnimatePresence>

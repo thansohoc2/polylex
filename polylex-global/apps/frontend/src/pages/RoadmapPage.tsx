@@ -54,20 +54,8 @@ export default function RoadmapPage() {
     setPaths((prev) => [newPath, ...prev]);
   };
 
-  const topBarAction = (
-    <button
-      type="button"
-      onClick={() => setShowGenerator(true)}
-      className="press flex min-h-11 min-w-11 items-center justify-center rounded-full bg-[var(--color-coral-soft)] text-[var(--color-coral)] transition-colors hover:bg-[var(--color-card-2)]"
-      title={t('roadmap.createNew')}
-      aria-label={t('roadmap.createNew')}
-    >
-      <Plus size={20} aria-hidden="true" />
-    </button>
-  );
-
   return (
-    <AppShell title={t('roadmap.title')} rightAction={topBarAction}>
+    <AppShell title={t('roadmap.title')}>
       <div className="px-4 pb-6 sm:px-6 lg:px-8">
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">
@@ -112,6 +100,23 @@ export default function RoadmapPage() {
         onClose={() => setShowGenerator(false)}
         onCreated={handleCreated}
       />
+
+      {!showGenerator && (
+        <button
+          type="button"
+          onClick={() => setShowGenerator(true)}
+          aria-label={t('roadmap.createNew')}
+          title={t('roadmap.createNew')}
+          className="fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full"
+          style={{
+            bottom: 'calc(env(safe-area-inset-bottom, 50px) + 140px)',
+            background: 'linear-gradient(135deg, var(--color-grape), var(--color-grape-dark))',
+            boxShadow: '0 8px 24px rgba(101, 69, 214, 0.45)',
+          }}
+        >
+          <Plus size={26} color="#fff" strokeWidth={2.5} />
+        </button>
+      )}
     </AppShell>
   );
 }

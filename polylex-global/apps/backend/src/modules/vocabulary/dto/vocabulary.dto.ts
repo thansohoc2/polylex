@@ -104,6 +104,12 @@ export class SpeechRecognitionDto {
   @MaxLength(MAX_SPEECH_AUDIO_BASE64_LENGTH)
   audioBase64: string;
 
+  @ApiPropertyOptional({ example: 'audio/webm;codecs=opus' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  audioMimeType?: string;
+
   @ApiProperty({ example: 'I eat an apple every day.' })
   @IsString()
   targetText: string;

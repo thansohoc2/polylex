@@ -82,7 +82,12 @@ export class VocabularyController {
   @ApiOperation({ summary: 'Transcribe recorded audio with Google STT and return pronunciation accuracy' })
   @HttpCode(HttpStatus.OK)
   async recognizeSpeech(@Body() dto: SpeechRecognitionDto) {
-    return this.speechToTextService.transcribe(dto.audioBase64, dto.languageCode, dto.targetText);
+    return this.speechToTextService.transcribe(
+      dto.audioBase64,
+      dto.languageCode,
+      dto.targetText,
+      dto.audioMimeType,
+    );
   }
 
   @Post(':id/translations')
